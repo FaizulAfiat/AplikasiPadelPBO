@@ -78,6 +78,8 @@ public class ShopController extends HttpServlet {
                 p.setPrice(rs.getInt("price"));
                 p.setStock(rs.getInt("stock"));
                 p.setImage(rs.getString("image"));
+                p.setDescription(rs.getString("description"));
+                p.setRating(rs.getDouble("rating"));
                 productList.add(p);
             }
                         

@@ -105,6 +105,8 @@ public class CartController extends HttpServlet {
                         product.setPrice(rs.getInt("price"));
                         product.setStock(rs.getInt("stock"));
                         product.setImage(rs.getString("image"));
+                        product.setDescription(rs.getString("description"));
+                        product.setRating(rs.getDouble("rating"));
 
                         if (product.getStock() <= 0) {
                             response.sendRedirect(request.getContextPath() + "/ShopController?status=out_of_stock");

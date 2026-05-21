@@ -94,6 +94,38 @@ public class DatabaseSeeder implements ServletContextListener {
                         e.printStackTrace();
                     }
                 }
+                
+                // Cek apakah tabel 'products' perlu migrasi (apakah kolom description belum ada)
+                boolean productsNeedMigration = false;
+                try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "products", "description")) {
+                    if (!colRs.next()) {
+                        productsNeedMigration = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan jika terjadi error
+                }
+                
+                if (productsNeedMigration) {
+                    System.out.println("[Seeder] Tabel 'products' membutuhkan migrasi schema. Menjalankan ALTER...");
+                    try {
+                        stmt.executeUpdate("ALTER TABLE `products` ADD COLUMN `description` TEXT NULL AFTER `image`");
+                        stmt.executeUpdate("ALTER TABLE `products` ADD COLUMN `rating` DECIMAL(3,1) NOT NULL DEFAULT 4.5 AFTER `description`");
+                        System.out.println("[Seeder] Kolom 'description' dan 'rating' berhasil ditambahkan ke tabel 'products'.");
+                        
+                        // Mengisi deskripsi & rating default untuk produk awal
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Overgrip premium dengan daya cengkeram maksimal dan penyerapan keringat yang luar biasa.', `rating` = 4.8 WHERE `product_id` = 1");
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Raket padel tingkat profesional dengan kontrol presisi tinggi dan sweetspot yang luas.', `rating` = 4.9 WHERE `product_id` = 2");
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Raket padel ringan khusus anak-anak untuk kenyamanan dan kemudahan belajar.', `rating` = 4.7 WHERE `product_id` = 3");
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Tas padel fungsional dengan kompartemen raket termal dan kantong aksesoris luas.', `rating` = 4.6 WHERE `product_id` = 4");
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Raket padel berkecepatan tinggi dengan transfer energi maksimal untuk pukulan bertenaga.', `rating` = 4.8 WHERE `product_id` = 5");
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Produk percobaan untuk testing sistem toko.', `rating` = 4.0 WHERE `product_id` = 13");
+                        stmt.executeUpdate("UPDATE `products` SET `description` = 'Produk sewa percobaan untuk testing sistem rental.', `rating` = 4.2 WHERE `product_id` = 14");
+                        System.out.println("[Seeder] Data awal produk berhasil diperbarui dengan deskripsi dan rating.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal melakukan migrasi tabel 'products': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
                 return;
             }
 

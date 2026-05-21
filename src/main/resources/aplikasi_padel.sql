@@ -129,21 +129,23 @@ CREATE TABLE `products` (
   `type` enum('Sale','Rent') NOT NULL,
   `price` int(155) NOT NULL,
   `stock` int(11) NOT NULL,
-  `image` varchar(255) NOT NULL DEFAULT 'default.png'
+  `image` varchar(255) NOT NULL DEFAULT 'default.png',
+  `description` text DEFAULT NULL,
+  `rating` decimal(3,1) NOT NULL DEFAULT 4.5
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`product_id`, `name`, `category`, `type`, `price`, `stock`, `image`) VALUES
-(1, 'HEAD Padel Pro Overgrip', 'Grip', 'Sale', 4500000, 10, 'HEAD Padel Pro Overgrip.png'),
-(2, 'HEAD Padel Racket Gravity Pro 2024 (365G) 224004 – Raket Padel', 'Racket', 'Sale', 4200000, 5, 'HEAD Padel Racket Gravity Pro 2024.png'),
-(3, 'HEAD Extreme Junior Padel Racket 356G – Raket Padel Anak', 'Racket', 'Sale', 4800000, 3, 'HEAD Extreme Junior Padel Racket.png'),
-(4, 'Prosport Tas Padel', 'Bag', 'Sale', 4100000, 7, 'Tas Padel.webp'),
-(5, 'HEAD Padel Racket Speed One X\n', 'Racket', 'Sale', 3800000, 8, 'HEAD Padel Racket Speed One X.webp'),
-(13, 'Test', 'Racquet', 'Sale', 100000, 12, 'code.png'),
-(14, 'test2', 'Racquet', 'Rent', 190090999, 2, 'logo kebanggaan.png');
+INSERT INTO `products` (`product_id`, `name`, `category`, `type`, `price`, `stock`, `image`, `description`, `rating`) VALUES
+(1, 'HEAD Padel Pro Overgrip', 'Grip', 'Sale', 4500000, 10, 'HEAD Padel Pro Overgrip.png', 'Overgrip premium dengan daya cengkeram maksimal dan penyerapan keringat yang luar biasa.', 4.8),
+(2, 'HEAD Padel Racket Gravity Pro 2024 (365G) 224004 – Raket Padel', 'Racket', 'Sale', 4200000, 5, 'HEAD Padel Racket Gravity Pro 2024.png', 'Raket padel tingkat profesional dengan kontrol presisi tinggi dan sweetspot yang luas.', 4.9),
+(3, 'HEAD Extreme Junior Padel Racket 356G – Raket Padel Anak', 'Racket', 'Sale', 4800000, 3, 'HEAD Extreme Junior Padel Racket.png', 'Raket padel ringan khusus anak-anak untuk kenyamanan dan kemudahan belajar.', 4.7),
+(4, 'Prosport Tas Padel', 'Bag', 'Sale', 4100000, 7, 'Tas Padel.webp', 'Tas padel fungsional dengan kompartemen raket termal dan kantong aksesoris luas.', 4.6),
+(5, 'HEAD Padel Racket Speed One X\n', 'Racket', 'Sale', 3800000, 8, 'HEAD Padel Racket Speed One X.webp', 'Raket padel berkecepatan tinggi dengan transfer energi maksimal untuk pukulan bertenaga.', 4.8),
+(13, 'Test', 'Racquet', 'Sale', 100000, 12, 'code.png', 'Produk percobaan untuk testing sistem toko.', 4.0),
+(14, 'test2', 'Racquet', 'Rent', 190090999, 2, 'logo kebanggaan.png', 'Produk sewa percobaan untuk testing sistem rental.', 4.2);
 
 -- --------------------------------------------------------
 
