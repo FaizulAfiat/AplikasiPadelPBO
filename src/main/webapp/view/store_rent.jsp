@@ -49,7 +49,7 @@
 
                                     <%-- FIXED-SIZE CARD ELEMENT --%>
                                         <div
-                                            class="bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[480px]">
+                                            class="bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[500px]">
 
                                             <%-- 1. Wadah Gambar dengan Tinggi Fixed Mutlak --%>
                                                 <div
@@ -72,7 +72,7 @@
                                                                 class="text-[10px] font-black uppercase opacity-40 tracking-wider">Product
                                                                 Catalog</span>
                                                             <h3
-                                                                class="font-black uppercase italic text-xl leading-tight text-gray-900 line-clamp-2">
+                                                                class="font-black uppercase italic text-xl leading-tight text-gray-900 line-clamp-2 h-14">
                                                                 ${product.name}
                                                             </h3>
                                                         </div>

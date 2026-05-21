@@ -45,8 +45,7 @@
                 <table class="w-full text-left">
                     <thead>
                         <tr class="border-b-4 border-black">
-                            <th class="py-4 font-black uppercase text-xs opacity-40">Image</th>
-                            <th class="py-4 font-black uppercase text-xs opacity-40">Item Name</th>
+                            <th class="py-4 font-black uppercase text-xs opacity-40">Item</th>
                             <th class="py-4 font-black uppercase text-xs opacity-40">Category</th>
                             <th class="py-4 font-black uppercase text-xs opacity-40">Price</th>
                             <th class="py-4 font-black uppercase text-xs opacity-40">Stock</th>
