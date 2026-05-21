@@ -1,7 +1,10 @@
 <%-- Document : store_rent Created on : 5 May 2026, 13.47.13 Author : Faizul Afiat --%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ page import="com.mycompany.aplikasi_padel_tubes_pbo.model.CartItem" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.text.NumberFormat" %>
+<%@ page import="java.util.Locale" %>
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%
     List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
@@ -13,6 +16,7 @@
             cartTotal += item.getSubtotal();
         }
     }
+    NumberFormat rupiahFormat = NumberFormat.getNumberInstance(new Locale("id", "ID"));
 %>
 <!DOCTYPE html>
 <html>
@@ -111,7 +115,8 @@
                                                                             class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Rate
                                                                             / Price</span>
                                                                         <p class="font-black text-xl text-black">
-                                                                            Rp ${product.price}
+                                                                            <fmt:setLocale value="id_ID"/>
+                                                                            <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="Rp " maxFractionDigits="0"/>
                                                                             <c:if test="${product.type == 'Rent'}"><span
                                                                                     class="text-xs font-bold text-gray-400 opacity-60">
                                                                                     / Session</span></c:if>
@@ -245,7 +250,7 @@
                                     </div>
                                     <div class="flex justify-between items-end mt-2">
                                         <p class="font-black text-sm text-black">
-                                            Rp <%= item.getProduct().getPrice() %>
+                                            Rp <%= rupiahFormat.format(item.getProduct().getPrice()) %>
                                         </p>
                                         
                                         <!-- Qty Controls -->
@@ -282,7 +287,7 @@
                     <div class="border-t-4 border-black pt-6 mt-6 space-y-4 flex-none">
                         <div class="flex justify-between items-end">
                             <span class="font-black text-xs uppercase text-gray-400 tracking-widest">Total Amount</span>
-                            <p class="font-black text-2xl text-black">Rp <%= cartTotal %></p>
+                            <p class="font-black text-2xl text-black">Rp <%= rupiahFormat.format(cartTotal) %></p>
                         </div>
                         
                         <div class="flex gap-4">
