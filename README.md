@@ -22,7 +22,9 @@ Sebelum memulai, pastikan laptop Anda sudah terinstal software berikut:
 
 ---
 
-## 🚀 BAGIAN 2: Cara Mengambil Proyek dari GitHub (Clone & Pull)
+## 🚀 BAGIAN 2: Cara Mengambil & Mengembangkan Proyek (Git Workflow & Branching)
+
+Agar kode program utama tetap aman dan tidak saling menimpa kerjaan teman kelompok, gunakan alur kerja berikut:
 
 ### 1. Mengunduh Proyek Pertama Kali (Clone)
 1.  Buka **File Explorer** di komputer Anda, lalu masuk ke folder tempat Anda ingin menyimpan proyek (misal: `D:\Kuliah`).
@@ -39,6 +41,43 @@ Sebelum memulai, pastikan laptop Anda sudah terinstal software berikut:
 ### 2. Mengambil Kode Terbaru Sebelum Mulai Mengoding (Pull)
 **PENTING:** Setiap kali Anda ingin mulai mengoding atau membuka proyek, selalu jalankan perintah ini di Git Bash/CMD agar kode Anda tersinkronisasi dengan update dari teman kelompok:
 ```bash
+git checkout main
+git pull origin main
+```
+
+### 3. Alur Kerja Menggunakan Branch (Sangat Direkomendasikan!)
+Jangan langsung melakukan push ke branch `main`. Buatlah **branch baru** setiap kali Anda ingin menambah fitur baru atau memperbaiki eror.
+
+#### Langkah 1: Buat dan Masuk ke Branch Baru Anda
+Tentukan nama branch sesuai fitur yang dikerjakan (contoh: `fitur-logout`, `fitur-scoring`, dll):
+```bash
+git checkout -b nama-branch-baru
+```
+*(Perintah `-b` otomatis membuat branch baru dan memindahkan Anda ke branch tersebut).*
+
+#### Langkah 2: Lakukan Coding & Simpan Perubahan (Commit)
+Setelah selesai menulis kode di laptop Anda, simpan perubahannya ke Git:
+```bash
+git add .
+git commit -m "Deskripsi singkat apa yang Anda ubah"
+```
+
+#### Langkah 3: Push Branch Anda ke GitHub
+Kirim branch Anda ke repositori online (bukan ke main):
+```bash
+git push origin nama-branch-baru
+```
+
+#### Langkah 4: Gabungkan via Pull Request (PR) di GitHub
+1.  Buka halaman GitHub proyek Anda di browser.
+2.  Anda akan melihat tombol hijau bertuliskan **Compare & pull request** untuk branch yang baru saja di-push. Klik tombol tersebut.
+3.  Tulis pesan singkat, lalu klik **Create pull request**.
+4.  Jika kode dirasa sudah aman dan tidak ada bentrok (*conflict*), klik tombol **Merge pull request** lalu **Confirm merge**. Sekarang fitur Anda resmi masuk ke branch `main`.
+
+#### Langkah 5: Sinkronkan Kembali Laptop Anda
+Setelah digabungkan di GitHub, kembalikan posisi Git laptop Anda ke branch `main` dan ambil update terbaru hasil penggabungan tadi:
+```bash
+git checkout main
 git pull origin main
 ```
 
