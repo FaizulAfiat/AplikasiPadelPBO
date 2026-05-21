@@ -49,6 +49,51 @@ public class DatabaseSeeder implements ServletContextListener {
 
             if (dbInitialized) {
                 System.out.println("[Seeder] Tabel 'users' sudah ada. Proses seeding dilewati.");
+                
+                // Cek apakah tabel 'transaction' perlu migrasi (apakah kolom product_id belum ada)
+                boolean needsMigration = false;
+                try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "transaction", "product_id")) {
+                    if (!colRs.next()) {
+                        needsMigration = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan jika tabel belum ada atau terjadi error
+                }
+                
+                if (needsMigration) {
+                    System.out.println("[Seeder] Tabel 'transaction' membutuhkan migrasi schema. Menjalankan ALTER...");
+                    try {
+                        // Drop FK constraint yang bergantung pada user_id unik
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `transaction` DROP FOREIGN KEY `transaction_ibfk_1`");
+                        } catch (Exception e) {
+                            System.out.println("[Seeder] Peringatan saat drop FK: " + e.getMessage());
+                        }
+                        
+                        // Drop UNIQUE index
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `transaction` DROP INDEX `user_id`");
+                        } catch (Exception e) {
+                            System.out.println("[Seeder] Peringatan saat drop index: " + e.getMessage());
+                        }
+                        
+                        // Tambah kolom-kolom baru
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD COLUMN `product_id` int(11) NOT NULL AFTER `user_id`");
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD COLUMN `quantity` int(11) NOT NULL DEFAULT 1 AFTER `product_id`");
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD COLUMN `type` enum('Sale','Rent') NOT NULL AFTER `quantity`");
+                        
+                        // Re-create user_id index & constraint, dan add product_id index & constraint
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD KEY `user_id` (`user_id`)");
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD KEY `product_id` (`product_id`)");
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE");
+                        stmt.executeUpdate("ALTER TABLE `transaction` ADD CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE");
+                        
+                        System.out.println("[Seeder] Tabel 'transaction' berhasil dimigrasi.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal melakukan migrasi tabel 'transaction': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
                 return;
             }
 

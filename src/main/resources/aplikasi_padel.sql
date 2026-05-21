@@ -181,6 +181,9 @@ CREATE TABLE `session` (
 CREATE TABLE `transaction` (
   `transaction_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `type` enum('Sale','Rent') NOT NULL,
   `transaction_date` date NOT NULL,
   `total_amount` int(100) NOT NULL,
   `status` enum('Processing','Completed','Failed','') NOT NULL DEFAULT 'Processing'
@@ -284,7 +287,8 @@ ALTER TABLE `session`
 --
 ALTER TABLE `transaction`
   ADD PRIMARY KEY (`transaction_id`),
-  ADD UNIQUE KEY `user_id` (`user_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `users`
@@ -403,7 +407,8 @@ ALTER TABLE `session`
 -- Constraints for table `transaction`
 --
 ALTER TABLE `transaction`
-  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `verifications`
