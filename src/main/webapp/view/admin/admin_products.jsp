@@ -25,7 +25,7 @@
                 <a href="ManageBookings" class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">Schedules</a>
             </nav>
 
-            <a href="Logout" class="mt-auto bg-red-500/10 text-red-500 border-2 border-red-500 p-4 rounded-2xl text-center font-black text-xs uppercase hover:bg-red-500 hover:text-white transition-all">
+            <a href="${pageContext.request.contextPath}/Logout" class="mt-auto bg-red-500/10 text-red-500 border-2 border-red-500 p-4 rounded-2xl text-center font-black text-xs uppercase hover:bg-red-500 hover:text-white transition-all">
                 Exit Session
             </a>
         </div>

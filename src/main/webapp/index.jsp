@@ -51,7 +51,7 @@
                     </svg>
                     <span class="hidden lg:inline text-[10px] font-bold uppercase tracking-widest"><%= (session.getAttribute("user") != null) ? session.getAttribute("user") : "Guest"%></span>
                 </div>
-                <button class="bg-black text-white px-4 py-2 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-red-600 transition-colors">
+                <button onclick="window.location.href='${pageContext.request.contextPath}/Logout'" class="bg-black text-white px-4 py-2 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-red-600 transition-colors">
                     Logout
                 </button>
             </div>
