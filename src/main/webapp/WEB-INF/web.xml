@@ -17,6 +17,10 @@
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.LogoutController</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.CartController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>BookingController</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.BookingController</servlet-class>
     </servlet>
@@ -64,6 +68,11 @@
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
         <url-pattern>/Logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/CartController</url-pattern>
+        <url-pattern>/Cart</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>BookingController</servlet-name>
