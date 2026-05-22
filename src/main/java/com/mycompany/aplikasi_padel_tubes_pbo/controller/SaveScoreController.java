@@ -34,7 +34,16 @@ public class SaveScoreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int bookingId = Integer.parseInt(request.getParameter("booking_id"));
+        String bookingIdParam = request.getParameter("booking_id");
+        Integer bookingId = null;
+        if (bookingIdParam != null && !bookingIdParam.trim().isEmpty() && !bookingIdParam.trim().equalsIgnoreCase("null")) {
+            try {
+                bookingId = Integer.parseInt(bookingIdParam.trim());
+            } catch (NumberFormatException e) {
+                // Keep it null
+            }
+        }
+
         String scoringStyle = request.getParameter("scoring_style");
         int skorTim1 = Integer.parseInt(request.getParameter("skor_tim1"));
         int skorTim2 = Integer.parseInt(request.getParameter("skor_tim2"));
@@ -59,7 +68,27 @@ public class SaveScoreController extends HttpServlet {
             // [BAGIAN INSERT MATCHES TETAP SAMA SEPERTI SEBELUMNYA]
             String sqlMatch = "INSERT INTO matches (booking_id, scoring_style, skor_tim1, skor_tim2, status_selesai) VALUES (?, ?, ?, ?, TRUE)";
             PreparedStatement psMatch = conn.prepareStatement(sqlMatch, PreparedStatement.RETURN_GENERATED_KEYS);
-            psMatch.setInt(1, bookingId);
+            
+            // Verifikasi apakah bookingId benar-benar ada di database, jika tidak set ke NULL
+            boolean bookingExists = false;
+            if (bookingId != null) {
+                String checkBookingSql = "SELECT 1 FROM bookings WHERE booking_id = ?";
+                try (PreparedStatement checkPs = conn.prepareStatement(checkBookingSql)) {
+                    checkPs.setInt(1, bookingId);
+                    try (ResultSet checkRs = checkPs.executeQuery()) {
+                        if (checkRs.next()) {
+                            bookingExists = true;
+                        }
+                    }
+                }
+            }
+
+            if (bookingExists) {
+                psMatch.setInt(1, bookingId);
+            } else {
+                psMatch.setNull(1, java.sql.Types.INTEGER);
+            }
+            
             psMatch.setString(2, scoringStyle);
             psMatch.setInt(3, skorTim1);
             psMatch.setInt(4, skorTim2);

@@ -127,7 +127,7 @@
                                 method="GET" onsubmit="return finalValidation();"
                                 class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
                                 <input type="hidden" name="booking_id"
-                                    value="${param.booking_id != null ? param.booking_id : 1}">
+                                    value="${param.booking_id}">
                                 <input type="hidden" name="scoring_style" id="form_scoring_style">
 
                                 <input type="hidden" name="is_guest_p1" id="is_guest_p1" value="false">
