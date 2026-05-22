@@ -415,28 +415,14 @@
 
             // Submit Processing Animation
             document.getElementById('paymentForm').onsubmit = function(e) {
-                const method = document.getElementById('selectedMethod').value;
-                if (method === 'cc') {
-                    // validation CC
-                    const ccNum = document.getElementById('cc-number').value;
-                    const ccExp = document.getElementById('cc-expiry').value;
-                    const ccCvv = document.getElementById('cc-cvv').value;
-
-                    if (ccNum.length < 16 || ccExp.length < 5 || ccCvv.length < 3) {
-                        alert("Mohon isi informasi kartu kredit secara lengkap!");
-                        e.preventDefault();
-                        return false;
-                    }
-                }
-
                 // Show Loading overlay
                 document.getElementById('loadingOverlay').classList.remove('hidden');
                 
-                // Delay submit slightly to feel premium & simulated loading
+                // Delay submit slightly (500ms) for testing to show processing overlay
                 e.preventDefault();
                 setTimeout(() => {
                     document.getElementById('paymentForm').submit();
-                }, 2000);
+                }, 500);
             };
         </script>
     </body>
