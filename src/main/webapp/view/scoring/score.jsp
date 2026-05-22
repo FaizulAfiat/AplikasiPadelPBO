@@ -33,16 +33,29 @@
                 <p id="mode-desc" class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2"></p>
             </div>
 
+            <%-- Match Status / Winner Announcement Banner --%>
+            <div id="scoring-status-banner" class="w-full mb-8">
+                <div class="border-4 border-black p-4 rounded-2xl bg-white text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-sm">
+                    🎾 Match Ready - Awaiting First Serve...
+                </div>
+            </div>
+
             <%-- Score Display --%>
             <div class="flex flex-col md:flex-row gap-8 w-full mb-12">
                 <div class="flex-1 bg-black text-white p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center">
-                    <span class="text-xs font-black uppercase tracking-widest text-cyan-400 mb-2">Team 1</span>
+                    <span class="text-xs font-black uppercase tracking-widest text-cyan-400 mb-1">Team 1</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase mb-4 select-none">
+                        ${not empty param.p1_tim1_name ? param.p1_tim1_name : 'Player 1'} & ${not empty param.p2_tim1_name ? param.p2_tim1_name : 'Player 2'}
+                    </span>
                     <div id="scoreTim1" class="text-9xl font-black italic tabular-nums text-cyan-400">0</div>
                     <button id="btnTim1" onclick="addScore(1)" class="mt-8 w-full bg-cyan-400 text-black font-black py-4 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:scale-95 transition-all uppercase italic text-lg">+ Point</button>
                 </div>
 
                 <div class="flex-1 bg-white p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center">
-                    <span class="text-xs font-black uppercase tracking-widest text-gray-400 mb-2">Team 2</span>
+                    <span class="text-xs font-black uppercase tracking-widest text-gray-400 mb-1">Team 2</span>
+                    <span class="text-xs font-bold text-gray-500 uppercase mb-4 select-none">
+                        ${not empty param.p1_tim2_name ? param.p1_tim2_name : 'Player 3'} & ${not empty param.p2_tim2_name ? param.p2_tim2_name : 'Player 4'}
+                    </span>
                     <div id="scoreTim2" class="text-9xl font-black italic tabular-nums text-black">0</div>
                     <button id="btnTim2" onclick="addScore(2)" class="mt-8 w-full bg-black text-white font-black py-4 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:scale-95 transition-all uppercase italic text-lg">+ Point</button>
                 </div>
@@ -69,11 +82,17 @@
                 <input type="hidden" name="p1_tim2" value="${param.p1_tim2}">
                 <input type="hidden" name="p2_tim2" value="${param.p2_tim2}">
 
+                <input type="hidden" name="is_guest_p1" value="${param.is_guest_p1}">
+                <input type="hidden" name="is_guest_p2" value="${param.is_guest_p2}">
+                <input type="hidden" name="is_guest_p3" value="${param.is_guest_p3}">
+                <input type="hidden" name="is_guest_p4" value="${param.is_guest_p4}">
+
                 <input type="hidden" id="input_skor_tim1" name="skor_tim1" value="0">
                 <input type="hidden" id="input_skor_tim2" name="skor_tim2" value="0">
 
-                <button type="button" onclick="resetMatch()" class="w-1/3 border-4 border-black bg-gray-200 py-4 rounded-2xl font-black uppercase text-xs">Reset Board</button>
-                <button type="submit" id="btnSubmitMatch" disabled class="w-2/3 border-4 border-black bg-green-400 py-4 rounded-2xl font-black uppercase opacity-30 cursor-not-allowed text-xs transition-all">Submit Final Score</button>
+                <button type="button" onclick="resetMatch()" class="w-1/4 border-4 border-black bg-gray-200 py-4 rounded-2xl font-black uppercase text-xs">Reset Board</button>
+                <button type="button" id="btnConclude" onclick="concludeMatch()" class="w-1/4 border-4 border-black bg-yellow-400 py-4 rounded-2xl font-black text-black uppercase text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">Conclude</button>
+                <button type="submit" id="btnSubmitMatch" disabled class="w-2/4 border-4 border-black bg-green-400 py-4 rounded-2xl font-black uppercase opacity-30 cursor-not-allowed text-xs transition-all">Submit Final Score</button>
             </form>
         </div>
 
@@ -87,6 +106,7 @@
             let setTim1 = 0;
             let setTim2 = 0;
             let logHistory = [];
+            let isFinished = false;
             const tennisPoints = ["0", "15", "30", "40", "ADV", "GAME"];
 
             document.getElementById('mode-badge').innerText = scoringStyle;
@@ -95,6 +115,8 @@
                     : "Traditional system. Win games to secure victory";
 
             function addScore(team) {
+                if (isFinished) return;
+                
                 if (scoringStyle === "AMERICANO") {
                     if (scoreTim1 + scoreTim2 >= maxAmericanoPoints)
                         return;
@@ -104,8 +126,9 @@
                         scoreTim2++;
                     addLog(team === 1 ? "Team 1 scores!" : "Team 2 scores!");
 
-                    if ((scoreTim1 + scoreTim2) === maxAmericanoPoints)
-                        triggerMatchFinished();
+                    if ((scoreTim1 + scoreTim2) === maxAmericanoPoints) {
+                        concludeMatch();
+                    }
                 } else {
                     if (team === 1) {
                         if (scoreTim1 === 3 && scoreTim2 === 3)
@@ -134,9 +157,6 @@
                         scoreTim1 = 0;
                         scoreTim2 = 0;
                     }
-
-                    // Pada sistem Tradisional, tombol selesai bisa diaktifkan secara manual kapan pun oleh admin
-                    triggerMatchFinished();
                 }
                 updateInterface();
             }
@@ -150,19 +170,82 @@
                 } else {
                     document.getElementById('scoreTim1').innerText = tennisPoints[scoreTim1];
                     document.getElementById('scoreTim2').innerText = tennisPoints[scoreTim2];
-                    document.getElementById('input_skor_tim1').value = setTim1; // Yang disubmit jumlah set-nya
+                    document.getElementById('input_skor_tim1').value = setTim1;
                     document.getElementById('input_skor_tim2').value = setTim2;
                 }
                 renderLog();
+                updateStatusBanner();
             }
 
-            function triggerMatchFinished() {
+            function updateStatusBanner() {
+                if (isFinished) return;
+                
+                const p1_t1 = "${param.p1_tim1_name}".toUpperCase();
+                const p2_t1 = "${param.p2_tim1_name}".toUpperCase();
+                const p1_t2 = "${param.p1_tim2_name}".toUpperCase();
+                const p2_t2 = "${param.p2_tim2_name}".toUpperCase();
+                
+                let t1Val = scoringStyle === "AMERICANO" ? scoreTim1 : setTim1;
+                let t2Val = scoringStyle === "AMERICANO" ? scoreTim2 : setTim2;
+                
+                const banner = document.getElementById('scoring-status-banner');
+                
+                if (t1Val === 0 && t2Val === 0 && (scoringStyle !== "AMERICANO" || (scoreTim1 === 0 && scoreTim2 === 0))) {
+                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-white text-black font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">🎾 Match Ready - Awaiting First Serve...</div>';
+                } else if (t1Val > t2Val) {
+                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-cyan-100 text-cyan-800 font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">📈 Team 1 is leading (' + p1_t1 + ' & ' + p2_t1 + ')</div>';
+                } else if (t2Val > t1Val) {
+                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-yellow-100 text-yellow-800 font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">📈 Team 2 is leading (' + p1_t2 + ' & ' + p2_t2 + ')</div>';
+                } else {
+                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-gray-100 text-gray-800 font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">⚖️ Match is Tied</div>';
+                }
+            }
+
+            function concludeMatch() {
+                isFinished = true;
+                
+                const p1_t1 = "${param.p1_tim1_name}".toUpperCase();
+                const p2_t1 = "${param.p2_tim1_name}".toUpperCase();
+                const p1_t2 = "${param.p1_tim2_name}".toUpperCase();
+                const p2_t2 = "${param.p2_tim2_name}".toUpperCase();
+                
+                let t1Val = scoringStyle === "AMERICANO" ? scoreTim1 : setTim1;
+                let t2Val = scoringStyle === "AMERICANO" ? scoreTim2 : setTim2;
+                
+                const banner = document.getElementById('scoring-status-banner');
+                
+                if (t1Val > t2Val) {
+                    banner.innerHTML = '<div class="border-4 border-black p-6 rounded-2xl bg-cyan-400 text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-2xl">🏆 Winner: Team 1 (' + p1_t1 + ' & ' + p2_t1 + ')</div>';
+                } else if (t2Val > t1Val) {
+                    banner.innerHTML = '<div class="border-4 border-black p-6 rounded-2xl bg-yellow-300 text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-2xl">🏆 Winner: Team 2 (' + p1_t2 + ' & ' + p2_t2 + ')</div>';
+                } else {
+                    banner.innerHTML = '<div class="border-4 border-black p-6 rounded-2xl bg-gray-300 text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-2xl">🤝 Draw Match!</div>';
+                }
+                
+                // Disable scoring buttons and Conclude button
+                const btnTim1 = document.getElementById('btnTim1');
+                const btnTim2 = document.getElementById('btnTim2');
+                if (btnTim1) {
+                    btnTim1.disabled = true;
+                    btnTim1.className = "mt-8 w-full bg-gray-200 text-gray-400 font-black py-4 rounded-2xl border-2 border-black cursor-not-allowed uppercase italic text-lg opacity-50";
+                }
+                if (btnTim2) {
+                    btnTim2.disabled = true;
+                    btnTim2.className = "mt-8 w-full bg-gray-200 text-gray-400 font-black py-4 rounded-2xl border-2 border-black cursor-not-allowed uppercase italic text-lg opacity-50";
+                }
+                
+                const btnConclude = document.getElementById('btnConclude');
+                if (btnConclude) {
+                    btnConclude.disabled = true;
+                    btnConclude.className = "w-1/4 border-4 border-black bg-gray-200 text-gray-400 py-4 rounded-2xl font-black uppercase text-xs cursor-not-allowed opacity-50";
+                }
+                
                 document.getElementById('match-status').innerText = "Match Concluded";
                 document.getElementById('match-status').className = "text-xs font-black bg-green-400 border-2 border-black px-4 py-1 rounded-full uppercase text-black animate-pulse";
 
                 const btn = document.getElementById('btnSubmitMatch');
                 btn.disabled = false;
-                btn.className = "w-2/3 border-4 border-black bg-green-400 py-4 rounded-2xl font-black uppercase text-xs text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all";
+                btn.className = "w-2/4 border-4 border-black bg-green-400 py-4 rounded-2xl font-black uppercase text-xs text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all";
             }
 
             function addLog(event) {

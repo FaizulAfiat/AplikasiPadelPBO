@@ -83,6 +83,93 @@ public class ProfileController extends HttpServlet {
                 }
             }
 
+            // 3. Fetch Match History
+            String matchSql = "SELECT ps_self.match_id, m.scoring_style, m.skor_tim1, m.skor_tim2, ps_self.tim AS user_team, " +
+                              "       ps_all.user_id AS player_user_id, ps_all.tim AS player_team, " +
+                              "       u.username AS player_username, pr.fullname AS player_fullname " +
+                              "FROM player_scores ps_self " +
+                              "JOIN matches m ON ps_self.match_id = m.match_id " +
+                              "JOIN player_scores ps_all ON m.match_id = ps_all.match_id " +
+                              "LEFT JOIN users u ON ps_all.user_id = u.user_id " +
+                              "LEFT JOIN profiles pr ON ps_all.user_id = pr.user_id " +
+                              "WHERE ps_self.user_id = ? " +
+                              "ORDER BY m.match_id DESC";
+
+            java.util.Map<Integer, java.util.Map<String, Object>> matchMap = new java.util.LinkedHashMap<>();
+            try (PreparedStatement ps = conn.prepareStatement(matchSql)) {
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int matchId = rs.getInt("match_id");
+                        java.util.Map<String, Object> matchData = matchMap.get(matchId);
+                        if (matchData == null) {
+                            matchData = new HashMap<>();
+                            matchData.put("id", matchId);
+                            matchData.put("mode", rs.getString("scoring_style"));
+
+                            int skorTim1 = rs.getInt("skor_tim1");
+                            int skorTim2 = rs.getInt("skor_tim2");
+                            int userTeam = rs.getInt("user_team");
+
+                            int userScore = (userTeam == 1) ? skorTim1 : skorTim2;
+                            int oppScore = (userTeam == 1) ? skorTim2 : skorTim1;
+
+                            matchData.put("score", userScore + " - " + oppScore);
+
+                            String outcome = "DRAW";
+                            if (userScore > oppScore) {
+                                outcome = "WIN";
+                            } else if (userScore < oppScore) {
+                                outcome = "LOSE";
+                            }
+                            matchData.put("outcome", outcome);
+
+                            matchData.put("partnerList", new ArrayList<String>());
+                            matchData.put("opponentList", new ArrayList<String>());
+                            matchData.put("userTeam", userTeam);
+
+                            matchMap.put(matchId, matchData);
+                        }
+
+                        int userTeam = (Integer) matchData.get("userTeam");
+                        int playerTeam = rs.getInt("player_team");
+                        Integer playerUserId = rs.getObject("player_user_id") != null ? rs.getInt("player_user_id") : null;
+
+                        String fullname = rs.getString("player_fullname");
+                        String username = rs.getString("player_username");
+                        String name = (fullname != null && !fullname.trim().isEmpty()) ? fullname : username;
+                        if (name == null || name.trim().isEmpty()) {
+                            name = "Guest";
+                        }
+
+                        if (playerTeam == userTeam) {
+                            if (playerUserId != null && playerUserId == userId) {
+                                // It's self, skip
+                            } else {
+                                ((List<String>) matchData.get("partnerList")).add(name);
+                            }
+                        } else {
+                            ((List<String>) matchData.get("opponentList")).add(name);
+                        }
+                    }
+                }
+            }
+
+            List<Map<String, Object>> matchHistory = new ArrayList<>();
+            for (Map<String, Object> matchData : matchMap.values()) {
+                List<String> partnerList = (List<String>) matchData.get("partnerList");
+                List<String> opponentList = (List<String>) matchData.get("opponentList");
+
+                String partner = partnerList.isEmpty() ? "Guest" : String.join(" & ", partnerList);
+                String opponents = opponentList.isEmpty() ? "Guest" : String.join(" & ", opponentList);
+
+                matchData.put("partner", partner);
+                matchData.put("opponents", opponents);
+
+                matchHistory.add(matchData);
+            }
+            request.setAttribute("matchHistory", matchHistory);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

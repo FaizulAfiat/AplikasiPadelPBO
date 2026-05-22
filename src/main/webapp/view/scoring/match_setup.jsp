@@ -135,6 +135,11 @@
                                 <input type="hidden" name="is_guest_p3" id="is_guest_p3" value="false">
                                 <input type="hidden" name="is_guest_p4" id="is_guest_p4" value="false">
 
+                                <input type="hidden" name="p1_tim1_name" id="p1_tim1_name">
+                                <input type="hidden" name="p2_tim1_name" id="p2_tim1_name">
+                                <input type="hidden" name="p1_tim2_name" id="p1_tim2_name">
+                                <input type="hidden" name="p2_tim2_name" id="p2_tim2_name">
+
                                 <div class="p-4 border-2 border-black bg-cyan-50/50 rounded-2xl space-y-4">
                                     <span
                                         class="text-xs font-black uppercase tracking-widest text-cyan-600 block border-b border-cyan-200 pb-1">Team
@@ -302,6 +307,10 @@
                             const el = document.getElementById(teamIds[i]);
                             const pIdx = el.options[el.selectedIndex].getAttribute('data-idx');
                             document.getElementById('is_guest_p' + (i + 1)).value = poolData[pIdx].isManual;
+                            
+                            // Set the names
+                            const nameParamId = (i < 2 ? 'p' + (i + 1) + '_tim1_name' : 'p' + (i - 1) + '_tim2_name');
+                            document.getElementById(nameParamId).value = poolData[pIdx].name;
                         }
                         return true;
                     }

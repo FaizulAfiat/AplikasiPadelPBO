@@ -256,7 +256,74 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Match History -->
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-black uppercase tracking-tight flex items-center gap-2">
+                        <span class="w-3 h-3 bg-purple-400 rounded-full"></span>
+                        Riwayat Pertandingan
+                    </h3>
+
+                    <div class="border-4 border-black rounded-2xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-black text-white font-black uppercase text-xs tracking-wider border-b-4 border-black">
+                                        <th class="p-4">ID</th>
+                                        <th class="p-4">Mode</th>
+                                        <th class="p-4">Partner</th>
+                                        <th class="p-4">Lawan</th>
+                                        <th class="p-4">Skor</th>
+                                        <th class="p-4">Hasil</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y-2 divide-black">
+                                    <c:choose>
+                                        <c:when test="${empty matchHistory}">
+                                            <tr>
+                                                <td colspan="6" class="p-8 text-center text-gray-500 font-bold uppercase italic">
+                                                    Belum ada riwayat pertandingan.
+                                                </td>
+                                            </tr>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:forEach var="match" items="${matchHistory}">
+                                                <tr class="hover:bg-gray-50 transition-colors font-bold text-sm">
+                                                    <td class="p-4">#${match.id}</td>
+                                                    <td class="p-4 uppercase">${match.mode}</td>
+                                                    <td class="p-4">${match.partner}</td>
+                                                    <td class="p-4">${match.opponents}</td>
+                                                    <td class="p-4">${match.score}</td>
+                                                    <td class="p-4">
+                                                        <c:choose>
+                                                            <c:when test="${match.outcome eq 'WIN'}">
+                                                                <span class="px-3 py-1 bg-emerald-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                    WIN
+                                                                </span>
+                                                            </c:when>
+                                                            <c:when test="${match.outcome eq 'LOSE'}">
+                                                                <span class="px-3 py-1 bg-rose-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                    LOSE
+                                                                </span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="px-3 py-1 bg-gray-200 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                    DRAW
+                                                                </span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </body>
 </html>
+
