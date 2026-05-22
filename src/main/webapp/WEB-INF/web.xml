@@ -64,6 +64,14 @@
         <servlet-name>ProfileController</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ProfileController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PaymentController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.PaymentController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InvoiceController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.InvoiceController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>PadelController</servlet-name>
         <url-pattern>/padel</url-pattern>
@@ -130,6 +138,16 @@
         <servlet-name>ProfileController</servlet-name>
         <url-pattern>/ProfileController</url-pattern>
         <url-pattern>/Profile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaymentController</servlet-name>
+        <url-pattern>/PaymentController</url-pattern>
+        <url-pattern>/Payment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvoiceController</servlet-name>
+        <url-pattern>/InvoiceController</url-pattern>
+        <url-pattern>/Invoice</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

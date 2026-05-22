@@ -132,16 +132,26 @@
                                                     </td>
                                                     <td class="p-4">
                                                         <c:choose>
-                                                            <c:when test="${booking.status eq 'Pending'}">
-                                                                <span class="px-3 py-1 bg-yellow-300 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider">
-                                                                    Pending
-                                                                </span>
-                                                            </c:when>
-                                                            <c:when test="${booking.status eq 'Confirmed'}">
-                                                                <span class="px-3 py-1 bg-emerald-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
-                                                                    Confirmed
-                                                                </span>
-                                                            </c:when>
+                                                             <c:when test="${booking.status eq 'Pending'}">
+                                                                 <div class="flex items-center gap-1.5 flex-wrap">
+                                                                     <span class="px-3 py-1 bg-yellow-300 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider">
+                                                                         Pending
+                                                                     </span>
+                                                                     <a href="${pageContext.request.contextPath}/PaymentController?booking_id=${booking.id}" class="px-2.5 py-1 bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none">
+                                                                         Bayar
+                                                                     </a>
+                                                                 </div>
+                                                             </c:when>
+                                                             <c:when test="${booking.status eq 'Confirmed'}">
+                                                                 <div class="flex items-center gap-1.5 flex-wrap">
+                                                                     <span class="px-3 py-1 bg-emerald-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                         Confirmed
+                                                                     </span>
+                                                                     <a href="${pageContext.request.contextPath}/InvoiceController?booking_id=${booking.id}" class="px-2.5 py-1 bg-white text-black hover:bg-black hover:text-white border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none">
+                                                                         Invoice
+                                                                     </a>
+                                                                 </div>
+                                                             </c:when>
                                                             <c:when test="${booking.status eq 'Cancelled'}">
                                                                 <span class="px-3 py-1 bg-rose-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider">
                                                                     Cancelled

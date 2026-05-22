@@ -214,7 +214,7 @@ public class BookingController extends HttpServlet {
                 }
 
                 String sql = "INSERT INTO bookings (user_id, court_id, match_date, start_time, end_time, total_price, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-                PreparedStatement ps = conn.prepareStatement(sql);
+                PreparedStatement ps = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 
                 ps.setInt(1, userId);
                 ps.setInt(2, courtId);
@@ -226,7 +226,17 @@ public class BookingController extends HttpServlet {
 
                 int rowInserted = ps.executeUpdate();
                 if (rowInserted > 0) {
-                    response.sendRedirect("ProfileController?status=success");
+                    int bookingId = -1;
+                    try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                        if (generatedKeys.next()) {
+                            bookingId = generatedKeys.getInt(1);
+                        }
+                    }
+                    if (bookingId != -1) {
+                        response.sendRedirect(request.getContextPath() + "/PaymentController?booking_id=" + bookingId);
+                    } else {
+                        response.sendRedirect("BookingController?date=" + matchDate + "&status=error");
+                    }
                 }
             }
         } catch (SQLException e) {
