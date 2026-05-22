@@ -47,6 +47,17 @@ public class AddProduct extends HttpServlet {
         String type = request.getParameter("type");
         int price = Integer.parseInt(request.getParameter("price"));
         int stock = Integer.parseInt(request.getParameter("stock"));
+        String description = request.getParameter("description");
+        
+        double rating = 4.5;
+        String ratingStr = request.getParameter("rating");
+        if (ratingStr != null && !ratingStr.trim().isEmpty()) {
+            try {
+                rating = Double.parseDouble(ratingStr);
+            } catch (NumberFormatException e) {
+                // Gunakan default 4.5 jika gagal memparsing rating
+            }
+        }
 
         Part filePart = request.getPart("image");
         String fileName = filePart.getSubmittedFileName();
@@ -56,7 +67,7 @@ public class AddProduct extends HttpServlet {
         }
         
         try (Connection conn = Koneksi.getConnection()) {
-            String sql = "INSERT INTO products (name, category, type, price, stock, image) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO products (name, category, type, price, stock, image, description, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, name);
             ps.setString(2, category);
@@ -64,6 +75,8 @@ public class AddProduct extends HttpServlet {
             ps.setInt(4, price);
             ps.setInt(5, stock);
             ps.setString(6, fileName);
+            ps.setString(7, description);
+            ps.setDouble(8, rating);
 
             ps.executeUpdate();
             response.sendRedirect("ManageProducts?success=true");

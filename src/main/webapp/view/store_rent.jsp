@@ -95,7 +95,17 @@
 
                                                                 <%-- FIXED-SIZE CARD ELEMENT --%>
                                                                     <div
-                                                                        class="bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[580px]">
+                                                                        class="product-card bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[530px] cursor-pointer"
+                                                                        data-id="${product.id}"
+                                                                        data-name="<c:out value='${product.name}' />"
+                                                                        data-image="${product.image}"
+                                                                        data-type="${product.type}"
+                                                                        data-category="<c:out value='${product.category}' />"
+                                                                        data-rating="${product.rating}"
+                                                                        data-description="<c:out value='${product.description}' default='No description available.' />"
+                                                                        data-price="${product.price}"
+                                                                        data-stock="${product.stock}"
+                                                                        onclick="openProductModal(event, this)">
 
                                                                         <%-- 1. Wadah Gambar dengan Tinggi Fixed Mutlak
                                                                             --%>
@@ -124,17 +134,16 @@
                                                                                             ${product.name}
                                                                                         </h3>
                                                                                         <!-- Rating Badge in Neobrutalist Style -->
-                                                                                        <div class="flex items-center gap-2 pt-1.5">
-                                                                                            <div class="flex items-center gap-1 bg-yellow-300 border-2 border-black px-2 py-0.5 rounded-md text-[10px] font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                                        <div
+                                                                                            class="flex items-center gap-2 pt-1.5">
+                                                                                            <div
+                                                                                                class="flex items-center gap-1 bg-yellow-300 border-2 border-black px-2 py-0.5 rounded-md text-[10px] font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                                                                                 <span>★</span>
                                                                                                 <span>${product.rating}</span>
                                                                                             </div>
-                                                                                            <span class="text-[9px] font-bold uppercase text-gray-400 tracking-wider">Rating</span>
+                                                                                            <span
+                                                                                                class="text-[9px] font-bold uppercase text-gray-400 tracking-wider">Rating</span>
                                                                                         </div>
-                                                                                        <!-- Product Description -->
-                                                                                        <p class="text-xs text-gray-500 font-bold pt-2.5 line-clamp-2 leading-relaxed h-10 overflow-hidden">
-                                                                                            ${product.description != null ? product.description : 'No description available.'}
-                                                                                        </p>
                                                                                     </div>
 
                                                                                     <%-- 3. Area Harga, Stok & Aksi
@@ -179,40 +188,49 @@
                                                                                                 </div>
                                                                                             </div>
 
-                                                                                            <form
-                                                                                                action="${pageContext.request.contextPath}/Cart"
-                                                                                                method="POST"
-                                                                                                class="m-0 p-0">
-                                                                                                <input type="hidden"
-                                                                                                    name="productId"
-                                                                                                    value="${product.id}">
-                                                                                                <input type="hidden"
-                                                                                                    name="action"
-                                                                                                    value="add">
-                                                                                                <c:choose>
-                                                                                                    <c:when
-                                                                                                        test="${product.stock > 0}">
-                                                                                                        <button
-                                                                                                            type="submit"
-                                                                                                            class="w-full bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black py-3.5 rounded-xl font-black uppercase text-xs tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all">
-                                                                                                            ${product.type
-                                                                                                            == 'Rent' ?
-                                                                                                            'Rent
-                                                                                                            Equipment' :
-                                                                                                            'Purchase
-                                                                                                            Item'}
-                                                                                                        </button>
-                                                                                                    </c:when>
-                                                                                                    <c:otherwise>
-                                                                                                        <button
-                                                                                                            type="button"
-                                                                                                            disabled
-                                                                                                            class="w-full bg-gray-200 text-gray-400 border-2 border-gray-300 py-3.5 rounded-xl font-black uppercase text-xs tracking-wider cursor-not-allowed">
-                                                                                                            Out of Stock
-                                                                                                        </button>
-                                                                                                    </c:otherwise>
-                                                                                                </c:choose>
-                                                                                            </form>
+                                                                                            <div class="flex gap-3">
+                                                                                                <!-- View Detail Button -->
+                                                                                                <button
+                                                                                                    type="button"
+                                                                                                    onclick="event.stopPropagation(); openProductModal(event, this.closest('.product-card'))"
+                                                                                                    class="flex-1 bg-white text-black hover:bg-cyan-100 border-2 border-black py-2.5 rounded-xl font-black uppercase text-[10px] tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all text-center">
+                                                                                                    Details
+                                                                                                </button>
+
+                                                                                                <!-- Rent/Buy Form -->
+                                                                                                <form
+                                                                                                    action="${pageContext.request.contextPath}/Cart"
+                                                                                                    method="POST"
+                                                                                                    class="flex-1 m-0 p-0">
+                                                                                                    <input type="hidden"
+                                                                                                        name="productId"
+                                                                                                        value="${product.id}">
+                                                                                                    <input type="hidden"
+                                                                                                        name="action"
+                                                                                                        value="add">
+                                                                                                    <c:choose>
+                                                                                                        <c:when
+                                                                                                            test="${product.stock > 0}">
+                                                                                                            <button
+                                                                                                                type="submit"
+                                                                                                                class="w-full bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black py-2.5 rounded-xl font-black uppercase text-[10px] tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all">
+                                                                                                                ${product.type
+                                                                                                                == 'Rent' ?
+                                                                                                                'Rent' :
+                                                                                                                'Buy'}
+                                                                                                            </button>
+                                                                                                        </c:when>
+                                                                                                        <c:otherwise>
+                                                                                                            <button
+                                                                                                                type="button"
+                                                                                                                disabled
+                                                                                                                class="w-full bg-gray-200 text-gray-400 border-2 border-gray-300 py-2.5 rounded-xl font-black uppercase text-[10px] tracking-wider cursor-not-allowed">
+                                                                                                                Out Stock
+                                                                                                            </button>
+                                                                                                        </c:otherwise>
+                                                                                                    </c:choose>
+                                                                                                </form>
+                                                                                            </div>
                                                                                         </div>
                                                                                 </div>
 
@@ -293,6 +311,80 @@
                                                                 </button>
                                                             </div>
                                                         </c:if>
+                                                        <!-- PRODUCT DETAIL OVERLAY & MODAL -->
+                                                        <div id="productDetailOverlay"
+                                                            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[1001] hidden transition-opacity duration-300 opacity-0"
+                                                            onclick="closeProductModal()"></div>
+
+                                                        <div id="productDetailModal"
+                                                            class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-2xl bg-white border-4 border-black z-[1002] rounded-[2.5rem] p-6 md:p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hidden transition-all duration-300 transform scale-95 opacity-0 flex flex-col md:flex-row gap-6 md:gap-8">
+                                                            
+                                                            <!-- Close Button -->
+                                                            <button onclick="closeProductModal()"
+                                                                class="absolute top-4 right-4 p-2 border-2 border-black rounded-lg hover:bg-red-100 transition-colors z-10">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                                    viewBox="0 0 24 24" stroke-width="3"
+                                                                    stroke="currentColor" class="w-4 h-4">
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        d="M6 18 18 6M6 6l12 12" />
+                                                                </svg>
+                                                            </button>
+                                                            
+                                                            <!-- Left Column: Product Image -->
+                                                            <div class="w-full md:w-1/2 h-64 md:h-80 bg-gray-100 rounded-3xl overflow-hidden border-2 border-black/10 relative flex-none">
+                                                                <img id="modalProductImage" src="" alt="" class="w-full h-full object-cover">
+                                                                <span id="modalProductType" class=""></span>
+                                                            </div>
+                                                            
+                                                            <!-- Right Column: Product Info -->
+                                                            <div class="flex-1 flex flex-col justify-between">
+                                                                <div class="space-y-3">
+                                                                    <div>
+                                                                        <span class="text-[10px] font-black uppercase opacity-45 tracking-wider">Product Catalog</span>
+                                                                        <span id="modalProductCategory" class="ml-2 text-[10px] font-black uppercase bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-300"></span>
+                                                                    </div>
+                                                                    
+                                                                    <h2 id="modalProductName" class="font-black uppercase italic text-2xl md:text-3xl leading-tight text-gray-900"></h2>
+                                                                    
+                                                                    <!-- Rating Badge -->
+                                                                    <div class="flex items-center gap-2">
+                                                                        <div class="flex items-center gap-1 bg-yellow-300 border-2 border-black px-2.5 py-0.5 rounded-md text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                            <span>★</span>
+                                                                            <span id="modalProductRating"></span>
+                                                                        </div>
+                                                                        <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Rating</span>
+                                                                    </div>
+                                                                    
+                                                                    <!-- Scrollable Description -->
+                                                                    <div class="border-t-2 border-dashed border-gray-200 pt-3">
+                                                                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-1">Description</span>
+                                                                        <p id="modalProductDescription" class="text-xs text-gray-600 font-bold leading-relaxed max-h-32 overflow-y-auto pr-2"></p>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <!-- Price, Stock and Add to Cart Action -->
+                                                                <div class="mt-6 space-y-4">
+                                                                    <div class="flex justify-between items-end border-t-2 border-dashed border-gray-200 pt-3">
+                                                                        <div class="flex flex-col">
+                                                                            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Price</span>
+                                                                            <p id="modalProductPrice" class="font-black text-2xl text-black"></p>
+                                                                        </div>
+                                                                        <div class="flex flex-col items-end">
+                                                                            <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">Stock</span>
+                                                                            <span id="modalProductStock" class=""></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    <!-- Add to Cart Form -->
+                                                                    <form action="${pageContext.request.contextPath}/Cart" method="POST" id="modalForm" class="m-0 p-0">
+                                                                        <input type="hidden" name="productId" id="modalProductId" value="">
+                                                                        <input type="hidden" name="action" value="add">
+                                                                        <button type="submit" id="modalSubmitBtn" class=""></button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                         <!-- CART DRAWER OVERLAY -->
                                                         <div id="cartDrawerOverlay"
                                                             class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] hidden transition-opacity duration-300 opacity-0"
@@ -359,9 +451,16 @@
                                                                                                 <%= item.getProduct().getName()
                                                                                                     %>
                                                                                             </h4>
-                                                                                            <span
-                                                                                                class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none <%= "Rent".equals(item.getProduct().getType()) ? "bg-yellow-300" : "bg-cyan-400" %>">
-                                                                                                <%= item.getProduct().getType() %>
+                                                                                            <span class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none 
+                                                                                                <c:choose>
+                                                                                                    <c:when test="
+                                                                                                ${item.product.type=='Rent'
+                                                                                                }">bg-yellow-300
+                                                                                                </c:when>
+                                                                                                <c:otherwise>bg-cyan-400
+                                                                                                </c:otherwise>
+                                                                                                </c:choose>">
+                                                                                                ${item.product.type}
                                                                                             </span>
                                                                                         </div>
                                                                                         <span
@@ -499,6 +598,92 @@
                                                                         overlay.classList.add('hidden');
                                                                     }, 300);
                                                                 }
+                                                            }
+
+                                                            function openProductModal(event, card) {
+                                                                // If click is on interactive elements in the card, ignore
+                                                                if (event.target.closest('form') || event.target.closest('button[type="submit"]') || event.target.closest('.no-modal-click')) {
+                                                                    return;
+                                                                }
+
+                                                                const id = card.getAttribute('data-id');
+                                                                const name = card.getAttribute('data-name');
+                                                                const image = card.getAttribute('data-image');
+                                                                const type = card.getAttribute('data-type');
+                                                                const category = card.getAttribute('data-category');
+                                                                const rating = card.getAttribute('data-rating');
+                                                                const description = card.getAttribute('data-description');
+                                                                const price = parseInt(card.getAttribute('data-price'));
+                                                                const stock = parseInt(card.getAttribute('data-stock'));
+
+                                                                document.getElementById('modalProductImage').src = `${pageContext.request.contextPath}/assets/images/` + image;
+                                                                document.getElementById('modalProductImage').alt = name;
+                                                                document.getElementById('modalProductType').textContent = type;
+
+                                                                const typeBadge = document.getElementById('modalProductType');
+                                                                if (type === 'Rent') {
+                                                                    typeBadge.className = "absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-yellow-300 text-black";
+                                                                } else {
+                                                                    typeBadge.className = "absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-cyan-400 text-black";
+                                                                }
+
+                                                                document.getElementById('modalProductName').textContent = name;
+                                                                document.getElementById('modalProductCategory').textContent = category;
+                                                                document.getElementById('modalProductRating').textContent = rating;
+                                                                document.getElementById('modalProductDescription').textContent = description;
+
+                                                                // Format Price to Rupiah
+                                                                const rupiahFormat = new Intl.NumberFormat('id-ID', {
+                                                                    style: 'currency',
+                                                                    currency: 'IDR',
+                                                                    minimumFractionDigits: 0
+                                                                }).format(price).replace("IDR", "Rp");
+                                                                
+                                                                document.getElementById('modalProductPrice').innerHTML = rupiahFormat + (type === 'Rent' ? ' <span class="text-xs font-bold text-gray-400 opacity-60">/ Session</span>' : '');
+
+                                                                const stockBadge = document.getElementById('modalProductStock');
+                                                                if (stock > 0) {
+                                                                    stockBadge.textContent = stock;
+                                                                    stockBadge.className = "font-bold text-xs text-gray-800";
+                                                                } else {
+                                                                    stockBadge.textContent = "OUT OF STOCK";
+                                                                    stockBadge.className = "font-bold text-xs text-red-500 font-black animate-pulse";
+                                                                }
+
+                                                                document.getElementById('modalProductId').value = id;
+
+                                                                const submitBtn = document.getElementById('modalSubmitBtn');
+                                                                if (stock > 0) {
+                                                                    submitBtn.disabled = false;
+                                                                    submitBtn.textContent = type === 'Rent' ? 'Rent Equipment' : 'Purchase Item';
+                                                                    submitBtn.className = "w-full bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black py-3.5 rounded-xl font-black uppercase text-xs tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all text-center";
+                                                                } else {
+                                                                    submitBtn.disabled = true;
+                                                                    submitBtn.textContent = 'Out of Stock';
+                                                                    submitBtn.className = "w-full bg-gray-200 text-gray-400 border-2 border-gray-300 py-3.5 rounded-xl font-black uppercase text-xs tracking-wider cursor-not-allowed text-center";
+                                                                }
+
+                                                                const modal = document.getElementById('productDetailModal');
+                                                                const overlay = document.getElementById('productDetailOverlay');
+
+                                                                modal.classList.remove('hidden');
+                                                                overlay.classList.remove('hidden');
+                                                                setTimeout(() => {
+                                                                    overlay.classList.remove('opacity-0');
+                                                                    modal.classList.remove('opacity-0', 'scale-95');
+                                                                }, 10);
+                                                            }
+
+                                                            function closeProductModal() {
+                                                                const modal = document.getElementById('productDetailModal');
+                                                                const overlay = document.getElementById('productDetailOverlay');
+
+                                                                modal.classList.add('opacity-0', 'scale-95');
+                                                                overlay.classList.add('opacity-0');
+                                                                setTimeout(() => {
+                                                                    modal.classList.add('hidden');
+                                                                    overlay.classList.add('hidden');
+                                                                }, 300);
                                                             }
 
                                                             // Auto open cart if url has cartOpen=true parameter
