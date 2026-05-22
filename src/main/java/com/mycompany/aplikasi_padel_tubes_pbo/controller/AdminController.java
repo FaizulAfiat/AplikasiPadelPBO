@@ -61,6 +61,14 @@ public class AdminController extends HttpServlet {
                 totalProducts = rs2.getInt(1);
             }
 
+            String sqlBookings = "SELECT COUNT(*) FROM bookings";
+            PreparedStatement ps3 = conn.prepareStatement(sqlBookings);
+            ResultSet rs3 = ps3.executeQuery();
+            int totalBookings = 0;
+            if (rs3.next()) {
+                totalBookings = rs3.getInt(1);
+            }
+
             String sqlList = "SELECT b.booking_id, u.username, c.name as court_name, b.match_date, b.start_time, b.end_time, b.total_price, b.status "
                     + "FROM bookings b "
                     + "JOIN users u ON b.user_id = u.user_id "
@@ -85,6 +93,7 @@ public class AdminController extends HttpServlet {
 
             request.setAttribute("revenue", totalRevenue);
             request.setAttribute("productCount", totalProducts);
+            request.setAttribute("bookingCount", totalBookings);
             request.setAttribute("bookingList", bookingList);
 
             request.getRequestDispatcher("view/admin/admin_dashboard.jsp").forward(request, response);

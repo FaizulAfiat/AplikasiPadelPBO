@@ -23,7 +23,7 @@
                             <a href="ManageProducts"
                                 class="block font-black text-xs uppercase tracking-widest border-l-4 border-cyan-400 pl-4">Manage
                                 Shop</a>
-                            <a href="ManageBookings"
+                            <a href="AdminController#rental-logs"
                                 class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">Schedules</a>
                         </nav>
 
