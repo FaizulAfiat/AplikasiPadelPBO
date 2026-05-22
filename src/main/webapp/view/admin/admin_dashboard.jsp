@@ -5,153 +5,310 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
-<html>
+<html lang="id">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Admin Dashboard - PadelApp</title>
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Outfit', sans-serif;
+            }
+        </style>
     </head>
-    <body>
-        <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-        <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
-        <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-        <div class="flex min-h-screen bg-gray-50">
-            <div class="w-72 bg-black text-white p-8 flex flex-col fixed h-full shadow-2xl">
-                <div class="mb-12">
+    <body class="bg-[#f0f0f0] text-black min-h-screen">
+        <div class="flex min-h-screen">
+            <!-- Sidebar Navigation -->
+            <aside class="w-72 bg-black text-white p-8 flex flex-col fixed h-full border-r-4 border-black shadow-[8px_0px_0px_0px_rgba(0,0,0,1)] z-50">
+                <div class="mb-12 border-b-4 border-zinc-800 pb-6">
                     <h2 class="text-3xl font-black italic tracking-tighter text-cyan-400">PADELAPP</h2>
-                    <p class="text-[10px] font-bold opacity-50 tracking-[0.2em] uppercase">ADMIN</p>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></span>
+                        <p class="text-[10px] font-black text-zinc-400 tracking-[0.2em] uppercase">SYSTEM ADMIN</p>
+                    </div>
                 </div>
 
-                <nav class="space-y-6 flex-1">
-                    <a href="AdminDashboard" class="block font-black text-xs uppercase tracking-widest border-l-4 border-cyan-400 pl-4">Dashboard</a>
-                    <a href="ManageProducts" class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 hover:pl-4 transition-all">Manage Shop</a>
-                    <a href="ManageBookings" class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 hover:pl-4 transition-all">Schedules</a>
+                <nav class="space-y-4 flex-1">
+                    <a href="${pageContext.request.contextPath}/AdminController" 
+                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest bg-cyan-400 text-black border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    
+                    <a href="${pageContext.request.contextPath}/ManageProducts" 
+                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
+                        Manage Shop
+                    </a>
+                    
+                    <a href="${pageContext.request.contextPath}/AdminController#rental-logs" 
+                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                        </svg>
+                        Schedules
+                    </a>
                 </nav>
 
-                <a href="${pageContext.request.contextPath}/Logout" class="mt-auto bg-red-500/10 text-red-500 border-2 border-red-500 p-4 rounded-2xl text-center font-black text-xs uppercase hover:bg-red-500 hover:text-white transition-all">
-                    Exit Session
-                </a>
-            </div>
+                <div class="pt-6 border-t-4 border-zinc-800 mt-auto">
+                    <a href="${pageContext.request.contextPath}/Logout" 
+                       class="block w-full bg-rose-500/10 text-rose-500 border-2 border-rose-500 p-4 rounded-2xl text-center font-black text-xs uppercase hover:bg-rose-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(244,63,94,0.3)] transition-all">
+                        Exit Session
+                    </a>
+                </div>
+            </aside>
 
-            <div class="ml-72 p-12 w-full">
+            <!-- Main Content Area -->
+            <main class="ml-72 p-12 w-full max-w-7xl">
+                <!-- Header -->
                 <header class="mb-12 flex justify-between items-end">
                     <div>
-                        <h1 class="text-5xl font-black uppercase italic tracking-tighter">Overview</h1>
-                        <p class="text-gray-400 font-bold uppercase text-[10px] mt-2 tracking-widest">Real-time business analytics</p>
+                        <h1 class="text-6xl font-black uppercase italic tracking-tighter leading-none">Overview</h1>
+                        <p class="text-zinc-500 font-bold uppercase text-xs mt-3 tracking-widest flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+                            Real-time business analytics
+                        </p>
                     </div>
-                    <div class="text-right">
-                        <p class="font-black text-sm uppercase">Welcome back,</p>
-                        <p class="text-cyan-500 font-black text-xl uppercase">Admin <span class="text-cyan-600 italic">${user}</span></p>
+                    <div class="bg-white border-4 border-black p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-right">
+                        <p class="font-bold text-[10px] text-zinc-400 uppercase tracking-widest">Logged in admin</p>
+                        <p class="text-black font-black text-lg uppercase flex items-center justify-end gap-2">
+                            ${user}
+                            <span class="w-3 h-3 bg-cyan-400 rounded-full border-2 border-black"></span>
+                        </p>
                     </div>
                 </header>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-black text-white p-10 rounded-[3rem] shadow-xl relative overflow-hidden group">
-                        <p class="text-[10px] font-black uppercase opacity-50 mb-2">Total Earnings</p>
-
-                        <h2 class="text-4xl font-black italic tracking-tight text-cyan-400">
+                <!-- Statistics Metrics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Earnings Card -->
+                    <div class="bg-black text-white p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400">Total Earnings</span>
+                            <div class="w-8 h-8 rounded-full bg-cyan-400/10 flex items-center justify-center text-cyan-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                    <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-3xl font-black italic tracking-tight text-white mt-2">
                             <fmt:setLocale value="id_ID"/>
                             <fmt:formatNumber value="${revenue}" type="currency" currencySymbol="Rp " maxFractionDigits="0"/>
                         </h2>
-
-                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-cyan-400/10 rounded-full blur-3xl group-hover:bg-cyan-400/20 transition-all"></div>
+                        <div class="absolute -right-8 -bottom-8 w-24 h-24 bg-cyan-400/10 rounded-full blur-2xl group-hover:bg-cyan-400/20 transition-all"></div>
                     </div>
 
-                    <div class="bg-white border-4 border-black p-10 rounded-[3rem] shadow-[10px_10px_0px_0px_rgba(0,0,0,1)]">
-                        <p class="text-[10px] font-black uppercase opacity-40 mb-2">Inventory Size</p>
-                        <h2 class="text-4xl font-black italic tracking-tight">${productCount} Items</h2>
-                    </div>
-
-                    <div class="bg-cyan-400 border-4 border-black p-10 rounded-[3rem] shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between group cursor-pointer">
-                        <div>
-                            <p class="text-[10px] font-black uppercase opacity-60 mb-1">Stock Alert</p>
-                            <h2 class="text-xl font-black uppercase leading-none">Add New <br>Product</h2>
+                    <!-- Bookings Card -->
+                    <div class="bg-lime-300 text-black p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-black opacity-60">Total Rentals</span>
+                            <div class="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-black">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                    <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                                </svg>
+                            </div>
                         </div>
-                        <div class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-transform">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+                        <h2 class="text-3xl font-black italic tracking-tight text-black mt-2">
+                            ${bookingCount} Bookings
+                        </h2>
+                    </div>
+
+                    <!-- Products Card -->
+                    <div class="bg-amber-400 text-black p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 relative overflow-hidden group">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-black opacity-60">Inventory Size</span>
+                            <div class="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-black">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h2 class="text-3xl font-black italic tracking-tight text-black mt-2">
+                            ${productCount} Items
+                        </h2>
+                    </div>
+
+                    <!-- Quick Action Card -->
+                    <div onclick="window.location.href='${pageContext.request.contextPath}/ManageProducts'" 
+                         class="bg-fuchsia-400 text-black p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 flex flex-col justify-between cursor-pointer group">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-black opacity-60">Quick Actions</span>
+                            <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                    <path d="M5 12h14M12 5v14"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <h3 class="font-black uppercase text-xl leading-none tracking-tight">Add New <br>Product →</h3>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white border-4 border-black rounded-[3rem] p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mt-12 overflow-hidden">
-                    <h3 class="font-black uppercase italic text-2xl tracking-tighter mb-8">Court Rental Logs</h3>
+
+                <!-- Court Rental Logs Card -->
+                <div id="rental-logs" class="bg-white border-4 border-black rounded-[2.5rem] p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mt-12 overflow-hidden">
+                    <div class="flex items-center justify-between mb-8 pb-4 border-b-2 border-black/10">
+                        <h3 class="font-black uppercase italic text-3xl tracking-tighter flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                            </svg>
+                            Court Rental Logs
+                        </h3>
+                        <span class="text-xs bg-zinc-100 text-zinc-600 font-bold px-4 py-2 border-2 border-black rounded-xl">
+                            ${fn:length(bookingList)} records
+                        </span>
+                    </div>
 
                     <div class="overflow-x-auto">
-                        <table class="w-full text-left">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="border-b-4 border-black">
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40">ID</th>
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40">Customer</th>
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40">Court</th>
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40">Schedule</th>
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40">Amount</th>
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40">Status</th>
-                                    <th class="py-4 font-black uppercase text-xs tracking-widest opacity-40 text-center">Action</th>
+                                <tr class="border-b-4 border-black text-[10px] font-black uppercase tracking-widest text-zinc-400">
+                                    <th class="py-4 px-2">ID</th>
+                                    <th class="py-4 px-2">Customer</th>
+                                    <th class="py-4 px-2">Court</th>
+                                    <th class="py-4 px-2">Schedule</th>
+                                    <th class="py-4 px-2">Amount</th>
+                                    <th class="py-4 px-2">Status</th>
+                                    <th class="py-4 px-2 text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm font-bold">
-                                <c:forEach var="b" items="${bookingList}">
-                                    <tr class="border-b-2 border-gray-50 hover:bg-cyan-50 transition-colors">
-                                        <td class="py-5 text-gray-400">#${b.id}</td>
-                                        <td class="py-5 uppercase font-black">${b.username}</td>
-                                        <td class="py-5">
-                                            <span class="bg-black text-white px-3 py-1 rounded-full text-[10px] uppercase font-black">
-                                                ${b.court}
-                                            </span>
-                                        </td>
-                                        <td class="py-5">
-                                            <div class="flex flex-col">
-                                                <span class="text-gray-900 uppercase">${b.date}</span>
-                                                <span class="text-[10px] text-cyan-600 font-black italic mt-1">
-                                                    <fmt:formatDate value="${b.start}" pattern="HH:mm"/> - <fmt:formatDate value="${b.end}" pattern="HH:mm"/>
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td class="py-5 font-black text-cyan-600">
-                                <fmt:formatNumber value="${b.total}" type="currency" currencySymbol="Rp " maxFractionDigits="0"/>
-                                </td>
-                                <td class="py-5">
-                                    <c:set var="statusLower" value="${fn:toLowerCase(b.status)}" />
-                                    <c:choose>
-                                        <c:when test="${statusLower == 'Pending'}">
-                                            <span class="bg-amber-100 text-amber-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase border-2 border-amber-600 inline-block">
-                                                Pending
-                                            </span>
-                                        </c:when>
-                                        <c:when test="${statusLower == 'Confirmed'}">
-                                            <span class="bg-greens-100 text-emerald-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase border-2 border-emerald-600 inline-block">
-                                                Confirmed
-                                            </span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="bg-red-100 text-red-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase border-2 border-red-600 inline-block">
-                                                ${b.status}
-                                            </span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
+                                <c:choose>
+                                    <c:when test="${empty bookingList}">
+                                        <tr>
+                                            <td colspan="7" class="py-12 text-center text-zinc-400 uppercase tracking-widest">
+                                                No bookings recorded yet
+                                            </td>
+                                        </tr>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach var="b" items="${bookingList}">
+                                            <tr class="border-b-2 border-zinc-100 hover:bg-cyan-50/50 transition-colors">
+                                                <!-- Booking ID -->
+                                                <td class="py-5 px-2 text-zinc-400">#${b.id}</td>
+                                                
+                                                <!-- Customer Username -->
+                                                <td class="py-5 px-2 uppercase font-black text-black tracking-tight">${b.username}</td>
+                                                
+                                                <!-- Court Name (Color Badge Specifics) -->
+                                                <td class="py-5 px-2">
+                                                    <c:choose>
+                                                        <c:when test="${fn:contains(fn:toUpperCase(b.court), 'A')}">
+                                                            <span class="bg-blue-500 text-white border-2 border-black px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                ${b.court}
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${fn:contains(fn:toUpperCase(b.court), 'B')}">
+                                                            <span class="bg-emerald-500 text-white border-2 border-black px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                ${b.court}
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="bg-black text-white border-2 border-black px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                ${b.court}
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                
+                                                <!-- Booking Time Range -->
+                                                <td class="py-5 px-2">
+                                                    <div class="flex flex-col">
+                                                        <span class="text-black uppercase text-xs font-black"><fmt:formatDate value="${b.date}" pattern="dd MMM yyyy" /></span>
+                                                        <span class="text-[10px] text-cyan-600 font-black italic mt-1 flex items-center gap-1">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                                            </svg>
+                                                            <fmt:formatDate value="${b.start}" pattern="HH:mm"/> - <fmt:formatDate value="${b.end}" pattern="HH:mm"/>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                
+                                                <!-- Total Price -->
+                                                <td class="py-5 px-2 font-black text-cyan-600">
+                                                    <fmt:formatNumber value="${b.total}" type="currency" currencySymbol="Rp " maxFractionDigits="0"/>
+                                                </td>
+                                                
+                                                <!-- Status Badge (Neo-Brutalist Block Style) -->
+                                                <td class="py-5 px-2">
+                                                    <c:set var="statusLower" value="${fn:toLowerCase(b.status)}" />
+                                                    <c:choose>
+                                                        <c:when test="${statusLower == 'pending'}">
+                                                            <span class="bg-amber-300 text-black px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border-2 border-black inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                Pending
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${statusLower == 'confirmed'}">
+                                                            <span class="bg-emerald-400 text-black px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border-2 border-black inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                Confirmed
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="bg-rose-400 text-black px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border-2 border-black inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                ${b.status}
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
 
-                                <td class="py-5 text-center">
-                                    <c:if test="${b.status == 'Pending' || b.status == 'pending' || b.status == 'PENDING'}">
-                                        <div class="flex justify-center gap-2">
-                                            <a href="UpdateStatusController?id=${b.id}&status=Confirmed" 
-                                               class="bg-emerald-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                                            </a>
-                                            <a href="UpdateStatusController?id=${b.id}&status=Cancelled" 
-                                               class="bg-red-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                                            </a>
-                                        </div>
-                                    </c:if>
-                                </td>
-                                </tr>
-                            </c:forEach>
+                                                <!-- Actions (Approve, Cancel, or Locked states) -->
+                                                <td class="py-5 px-2">
+                                                    <div class="flex justify-center gap-2">
+                                                        <c:choose>
+                                                            <c:when test="${statusLower == 'pending'}">
+                                                                <!-- For Pending: Admin can Approve or Cancel -->
+                                                                <a href="UpdateStatusController?id=${b.id}&status=Confirmed" 
+                                                                   title="Setujui Booking"
+                                                                   class="bg-emerald-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                        <path d="M20 6L9 17l-5-5"/>
+                                                                    </svg>
+                                                                </a>
+                                                                <a href="UpdateStatusController?id=${b.id}&status=Cancelled" 
+                                                                   title="Batalkan Booking"
+                                                                   class="bg-rose-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                        <path d="M18 6L6 18M6 6l12 12"/>
+                                                                    </svg>
+                                                                </a>
+                                                            </c:when>
+                                                            <c:when test="${statusLower == 'confirmed'}">
+                                                                <!-- For Confirmed (Model A): Admin can Cancel/Revoke -->
+                                                                <a href="UpdateStatusController?id=${b.id}&status=Cancelled" 
+                                                                   title="Batalkan Booking (Revoke)"
+                                                                   class="bg-rose-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-1 text-[10px] font-black uppercase px-3 py-1.5">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                        <path d="M18 6L6 18M6 6l12 12"/>
+                                                                    </svg>
+                                                                    Cancel
+                                                                </a>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <!-- For Cancelled: No further actions available -->
+                                                                <span class="text-zinc-400 text-[10px] font-black uppercase tracking-wider">Locked</span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
     </body>
 </html>
