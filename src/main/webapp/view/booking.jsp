@@ -66,6 +66,37 @@
             </div>
 
             <div class="flex-1 p-8 md:p-12 bg-white">
+                <c:if test="${not empty param.status && param.status != 'success'}">
+                    <div id="error-toast"
+                        class="mb-8 border-4 border-black p-5 rounded-2xl bg-rose-400 font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="3" class="shrink-0">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <span>
+                                <c:choose>
+                                    <c:when test="${param.status eq 'already_booked'}">Jadwal lapangan sudah dipesan oleh orang lain!</c:when>
+                                    <c:when test="${param.status eq 'past_time'}">Gagal: Anda tidak dapat memesan jadwal di masa lalu!</c:when>
+                                    <c:when test="${param.status eq 'invalid_date'}">Gagal: Tanggal pemesanan tidak valid!</c:when>
+                                    <c:when test="${param.status eq 'invalid_time'}">Gagal: Waktu pemesanan tidak valid!</c:when>
+                                    <c:otherwise>Terjadi kesalahan sistem saat memproses pemesanan!</c:otherwise>
+                                </c:choose>
+                            </span>
+                        </div>
+                        <button onclick="document.getElementById('error-toast').remove()"
+                            class="hover:opacity-70 transition-opacity">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="3">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </c:if>
+
                 <form action="${pageContext.request.contextPath}/BookingController" method="POST" class="max-w-2xl space-y-12" id="bookingForm">
                     <input type="hidden" name="start_time" id="start_time_input">
                     <input type="hidden" name="end_time" id="end_time_input">
@@ -75,7 +106,7 @@
                         <label class="text-xs font-bold uppercase opacity-50 block mb-2">Select Date</label>
                         <c:set var="today" value="<%= java.time.LocalDate.now()%>" />
                         <input type="date" name="match_date" id="match_date" 
-                               value="${param.date != null ? param.date : today}"
+                               value="${not empty match_date ? match_date : today}"
                                min="${today}"
                                class="w-full bg-transparent text-2xl font-black outline-none" required
                                onchange="window.location.href = '${pageContext.request.contextPath}/BookingController?date=' + this.value">
@@ -84,23 +115,16 @@
                     <div class="col-span-full">
                         <label class="text-xs font-bold uppercase opacity-50 block mb-4">Select Schedule</label>
                         <div class="grid grid-cols-4 gap-4" id="time-grid">
-                            <c:forEach var="s" items="${timeSlots}">
-                                <c:choose>
-                                    <c:when test="${s.isAvailable}">
-                                        <button type="button" 
-                                                data-time="${s.time}" 
-                                                onclick="handleSelection(this)"
-                                                class="time-slot p-4 border-2 border-black rounded-xl font-black transition-all hover:bg-gray-100">
-                                            ${s.time}
-                                        </button>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <button type="button" disabled 
-                                                class="p-4 bg-gray-100 text-gray-400 border-2 border-gray-200 rounded-xl line-through cursor-not-allowed">
-                                            ${s.time}
-                                        </button>
-                                    </c:otherwise>
-                                </c:choose>
+                            <c:forEach var="hour" begin="6" end="21">
+                                <fmt:formatNumber var="formattedHour" value="${hour}" minIntegerDigits="2" />
+                                <c:set var="slotTime" value="${formattedHour}:00" />
+                                <button type="button" 
+                                        data-time="${slotTime}" 
+                                        id="slot-${slotTime}"
+                                        onclick="handleSelection(this)"
+                                        class="time-slot p-4 border-2 border-black rounded-xl font-black transition-all hover:bg-gray-100">
+                                    ${slotTime}
+                                </button>
                             </c:forEach>
                         </div>
                     </div>
@@ -134,11 +158,63 @@
         </main>
 
         <script>
+            // Data booking dari server
+            const bookedA = [
+                <c:forEach var="slot" items="${bookedSlotsA}" varStatus="status">
+                    "${slot}"${not status.last ? ',' : ''}
+                </c:forEach>
+            ];
+            const bookedB = [
+                <c:forEach var="slot" items="${bookedSlotsB}" varStatus="status">
+                    "${slot}"${not status.last ? ',' : ''}
+                </c:forEach>
+            ];
+            const isToday = ${isToday != null ? isToday : false};
+            const currentHour = ${currentHour != null ? currentHour : -1};
+
             let firstClick = null;
             let secondClick = null;
             const pricePerHour = 250000;
 
+            function updateTimeSlots() {
+                const courtRadio = document.querySelector('input[name="court_id"]:checked');
+                const courtId = courtRadio ? courtRadio.value : '1';
+                const bookedList = courtId === '1' ? bookedA : bookedB;
+                
+                const allSlots = document.querySelectorAll('.time-slot');
+                
+                // Reset selected values
+                resetSelection(allSlots);
+                
+                allSlots.forEach(slot => {
+                    const slotTime = slot.getAttribute('data-time');
+                    const slotHour = parseInt(slotTime.split(':')[0]);
+                    
+                    let isDisabled = false;
+                    
+                    // 1. Past time restriction for today
+                    if (isToday && slotHour <= currentHour) {
+                        isDisabled = true;
+                    }
+                    
+                    // 2. Already booked slots
+                    if (bookedList.includes(slotTime)) {
+                        isDisabled = true;
+                    }
+                    
+                    slot.disabled = isDisabled;
+                    if (isDisabled) {
+                        slot.classList.add('bg-gray-100', 'line-through', 'cursor-not-allowed', 'opacity-50', 'border-gray-300');
+                        slot.classList.remove('hover:bg-gray-100', 'border-black');
+                    } else {
+                        slot.classList.remove('bg-gray-100', 'line-through', 'cursor-not-allowed', 'opacity-50', 'border-gray-300');
+                        slot.classList.add('hover:bg-gray-100', 'border-black');
+                    }
+                });
+            }
+
             function handleSelection(element) {
+                if (element.disabled) return;
                 const time = element.getAttribute('data-time');
                 const allSlots = document.querySelectorAll('.time-slot');
 
@@ -197,6 +273,8 @@
                 });
                 firstClick = null;
                 secondClick = null;
+                document.getElementById('start_time_input').value = "";
+                document.getElementById('end_time_input').value = "";
                 updateDisplay(0);
             }
 
@@ -228,6 +306,14 @@
                     e.preventDefault();
                 }
             };
+
+            // Bind radio change listeners
+            document.querySelectorAll('.court-radio').forEach(radio => {
+                radio.addEventListener('change', updateTimeSlots);
+            });
+
+            // Initialize on load
+            window.addEventListener('DOMContentLoaded', updateTimeSlots);
         </script>
     </body>
 </html>

@@ -60,6 +60,10 @@
         <servlet-name>EditProduct</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.EditProduct</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProfileController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ProfileController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>PadelController</servlet-name>
         <url-pattern>/padel</url-pattern>
@@ -121,6 +125,11 @@
     <servlet-mapping>
         <servlet-name>EditProduct</servlet-name>
         <url-pattern>/EditProduct</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileController</servlet-name>
+        <url-pattern>/ProfileController</url-pattern>
+        <url-pattern>/Profile</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
