@@ -360,12 +360,8 @@
                                                                                                     %>
                                                                                             </h4>
                                                                                             <span
-                                                                                                class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none <%= "
-                                                                                                Rent".equals(item.getProduct().getType())
-                                                                                                ? "bg-yellow-300"
-                                                                                                : "bg-cyan-400" %>">
-                                                                                                <%= item.getProduct().getType()
-                                                                                                    %>
+                                                                                                class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none <%= "Rent".equals(item.getProduct().getType()) ? "bg-yellow-300" : "bg-cyan-400" %>">
+                                                                                                <%= item.getProduct().getType() %>
                                                                                             </span>
                                                                                         </div>
                                                                                         <span
