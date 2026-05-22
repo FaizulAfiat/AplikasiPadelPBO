@@ -143,7 +143,7 @@ public class SaveScoreController extends HttpServlet {
             psPlayer.executeBatch();
             conn.commit();
 
-            response.sendRedirect("MatchSetupController?success=match_saved");
+            response.sendRedirect("MatchRecapController?match_id=" + generatedMatchId);
 
         } catch (Exception e) {
             if (conn != null) {

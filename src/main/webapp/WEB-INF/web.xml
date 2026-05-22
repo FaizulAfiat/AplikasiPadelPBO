@@ -72,6 +72,10 @@
         <servlet-name>InvoiceController</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.InvoiceController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>MatchRecapController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.MatchRecapController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>PadelController</servlet-name>
         <url-pattern>/padel</url-pattern>
@@ -148,6 +152,11 @@
         <servlet-name>InvoiceController</servlet-name>
         <url-pattern>/InvoiceController</url-pattern>
         <url-pattern>/Invoice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MatchRecapController</servlet-name>
+        <url-pattern>/MatchRecapController</url-pattern>
+        <url-pattern>/MatchRecap</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
