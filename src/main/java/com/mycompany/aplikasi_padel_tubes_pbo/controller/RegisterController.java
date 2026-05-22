@@ -77,6 +77,8 @@ public class RegisterController extends HttpServlet {
         
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         String username = request.getParameter("username");
+        String fullname = request.getParameter("fullname");
+        String gender = request.getParameter("gender");
         String email = request.getParameter("email");
         String pass = request.getParameter("password");
 
@@ -104,9 +106,9 @@ public class RegisterController extends HttpServlet {
                             String profileSql = "INSERT INTO profiles (user_id, fullname, username, gender) VALUES (?, ?, ?, ?)";
                             try (PreparedStatement profilePs = conn.prepareStatement(profileSql)) {
                                 profilePs.setInt(1, userId);
-                                profilePs.setString(2, username);
+                                profilePs.setString(2, fullname);
                                 profilePs.setString(3, username);
-                                profilePs.setString(4, "L");
+                                profilePs.setString(4, gender);
                                 profilePs.executeUpdate();
                             }
                         }
