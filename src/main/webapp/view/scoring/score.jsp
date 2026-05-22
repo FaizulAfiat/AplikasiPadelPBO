@@ -14,17 +14,17 @@
     <body class="bg-gray-100 min-h-screen flex flex-col">
 
         <%-- Header --%>
-        <header class="flex border-b border-black bg-white sticky top-0 z-50">
-            <div class="p-4 md:p-6 border-r border-black w-1/2 md:w-1/4">
+        <header class="flex border-b border-gray-200 bg-white sticky top-0 z-50">
+            <div class="p-4 md:p-6 border-r border-gray-200 w-1/2 md:w-1/4">
                 <h1 class="text-xl font-black tracking-tighter uppercase md:text-2xl">Padel<span class="text-cyan-400">App</span></h1>
             </div>
-            <div class="flex-1 border-r border-black flex items-center px-8">
-                <a href="${pageContext.request.contextPath}/MatchSetup" class="text-xs font-black uppercase tracking-widest hover:underline">← Exit Match</a>
+            <div class="flex-1 border-r border-gray-200 flex items-center px-8">
+                <a href="${pageContext.request.contextPath}/MatchSetup" class="text-xs font-bold text-gray-600 hover:text-black uppercase tracking-widest hover:underline transition-colors">← Exit Match</a>
             </div>
             <div class="p-4 md:p-6 w-1/2 md:w-1/4 flex items-center justify-end gap-2">
-                <span class="text-[10px] font-black bg-black text-white px-3 py-1 rounded-full uppercase" id="mode-badge">MODE</span>
+                <span class="text-[10px] font-bold bg-gray-100 text-gray-800 border border-gray-200 px-3 py-1.5 rounded-full uppercase" id="mode-badge">MODE</span>
             </div>
-        </header>\
+        </header>
 
         <div class="flex-1 p-6 pb-20 flex flex-col items-center max-w-4xl w-full mx-auto">
 
@@ -35,41 +35,41 @@
 
             <%-- Match Status / Winner Announcement Banner --%>
             <div id="scoring-status-banner" class="w-full mb-8">
-                <div class="border-4 border-black p-4 rounded-2xl bg-white text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-sm">
+                <div class="border border-gray-200 p-4 rounded-2xl bg-white text-gray-800 font-bold uppercase italic shadow-sm text-center text-sm">
                     🎾 Match Ready - Awaiting First Serve...
                 </div>
             </div>
 
             <%-- Score Display --%>
             <div class="flex flex-col md:flex-row gap-8 w-full mb-12">
-                <div class="flex-1 bg-black text-white p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center">
-                    <span class="text-xs font-black uppercase tracking-widest text-cyan-400 mb-1">Team 1</span>
-                    <span class="text-xs font-bold text-gray-400 uppercase mb-4 select-none">
+                <div class="flex-1 bg-gray-900 text-white p-8 rounded-[2.5rem] border border-gray-800 shadow-sm flex flex-col items-center">
+                    <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-1">Team 1</span>
+                    <span class="text-xs font-semibold text-gray-400 uppercase mb-4 text-center select-none">
                         ${not empty param.p1_tim1_name ? param.p1_tim1_name : 'Player 1'} & ${not empty param.p2_tim1_name ? param.p2_tim1_name : 'Player 2'}
                     </span>
                     <div id="scoreTim1" class="text-9xl font-black italic tabular-nums text-cyan-400">0</div>
-                    <button id="btnTim1" onclick="addScore(1)" class="mt-8 w-full bg-cyan-400 text-black font-black py-4 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:scale-95 transition-all uppercase italic text-lg">+ Point</button>
+                    <button id="btnTim1" onclick="addScore(1)" class="mt-8 w-full bg-cyan-400 hover:bg-cyan-500 text-black font-bold py-4 rounded-2xl border border-cyan-500 shadow-sm active:scale-[0.98] transition-all uppercase italic text-lg text-center cursor-pointer">+ Point</button>
                 </div>
 
-                <div class="flex-1 bg-white p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col items-center">
-                    <span class="text-xs font-black uppercase tracking-widest text-gray-400 mb-1">Team 2</span>
-                    <span class="text-xs font-bold text-gray-500 uppercase mb-4 select-none">
+                <div class="flex-1 bg-white p-8 rounded-[2.5rem] border border-gray-200 shadow-sm flex flex-col items-center">
+                    <span class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-1">Team 2</span>
+                    <span class="text-xs font-semibold text-gray-500 uppercase mb-4 text-center select-none">
                         ${not empty param.p1_tim2_name ? param.p1_tim2_name : 'Player 3'} & ${not empty param.p2_tim2_name ? param.p2_tim2_name : 'Player 4'}
                     </span>
                     <div id="scoreTim2" class="text-9xl font-black italic tabular-nums text-black">0</div>
-                    <button id="btnTim2" onclick="addScore(2)" class="mt-8 w-full bg-black text-white font-black py-4 rounded-2xl border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 active:scale-95 transition-all uppercase italic text-lg">+ Point</button>
+                    <button id="btnTim2" onclick="addScore(2)" class="mt-8 w-full bg-black hover:bg-zinc-800 text-white font-bold py-4 rounded-2xl border border-black shadow-sm active:scale-[0.98] transition-all uppercase italic text-lg text-center cursor-pointer">+ Point</button>
                 </div>
             </div>
 
             <%-- Match History Timeline Log --%>
-            <div class="w-full bg-white border-4 border-black rounded-[2.5rem] p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-8">
+            <div class="w-full bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="font-black uppercase italic text-2xl flex items-center gap-3">Match Logs</h3>
-                    <span id="match-status" class="text-xs font-black bg-yellow-400 border-2 border-black px-4 py-1 rounded-full uppercase tracking-wider">In Progress</span>
+                    <span id="match-status" class="text-xs font-bold bg-yellow-100 text-yellow-800 border border-yellow-200 px-4 py-1.5 rounded-full uppercase tracking-wider">In Progress</span>
                 </div>
                 <div id="historyList" class="space-y-4 max-h-[200px] overflow-y-auto pr-2">
-                    <div class="text-center py-10 border-4 border-dashed border-gray-200 rounded-3xl">
-                        <p class="text-gray-400 font-black uppercase text-xs tracking-widest">Awaiting First Serve...</p>
+                    <div class="text-center py-10 border border-dashed border-gray-200 rounded-3xl">
+                        <p class="text-gray-400 font-bold uppercase text-xs tracking-widest">Awaiting First Serve...</p>
                     </div>
                 </div>
             </div>
@@ -90,9 +90,9 @@
                 <input type="hidden" id="input_skor_tim1" name="skor_tim1" value="0">
                 <input type="hidden" id="input_skor_tim2" name="skor_tim2" value="0">
 
-                <button type="button" onclick="resetMatch()" class="w-1/4 border-4 border-black bg-gray-200 py-4 rounded-2xl font-black uppercase text-xs">Reset Board</button>
-                <button type="button" id="btnConclude" onclick="concludeMatch()" class="w-1/4 border-4 border-black bg-yellow-400 py-4 rounded-2xl font-black text-black uppercase text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">Conclude</button>
-                <button type="submit" id="btnSubmitMatch" disabled class="w-2/4 border-4 border-black bg-green-400 py-4 rounded-2xl font-black uppercase opacity-30 cursor-not-allowed text-xs transition-all">Submit Final Score</button>
+                <button type="button" onclick="resetMatch()" class="w-1/4 border border-gray-300 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 rounded-2xl font-bold uppercase text-xs transition-colors cursor-pointer">Reset Board</button>
+                <button type="button" id="btnConclude" onclick="concludeMatch()" class="w-1/4 border border-yellow-500 bg-yellow-400 hover:bg-yellow-500 text-black py-4 rounded-2xl font-bold uppercase text-xs shadow-sm transition-all cursor-pointer">Conclude</button>
+                <button type="submit" id="btnSubmitMatch" disabled class="w-2/4 border border-green-500 bg-green-400 text-black py-4 rounded-2xl font-bold uppercase opacity-30 cursor-not-allowed text-xs transition-all">Submit Final Score</button>
             </form>
         </div>
 
@@ -191,13 +191,13 @@
                 const banner = document.getElementById('scoring-status-banner');
                 
                 if (t1Val === 0 && t2Val === 0 && (scoringStyle !== "AMERICANO" || (scoreTim1 === 0 && scoreTim2 === 0))) {
-                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-white text-black font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">🎾 Match Ready - Awaiting First Serve...</div>';
+                    banner.innerHTML = '<div class="border border-gray-200 p-4 rounded-2xl bg-white text-gray-800 font-bold uppercase italic shadow-sm text-center text-sm">🎾 Match Ready - Awaiting First Serve...</div>';
                 } else if (t1Val > t2Val) {
-                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-cyan-100 text-cyan-800 font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">📈 Team 1 is leading (' + p1_t1 + ' & ' + p2_t1 + ')</div>';
+                    banner.innerHTML = '<div class="border border-cyan-200 p-4 rounded-2xl bg-cyan-50 text-cyan-800 font-bold uppercase italic shadow-sm text-center text-sm">📈 Team 1 is leading (' + p1_t1 + ' & ' + p2_t1 + ')</div>';
                 } else if (t2Val > t1Val) {
-                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-yellow-100 text-yellow-800 font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">📈 Team 2 is leading (' + p1_t2 + ' & ' + p2_t2 + ')</div>';
+                    banner.innerHTML = '<div class="border border-yellow-200 p-4 rounded-2xl bg-yellow-50 text-yellow-800 font-bold uppercase italic shadow-sm text-center text-sm">📈 Team 2 is leading (' + p1_t2 + ' & ' + p2_t2 + ')</div>';
                 } else {
-                    banner.innerHTML = '<div class="border-4 border-black p-4 rounded-2xl bg-gray-100 text-gray-800 font-black uppercase italic shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center text-sm">⚖️ Match is Tied</div>';
+                    banner.innerHTML = '<div class="border border-gray-200 p-4 rounded-2xl bg-gray-50 text-gray-800 font-bold uppercase italic shadow-sm text-center text-sm">⚖️ Match is Tied</div>';
                 }
             }
 
@@ -215,11 +215,11 @@
                 const banner = document.getElementById('scoring-status-banner');
                 
                 if (t1Val > t2Val) {
-                    banner.innerHTML = '<div class="border-4 border-black p-6 rounded-2xl bg-cyan-400 text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-2xl">🏆 Winner: Team 1 (' + p1_t1 + ' & ' + p2_t1 + ')</div>';
+                    banner.innerHTML = '<div class="border border-cyan-200 p-6 rounded-2xl bg-cyan-50 text-cyan-800 font-bold uppercase italic shadow-sm text-center text-2xl md:text-3xl animate-bounce">🏆 Winner: Team 1 (' + p1_t1 + ' & ' + p2_t1 + ')</div>';
                 } else if (t2Val > t1Val) {
-                    banner.innerHTML = '<div class="border-4 border-black p-6 rounded-2xl bg-yellow-300 text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-2xl">🏆 Winner: Team 2 (' + p1_t2 + ' & ' + p2_t2 + ')</div>';
+                    banner.innerHTML = '<div class="border border-yellow-200 p-6 rounded-2xl bg-yellow-50 text-yellow-800 font-bold uppercase italic shadow-sm text-center text-2xl md:text-3xl animate-bounce">🏆 Winner: Team 2 (' + p1_t2 + ' & ' + p2_t2 + ')</div>';
                 } else {
-                    banner.innerHTML = '<div class="border-4 border-black p-6 rounded-2xl bg-gray-300 text-black font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] text-center text-2xl">🤝 Draw Match!</div>';
+                    banner.innerHTML = '<div class="border border-gray-200 p-6 rounded-2xl bg-gray-50 text-gray-800 font-bold uppercase italic shadow-sm text-center text-2xl md:text-3xl">🤝 Draw Match!</div>';
                 }
                 
                 // Disable scoring buttons and Conclude button
@@ -227,25 +227,25 @@
                 const btnTim2 = document.getElementById('btnTim2');
                 if (btnTim1) {
                     btnTim1.disabled = true;
-                    btnTim1.className = "mt-8 w-full bg-gray-200 text-gray-400 font-black py-4 rounded-2xl border-2 border-black cursor-not-allowed uppercase italic text-lg opacity-50";
+                    btnTim1.className = "mt-8 w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-2xl border border-gray-200 cursor-not-allowed uppercase italic text-lg opacity-50";
                 }
                 if (btnTim2) {
                     btnTim2.disabled = true;
-                    btnTim2.className = "mt-8 w-full bg-gray-200 text-gray-400 font-black py-4 rounded-2xl border-2 border-black cursor-not-allowed uppercase italic text-lg opacity-50";
+                    btnTim2.className = "mt-8 w-full bg-gray-100 text-gray-400 font-bold py-4 rounded-2xl border border-gray-200 cursor-not-allowed uppercase italic text-lg opacity-50";
                 }
                 
                 const btnConclude = document.getElementById('btnConclude');
                 if (btnConclude) {
                     btnConclude.disabled = true;
-                    btnConclude.className = "w-1/4 border-4 border-black bg-gray-200 text-gray-400 py-4 rounded-2xl font-black uppercase text-xs cursor-not-allowed opacity-50";
+                    btnConclude.className = "w-1/4 border border-gray-200 bg-gray-100 text-gray-400 py-4 rounded-2xl font-bold uppercase text-xs cursor-not-allowed opacity-50";
                 }
                 
                 document.getElementById('match-status').innerText = "Match Concluded";
-                document.getElementById('match-status').className = "text-xs font-black bg-green-400 border-2 border-black px-4 py-1 rounded-full uppercase text-black animate-pulse";
+                document.getElementById('match-status').className = "text-xs font-bold bg-green-100 text-green-800 border border-green-200 px-4 py-1.5 rounded-full uppercase tracking-wider animate-pulse";
 
                 const btn = document.getElementById('btnSubmitMatch');
                 btn.disabled = false;
-                btn.className = "w-2/4 border-4 border-black bg-green-400 py-4 rounded-2xl font-black uppercase text-xs text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all";
+                btn.className = "w-2/4 border border-green-500 bg-green-400 text-black py-4 rounded-2xl font-bold uppercase text-xs shadow-sm hover:bg-green-500 transition-all cursor-pointer";
             }
 
             function addLog(event) {
@@ -269,16 +269,16 @@
                     }
 
                     htmlResult += '<div class="flex items-center gap-4 mb-3">';
-                    htmlResult += '  <div class="text-[10px] font-black text-gray-400 w-12">' + item.time + '</div>';
-                    htmlResult += '  <div class="relative flex-1 bg-gray-50 border-2 border-black p-3 rounded-xl flex justify-between items-center">';
-                    htmlResult += '    <div class="absolute -left-[9px] w-4 h-4 bg-black rounded-full border-4 border-white"></div>';
+                    htmlResult += '  <div class="text-[10px] font-bold text-gray-400 w-12">' + item.time + '</div>';
+                    htmlResult += '  <div class="relative flex-1 bg-gray-50 border border-gray-200 p-3 rounded-xl flex justify-between items-center">';
+                    htmlResult += '    <div class="absolute -left-[9px] w-4 h-4 bg-gray-800 rounded-full border-4 border-white"></div>';
                     htmlResult += '    <div class="flex flex-col text-left">';
-                    htmlResult += '      <span class="text-[9px] font-black text-gray-400 uppercase tracking-wider">Match Event</span>';
-                    htmlResult += '      <span class="font-black text-xs uppercase italic ' + colorClass + '">' + item.event + '</span>';
+                    htmlResult += '      <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Match Event</span>';
+                    htmlResult += '      <span class="font-bold text-xs uppercase italic ' + colorClass + '">' + item.event + '</span>';
                     htmlResult += '    </div>';
                     htmlResult += '    <div class="flex flex-col items-end">';
-                    htmlResult += '      <span class="text-[9px] font-black text-gray-400 uppercase tracking-wider">Score</span>';
-                    htmlResult += '      <span class="font-black text-xs tabular-nums bg-black text-white px-2 py-0.5 rounded">' + item.currentScore + '</span>';
+                    htmlResult += '      <span class="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Score</span>';
+                    htmlResult += '      <span class="font-bold text-xs tabular-nums bg-gray-800 text-white px-2 py-0.5 rounded">' + item.currentScore + '</span>';
                     htmlResult += '    </div>';
                     htmlResult += '  </div>';
                     htmlResult += '</div>';

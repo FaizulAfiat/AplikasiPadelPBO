@@ -41,7 +41,7 @@
 
                 <div class="flex-1 bg-gray-100 flex flex-col items-center justify-center p-6 pb-20 w-full">
                     <div
-                        class="w-full max-w-4xl bg-white border-4 border-black rounded-[2.5rem] p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] space-y-8">
+                        class="w-full max-w-4xl bg-white border border-gray-200 rounded-[2.5rem] p-10 shadow-sm space-y-8">
 
                         <div>
                             <h1 class="text-4xl font-black uppercase italic tracking-tighter">Match Configuration
@@ -50,43 +50,43 @@
                                 players into the pool first, then arrange the teams</p>
                         </div>
 
-                        <div class="border-b-4 border-black pb-6">
-                            <label class="text-xs font-black uppercase tracking-widest opacity-50 block mb-2">Scoring
+                        <div class="border-b border-gray-200 pb-6">
+                            <label class="text-xs font-bold uppercase tracking-widest opacity-50 block mb-2">Scoring
                                 Style / Game Mode</label>
                             <select id="scoring_style"
-                                class="w-full bg-cyan-50 border-4 border-black p-4 rounded-2xl text-xl font-black uppercase italic outline-none cursor-pointer">
+                                class="w-full bg-cyan-50/50 border border-cyan-200 p-4 rounded-2xl text-xl font-black uppercase italic outline-none cursor-pointer hover:border-cyan-300 focus:border-cyan-400 transition-colors">
                                 <option value="AMERICANO">Americano (Accumulative to 32)</option>
                                 <option value="TRADITIONAL">Traditional Padel (0 - 15 - 30 - 40 - Game)</option>
                             </select>
                         </div>
 
-                        <div class="border-4 border-black rounded-3xl p-6 bg-yellow-50/50 space-y-6">
+                        <div class="border border-yellow-200 rounded-3xl p-6 bg-yellow-50/20 space-y-6">
                             <span
-                                class="text-sm font-black uppercase tracking-wider bg-black text-white px-3 py-1 rounded">1.
+                                class="text-xs font-bold uppercase tracking-wider bg-yellow-100 text-yellow-800 border border-yellow-200 px-3.5 py-1.5 rounded-full">1.
                                 Player Registration Pool</span>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <c:forEach var="i" begin="1" end="4">
                                     <div
-                                        class="p-4 border-2 border-black bg-white rounded-2xl space-y-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        class="p-4 border border-gray-200 bg-white rounded-2xl space-y-3 shadow-sm hover:shadow transition-shadow">
                                         <div class="flex justify-between items-center">
-                                            <label class="text-xs font-black uppercase text-gray-500">Slot
+                                            <label class="text-xs font-bold uppercase text-gray-500">Slot
                                                 Player ${i}</label>
 
                                             <div
-                                                class="flex items-center gap-1 bg-gray-100 p-1 border border-black rounded-lg text-[9px] font-bold">
+                                                class="flex items-center gap-1 bg-gray-50 p-1 border border-gray-200 rounded-lg text-[9px] font-bold">
                                                 <button type="button" onclick="toggleInputMode(${i}, 'db')"
                                                     id="btn-db-${i}"
-                                                    class="px-2 py-0.5 bg-black text-white rounded">DB</button>
+                                                    class="px-2 py-0.5 bg-gray-800 text-white rounded transition-colors">DB</button>
                                                 <button type="button" onclick="toggleInputMode(${i}, 'manual')"
                                                     id="btn-manual-${i}"
-                                                    class="px-2 py-0.5 rounded text-gray-500">MANUAL</button>
+                                                    class="px-2 py-0.5 rounded text-gray-400 hover:text-gray-600 transition-colors">MANUAL</button>
                                             </div>
                                         </div>
 
                                         <div id="wrapper-db-${i}">
                                             <select id="pool-db-${i}" onchange="syncPoolToTeams()"
-                                                class="pool-select w-full border-2 border-black p-2 rounded-xl font-bold text-sm bg-white outline-none">
+                                                class="pool-select w-full border border-gray-200 p-2.5 rounded-xl font-bold text-sm bg-white outline-none focus:border-cyan-500 transition-colors">
                                                 <option value="" data-name="">-- SELECT REGISTERED USER --
                                                 </option>
                                                 <c:forEach var="user" items="${playerList}">
@@ -99,21 +99,21 @@
                                         <div id="wrapper-manual-${i}" class="hidden">
                                             <input type="text" id="pool-manual-${i}" oninput="syncPoolToTeams()"
                                                 placeholder="ENTER GUEST NAME"
-                                                class="pool-input w-full border-2 border-black p-2 rounded-xl font-bold text-sm uppercase outline-none">
+                                                class="pool-input w-full border-gray-200 p-2.5 rounded-xl font-bold text-sm uppercase outline-none focus:border-cyan-500 transition-colors">
                                         </div>
                                     </div>
                                 </c:forEach>
                             </div>
                         </div>
 
-                        <div class="border-4 border-black rounded-3xl p-6 bg-gray-50 space-y-6">
+                        <div class="border border-gray-200 rounded-3xl p-6 bg-gray-50/50 space-y-6">
                             <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                                 <span
-                                    class="text-sm font-black uppercase tracking-wider bg-black text-white px-3 py-1 rounded w-fit">2.
+                                    class="text-xs font-bold uppercase tracking-wider bg-cyan-100 text-cyan-800 border border-cyan-200 px-3.5 py-1.5 rounded-full w-fit">2.
                                     Team Allocation</span>
 
                                 <button type="button" onclick="shuffleTeams()"
-                                    class="bg-yellow-400 border-2 border-black px-4 py-2 rounded-xl font-black text-xs uppercase italic tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-2">
+                                    class="bg-yellow-400 hover:bg-yellow-500 border border-yellow-500 px-4 py-2.5 rounded-xl font-bold text-xs uppercase italic tracking-wider shadow-sm hover:shadow transition-all flex items-center gap-2 text-black cursor-pointer">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                                         stroke-linejoin="round">
@@ -140,15 +140,15 @@
                                 <input type="hidden" name="p1_tim2_name" id="p1_tim2_name">
                                 <input type="hidden" name="p2_tim2_name" id="p2_tim2_name">
 
-                                <div class="p-4 border-2 border-black bg-cyan-50/50 rounded-2xl space-y-4">
+                                <div class="p-4 border border-cyan-100 bg-cyan-50/20 rounded-2xl space-y-4">
                                     <span
-                                        class="text-xs font-black uppercase tracking-widest text-cyan-600 block border-b border-cyan-200 pb-1">Team
+                                        class="text-xs font-bold uppercase tracking-widest text-cyan-600 block border-b border-cyan-100 pb-1">Team
                                         1</span>
                                     <div>
                                         <label class="text-[9px] font-bold uppercase opacity-50 block mb-1">Player
                                             A</label>
                                         <select name="p1_tim1" id="team-p1"
-                                            class="w-full border-2 border-black p-3 rounded-xl font-bold bg-white outline-none"
+                                            class="w-full border border-gray-200 p-3 rounded-xl font-bold bg-white outline-none focus:border-cyan-500 transition-colors"
                                             required>
                                             <option value="">-- SELECT FROM POOL --</option>
                                         </select>
@@ -157,22 +157,22 @@
                                         <label class="text-[9px] font-bold uppercase opacity-50 block mb-1">Player
                                             B</label>
                                         <select name="p2_tim1" id="team-p2"
-                                            class="w-full border-2 border-black p-3 rounded-xl font-bold bg-white outline-none"
+                                            class="w-full border border-gray-200 p-3 rounded-xl font-bold bg-white outline-none focus:border-cyan-500 transition-colors"
                                             required>
                                             <option value="">-- SELECT FROM POOL --</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <div class="p-4 border-2 border-black bg-white rounded-2xl space-y-4">
+                                <div class="p-4 border border-gray-200 bg-white rounded-2xl space-y-4">
                                     <span
-                                        class="text-xs font-black uppercase tracking-widest text-gray-500 block border-b border-gray-200 pb-1">Team
+                                        class="text-xs font-bold uppercase tracking-widest text-gray-500 block border-b border-gray-200 pb-1">Team
                                         2</span>
                                     <div>
                                         <label class="text-[9px] font-bold uppercase opacity-50 block mb-1">Player
                                             C</label>
                                         <select name="p1_tim2" id="team-p3"
-                                            class="w-full border-2 border-black p-3 rounded-xl font-bold bg-white outline-none"
+                                            class="w-full border border-gray-200 p-3 rounded-xl font-bold bg-white outline-none focus:border-cyan-500 transition-colors"
                                             required>
                                             <option value="">-- SELECT FROM POOL --</option>
                                         </select>
@@ -181,7 +181,7 @@
                                         <label class="text-[9px] font-bold uppercase opacity-50 block mb-1">Player
                                             D</label>
                                         <select name="p2_tim2" id="team-p4"
-                                            class="w-full border-2 border-black p-3 rounded-xl font-bold bg-white outline-none"
+                                            class="w-full border border-gray-200 p-3 rounded-xl font-bold bg-white outline-none focus:border-cyan-500 transition-colors"
                                             required>
                                             <option value="">-- SELECT FROM POOL --</option>
                                         </select>
@@ -189,7 +189,7 @@
                                 </div>
 
                                 <button type="submit"
-                                    class="md:col-span-2 w-full bg-black text-cyan-400 font-black uppercase tracking-wider py-4 rounded-2xl border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all italic text-lg">
+                                    class="md:col-span-2 w-full bg-black text-cyan-400 hover:bg-zinc-800 font-bold uppercase tracking-wider py-4 rounded-2xl border border-black shadow-sm transition-all italic text-lg text-center cursor-pointer">
                                     Enter Scoring Board →
                                 </button>
                             </form>
@@ -214,15 +214,15 @@
                         const wrapManual = document.getElementById('wrapper-manual-' + index);
 
                         if (mode === 'db') {
-                            btnDb.className = "px-2 py-0.5 bg-black text-white rounded";
-                            btnManual.className = "px-2 py-0.5 rounded text-gray-500";
+                            btnDb.className = "px-2 py-0.5 bg-gray-800 text-white rounded transition-colors";
+                            btnManual.className = "px-2 py-0.5 rounded text-gray-400 hover:text-gray-600 transition-colors";
                             wrapDb.classList.remove('hidden');
                             wrapManual.classList.add('hidden');
                             document.getElementById('pool-manual-' + index).value = "";
                             poolData[idx].isManual = false;
                         } else {
-                            btnManual.className = "px-2 py-0.5 bg-black text-white rounded";
-                            btnDb.className = "px-2 py-0.5 rounded text-gray-500";
+                            btnManual.className = "px-2 py-0.5 bg-gray-800 text-white rounded transition-colors";
+                            btnDb.className = "px-2 py-0.5 rounded text-gray-400 hover:text-gray-600 transition-colors";
                             wrapManual.classList.remove('hidden');
                             wrapDb.classList.add('hidden');
                             document.getElementById('pool-db-' + index).value = "";
