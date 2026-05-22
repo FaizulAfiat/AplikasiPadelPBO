@@ -16,6 +16,8 @@ public class Product {
     private int price;
     private int stock;
     private String image;
+    private String description;
+    private double rating;
 
     public int getId() {
         return id; 
@@ -64,5 +66,19 @@ public class Product {
     }
     public void setStock(int stock) {
         this.stock = stock; 
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

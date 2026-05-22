@@ -95,7 +95,7 @@
 
                                                                 <%-- FIXED-SIZE CARD ELEMENT --%>
                                                                     <div
-                                                                        class="bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[500px]">
+                                                                        class="bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[580px]">
 
                                                                         <%-- 1. Wadah Gambar dengan Tinggi Fixed Mutlak
                                                                             --%>
@@ -123,6 +123,18 @@
                                                                                             class="font-black uppercase italic text-xl leading-tight text-gray-900 line-clamp-2 h-14">
                                                                                             ${product.name}
                                                                                         </h3>
+                                                                                        <!-- Rating Badge in Neobrutalist Style -->
+                                                                                        <div class="flex items-center gap-2 pt-1.5">
+                                                                                            <div class="flex items-center gap-1 bg-yellow-300 border-2 border-black px-2 py-0.5 rounded-md text-[10px] font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                                                <span>★</span>
+                                                                                                <span>${product.rating}</span>
+                                                                                            </div>
+                                                                                            <span class="text-[9px] font-bold uppercase text-gray-400 tracking-wider">Rating</span>
+                                                                                        </div>
+                                                                                        <!-- Product Description -->
+                                                                                        <p class="text-xs text-gray-500 font-bold pt-2.5 line-clamp-2 leading-relaxed h-10 overflow-hidden">
+                                                                                            ${product.description != null ? product.description : 'No description available.'}
+                                                                                        </p>
                                                                                     </div>
 
                                                                                     <%-- 3. Area Harga, Stok & Aksi
@@ -348,12 +360,8 @@
                                                                                                     %>
                                                                                             </h4>
                                                                                             <span
-                                                                                                class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none <%= "
-                                                                                                Rent".equals(item.getProduct().getType())
-                                                                                                ? "bg-yellow-300"
-                                                                                                : "bg-cyan-400" %>">
-                                                                                                <%= item.getProduct().getType()
-                                                                                                    %>
+                                                                                                class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none <%= "Rent".equals(item.getProduct().getType()) ? "bg-yellow-300" : "bg-cyan-400" %>">
+                                                                                                <%= item.getProduct().getType() %>
                                                                                             </span>
                                                                                         </div>
                                                                                         <span
