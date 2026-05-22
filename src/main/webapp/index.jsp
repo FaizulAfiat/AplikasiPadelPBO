@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%
     // Jika tidak ada data user di session, tendang balik ke login
     if (session.getAttribute("user") == null) {
@@ -58,6 +59,23 @@
         </header>
 
         <main class="flex flex-col flex-1">
+            <c:if test="${param.status eq 'success'}">
+                <div id="success-toast" class="m-8 border-4 border-black p-5 rounded-2xl bg-emerald-400 font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="shrink-0">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <span>Pemesanan lapangan berhasil dikonfirmasi! Silakan cek jadwal Anda.</span>
+                    </div>
+                    <button onclick="document.getElementById('success-toast').remove()" class="hover:opacity-70 transition-opacity">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </c:if>
             <div class="w-full border-b border-grid overflow-hidden relative group">
                 <img src="img/padel.jpg" alt="Padel Banner" 
                      class="w-full h-64 md:h-96 object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
@@ -124,7 +142,7 @@
                         <span class="font-black uppercase text-sm tracking-tighter">Book Court</span>
                     </a>
 
-                    <a href="index.jsp" class="group flex flex-col items-center gap-4 text-center">
+                    <a href="${pageContext.request.contextPath}/ProfileController" class="group flex flex-col items-center gap-4 text-center">
                         <div class="w-20 h-20 bg-white border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                         </div>
@@ -145,7 +163,7 @@
                         <span class="font-black uppercase text-sm tracking-tighter">Shop & Rent</span>
                     </a>
 
-                    <a href="profile.jsp" class="group flex flex-col items-center gap-4 text-center">
+                    <a href="${pageContext.request.contextPath}/ProfileController" class="group flex flex-col items-center gap-4 text-center">
                         <div class="w-20 h-20 bg-cyan-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         </div>

@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package com.mycompany.aplikasi_padel_tubes_pbo.controller;
 
 import com.mycompany.aplikasi_padel_tubes_pbo.model.Koneksi;
+import com.mycompany.aplikasi_padel_tubes_pbo.model.Lapangan;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,10 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- * @author Faizul Afiat
- */
 public class BookingController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,19 +27,48 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String courtId = request.getParameter("court_id");
         String date = request.getParameter("date");
-
-        if (courtId == null) {
-            courtId = "1";
+        
+        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate selectedDate = today;
+        try {
+            if (date != null && !date.trim().isEmpty()) {
+                selectedDate = java.time.LocalDate.parse(date);
+                if (selectedDate.isBefore(today)) {
+                    selectedDate = today;
+                }
+            }
+        } catch (Exception e) {
+            selectedDate = today;
         }
-        if (date == null) {
-            date = java.time.LocalDate.now().toString();
-        }
+        date = selectedDate.toString();
 
+        List<Lapangan> listLapangan = new ArrayList<>();
         List<LocalTime> bookedSlots = new ArrayList<>();
 
         try (Connection conn = Koneksi.getConnection()) {
+            // Load all available courts from database
+            String courtSql = "SELECT * FROM courts WHERE status = 'Available'";
+            try (PreparedStatement courtPs = conn.prepareStatement(courtSql);
+                 ResultSet courtRs = courtPs.executeQuery()) {
+                while (courtRs.next()) {
+                    listLapangan.add(new Lapangan(
+                        courtRs.getInt("court_id"),
+                        courtRs.getString("name"),
+                        courtRs.getInt("price_per_hour"),
+                        courtRs.getString("status")
+                    ));
+                }
+            }
+
+            // Determine active courtId
+            String courtId = request.getParameter("court_id");
+            if (courtId == null && !listLapangan.isEmpty()) {
+                courtId = String.valueOf(listLapangan.get(0).getCourtId());
+            } else if (courtId == null) {
+                courtId = "1";
+            }
+
             String sql = "SELECT start_time, end_time FROM bookings WHERE court_id = ? AND match_date = ? AND status != 'Cancelled'";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, courtId);
@@ -66,21 +86,45 @@ public class BookingController extends HttpServlet {
                 }
             }
 
+            boolean isToday = selectedDate.equals(today);
+            int currentHour = java.time.LocalTime.now().getHour();
+
             // Generate Slot (06:00 - 22:00)
             List<Map<String, Object>> timeSlots = new ArrayList<>();
             for (int h = 6; h < 22; h++) {
                 LocalTime slotTime = LocalTime.of(h, 0);
                 Map<String, Object> slot = new HashMap<>();
                 slot.put("time", slotTime);
-                slot.put("isAvailable", !bookedSlots.contains(slotTime));
+                
+                boolean available = !bookedSlots.contains(slotTime);
+                if (isToday && h <= currentHour) {
+                    available = false;
+                }
+                
+                slot.put("isAvailable", available);
                 timeSlots.add(slot);
             }
 
+            int pricePerHour = 250000;
+            for (Lapangan l : listLapangan) {
+                if (String.valueOf(l.getCourtId()).equals(courtId)) {
+                    pricePerHour = l.getPricePerHour();
+                    break;
+                }
+            }
+
+            request.setAttribute("courtId", courtId);
+            request.setAttribute("date", date);
             request.setAttribute("timeSlots", timeSlots);
+            request.setAttribute("listLapangan", listLapangan);
+            request.setAttribute("pricePerHour", pricePerHour);
+            request.setAttribute("isToday", isToday);
+            request.setAttribute("currentHour", currentHour);
             request.getRequestDispatcher("view/booking.jsp").forward(request, response);
 
         } catch (SQLException e) {
             e.printStackTrace();
+            response.sendRedirect("BookingController?date=" + date + "&status=error");
         }
     }
 
@@ -102,6 +146,27 @@ public class BookingController extends HttpServlet {
         }
         Integer userId = (Integer) userObj;
 
+        // Server-side validation for date and past times
+        java.time.LocalDate today = java.time.LocalDate.now();
+        try {
+            java.time.LocalDate bookDate = java.time.LocalDate.parse(matchDate);
+            if (bookDate.isBefore(today)) {
+                response.sendRedirect("BookingController?date=" + matchDate + "&status=invalid_date");
+                return;
+            }
+            if (bookDate.equals(today)) {
+                LocalTime nowTime = LocalTime.now();
+                LocalTime start = LocalTime.parse(startTimeStr);
+                if (start.getHour() <= nowTime.getHour()) {
+                    response.sendRedirect("BookingController?date=" + matchDate + "&status=past_time");
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            response.sendRedirect("BookingController?status=invalid_date");
+            return;
+        }
+
         try {
             LocalTime start = LocalTime.parse(startTimeStr);
             LocalTime end = LocalTime.parse(endTimeStr);
@@ -114,18 +179,37 @@ public class BookingController extends HttpServlet {
 
             double hours = minutes / 60.0;
             int pricePerHour = 250000;
-            int totalPrice = (int) (hours * pricePerHour);
 
             try (Connection conn = Koneksi.getConnection()) {
-                String checkSql = "SELECT COUNT(*) FROM bookings WHERE court_id = ? AND match_date = ? AND start_time = ? AND status != 'Cancelled'";
+                // Fetch dynamic court price per hour from database
+                String courtPriceSql = "SELECT price_per_hour FROM courts WHERE court_id = ?";
+                try (PreparedStatement cpPs = conn.prepareStatement(courtPriceSql)) {
+                    cpPs.setInt(1, courtId);
+                    try (ResultSet cpRs = cpPs.executeQuery()) {
+                        if (cpRs.next()) {
+                            pricePerHour = cpRs.getInt("price_per_hour");
+                        }
+                    }
+                }
+
+                int totalPrice = (int) (hours * pricePerHour);
+
+                // strict overlapping interval check: S1 < E2 and S2 < E1
+                String checkSql = "SELECT COUNT(*) FROM bookings " +
+                                  "WHERE court_id = ? " +
+                                  "AND match_date = ? " +
+                                  "AND status != 'Cancelled' " +
+                                  "AND start_time < ? " +
+                                  "AND end_time > ?";
                 PreparedStatement checkPs = conn.prepareStatement(checkSql);
                 checkPs.setInt(1, courtId);
                 checkPs.setString(2, matchDate);
-                checkPs.setString(3, startTimeStr);
+                checkPs.setString(3, endTimeStr);
+                checkPs.setString(4, startTimeStr);
                 ResultSet rs = checkPs.executeQuery();
 
                 if (rs.next() && rs.getInt(1) > 0) {
-                    response.sendRedirect("view/booking.jsp?status=already_booked");
+                    response.sendRedirect("BookingController?date=" + matchDate + "&status=already_booked");
                     return;
                 }
 
@@ -142,15 +226,15 @@ public class BookingController extends HttpServlet {
 
                 int rowInserted = ps.executeUpdate();
                 if (rowInserted > 0) {
-                    response.sendRedirect("index.jsp?status=success");
+                    response.sendRedirect("ProfileController?status=success");
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendRedirect("view/booking.jsp?status=error");
+            response.sendRedirect("BookingController?date=" + matchDate + "&status=error");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("view/booking.jsp?status=invalid_time");
+            response.sendRedirect("BookingController?date=" + matchDate + "&status=invalid_time");
         }
     }
 }
