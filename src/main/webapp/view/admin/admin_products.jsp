@@ -111,86 +111,90 @@
                         </c:if>
 
                         <div
-                            class="bg-white border-4 border-black rounded-[3rem] p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-                            <table class="w-full text-left">
-                                <thead>
-                                    <tr class="border-b-4 border-black">
-                                        <th class="py-4 font-black uppercase text-xs opacity-40">Item</th>
-                                        <th class="py-4 font-black uppercase text-xs opacity-40">Category</th>
-                                        <th class="py-4 font-black uppercase text-xs opacity-40">Price</th>
-                                        <th class="py-4 font-black uppercase text-xs opacity-40">Stock</th>
-                                        <th class="py-4 font-black uppercase text-xs opacity-40 text-center">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="font-bold">
-                                    <c:forEach var="p" items="${productList}">
-                                        <tr class="border-b-2 border-gray-100 hover:bg-cyan-50">
-                                            <td class="py-5">
-                                                <div class="flex items-center gap-4">
-                                                    <div
-                                                        class="w-16 h-16 rounded-2xl border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] overflow-hidden bg-white">
-                                                        <img src="${pageContext.request.contextPath}/assets/images/${p.image}"
-                                                            alt="${p.name}"
-                                                            class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300">
-                                                    </div>
-                                                    <span
-                                                        class="uppercase font-black text-lg tracking-tighter">${p.name}</span>
-                                                </div>
-                                            </td>
-                                            <td class="py-5"><span
-                                                    class="bg-gray-100 px-3 py-1 rounded-full text-[10px] uppercase">${p.category}</span>
-                                            </td>
-                                            <td class="py-5 text-cyan-600 font-black">
-                                                <fmt:setLocale value="id_ID" />
-                                                <fmt:formatNumber value="${p.price}" type="currency"
-                                                    currencySymbol="Rp " maxFractionDigits="0" />
-                                            </td>
-                                            <td class="py-5">
-                                                <span class="${p.stock < 5 ? 'text-red-500' : ''}">${p.stock} pcs</span>
-                                            </td>
-                                            <td class="py-5">
-                                                <div class="flex justify-center gap-2">
-                                                    <button type="button"
-                                                        data-id="${p.id}"
-                                                        data-name="<c:out value="${p.name}"/>"
-                                                        data-category="<c:out value="${p.category}"/>"
-                                                        data-type="<c:out value="${p.type}"/>"
-                                                        data-price="${p.price}"
-                                                        data-stock="${p.stock}"
-                                                        data-rating="${p.rating}"
-                                                        data-description="<c:out value="${p.description}"/>"
-                                                        data-image="<c:out value="${p.image}"/>"
-                                                        onclick="openEditModal(this)"
-                                                        class="p-2 border-2 border-black rounded-lg hover:bg-yellow-400 transition-colors">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                            stroke-width="3">
-                                                            <path
-                                                                d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
-                                                            </path>
-                                                            <path
-                                                                d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
-                                                            </path>
-                                                        </svg>
-                                                    </button>
-                                                    <a href="${pageContext.request.contextPath}/DeleteProduct?id=${p.id}"
-                                                        onclick="return confirm('Hapus produk ini?')"
-                                                        class="p-2 border-2 border-black rounded-lg hover:bg-red-500 hover:text-white transition-colors">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                            stroke-width="3">
-                                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                                            <path
-                                                                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                                            </path>
-                                                        </svg>
-                                                    </a>
-                                                </div>
-                                            </td>
+                            class="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm overflow-hidden">
+                            <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+                                <table class="w-full text-left border-collapse bg-white">
+                                    <thead>
+                                        <tr class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider border-b border-gray-200">
+                                            <th class="py-3 px-4">Item</th>
+                                            <th class="py-3 px-4">Category</th>
+                                            <th class="py-3 px-4">Price</th>
+                                            <th class="py-3 px-4">Stock</th>
+                                            <th class="py-3 px-4 text-center">Action</th>
                                         </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody class="text-sm font-semibold divide-y divide-gray-100">
+                                        <c:forEach var="p" items="${productList}">
+                                            <tr class="hover:bg-gray-50/50 transition-colors text-gray-700">
+                                                <td class="py-4 px-4">
+                                                    <div class="flex items-center gap-4">
+                                                        <div
+                                                            class="w-12 h-12 rounded-xl border border-gray-200 shadow-sm overflow-hidden bg-white">
+                                                            <img src="${pageContext.request.contextPath}/assets/images/${p.image}"
+                                                                alt="${p.name}"
+                                                                class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300">
+                                                        </div>
+                                                        <span
+                                                            class="uppercase font-semibold text-gray-900 tracking-tight text-sm">${p.name}</span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-4 px-4"><span
+                                                        class="bg-gray-50 text-gray-600 border border-gray-200 px-2.5 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider">${p.category}</span>
+                                                </td>
+                                                <td class="py-4 px-4 text-cyan-600 font-semibold text-sm">
+                                                    <fmt:setLocale value="id_ID" />
+                                                    <fmt:formatNumber value="${p.price}" type="currency"
+                                                        currencySymbol="Rp " maxFractionDigits="0" />
+                                                </td>
+                                                <td class="py-4 px-4 text-sm font-semibold text-gray-700">
+                                                    <span class="${p.stock < 5 ? 'text-red-500' : ''}">${p.stock} pcs</span>
+                                                </td>
+                                                <td class="py-4 px-4">
+                                                    <div class="flex justify-center gap-2">
+                                                        <button type="button"
+                                                            data-id="${p.id}"
+                                                            data-name="<c:out value="${p.name}"/>"
+                                                            data-category="<c:out value="${p.category}"/>"
+                                                            data-type="<c:out value="${p.type}"/>"
+                                                            data-price="${p.price}"
+                                                            data-stock="${p.stock}"
+                                                            data-rating="${p.rating}"
+                                                            data-description="<c:out value="${p.description}"/>"
+                                                            data-image="<c:out value="${p.image}"/>"
+                                                            onclick="openEditModal(this)"
+                                                            class="p-2 border border-gray-200 rounded-lg hover:bg-yellow-100 text-yellow-800 transition-colors">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                stroke-width="2.5">
+                                                                <path
+                                                                    d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
+                                                                </path>
+                                                                <path
+                                                                    d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                        <a href="${pageContext.request.contextPath}/DeleteProduct?id=${p.id}"
+                                                            onclick="return confirm('Hapus produk ini?')"
+                                                            class="p-2 border border-gray-200 rounded-lg hover:bg-red-100 text-red-800 transition-colors">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                stroke-width="2.5">
+                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                <path
+                                                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                                </path>
+                                                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 

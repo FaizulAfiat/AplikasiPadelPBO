@@ -287,16 +287,16 @@
 
                 <!-- Match History -->
                 <div class="space-y-4">
-                    <h3 class="text-2xl font-black uppercase tracking-tight flex items-center gap-2">
-                        <span class="w-3 h-3 bg-purple-400 rounded-full"></span>
+                    <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 bg-purple-400 rounded-full"></span>
                         Riwayat Pertandingan
                     </h3>
 
-                    <div class="border-4 border-black rounded-2xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] bg-white">
+                    <div class="border border-grid rounded-2xl overflow-hidden shadow-sm bg-white">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
-                                    <tr class="bg-black text-white font-black uppercase text-xs tracking-wider border-b-4 border-black">
+                                    <tr class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider border-b border-grid">
                                         <th class="p-4">ID</th>
                                         <th class="p-4">Mode</th>
                                         <th class="p-4">Partner</th>
@@ -305,37 +305,37 @@
                                         <th class="p-4">Hasil</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y-2 divide-black">
+                                <tbody class="divide-y divide-gray-100">
                                     <c:choose>
                                         <c:when test="${empty matchHistory}">
                                             <tr>
-                                                <td colspan="6" class="p-8 text-center text-gray-500 font-bold uppercase italic">
+                                                <td colspan="6" class="p-8 text-center text-gray-400 font-medium italic bg-gray-50/50">
                                                     Belum ada riwayat pertandingan.
                                                 </td>
                                             </tr>
                                         </c:when>
                                         <c:otherwise>
                                             <c:forEach var="match" items="${matchHistory}">
-                                                <tr class="hover:bg-gray-50 transition-colors font-bold text-sm">
-                                                    <td class="p-4">#${match.id}</td>
-                                                    <td class="p-4 uppercase">${match.mode}</td>
-                                                    <td class="p-4">${match.partner}</td>
-                                                    <td class="p-4">${match.opponents}</td>
-                                                    <td class="p-4">${match.score}</td>
+                                                <tr class="hover:bg-gray-50 transition-colors duration-150 text-gray-700 text-sm">
+                                                    <td class="p-4 font-semibold">#${match.id}</td>
+                                                    <td class="p-4 uppercase text-xs text-gray-500">${match.mode}</td>
+                                                    <td class="p-4 font-medium">${match.partner}</td>
+                                                    <td class="p-4 font-medium">${match.opponents}</td>
+                                                    <td class="p-4 font-semibold text-black">${match.score}</td>
                                                     <td class="p-4">
                                                         <c:choose>
                                                             <c:when test="${match.outcome eq 'WIN'}">
-                                                                <span class="px-3 py-1 bg-emerald-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                                                     WIN
                                                                 </span>
                                                             </c:when>
                                                             <c:when test="${match.outcome eq 'LOSE'}">
-                                                                <span class="px-3 py-1 bg-rose-400 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                <span class="px-2.5 py-1 bg-rose-50 text-rose-800 border border-rose-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                                                     LOSE
                                                                 </span>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <span class="px-3 py-1 bg-gray-200 border-2 border-black rounded-full text-[10px] font-black uppercase tracking-wider text-black">
+                                                                <span class="px-2.5 py-1 bg-gray-50 text-gray-600 border border-gray-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                                                     DRAW
                                                                 </span>
                                                             </c:otherwise>

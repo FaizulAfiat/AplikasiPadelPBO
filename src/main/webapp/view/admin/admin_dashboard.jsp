@@ -156,65 +156,65 @@
                 </div>
 
                 <!-- Court Rental Logs Card -->
-                <div id="rental-logs" class="bg-white border-4 border-black rounded-[2.5rem] p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mt-12 overflow-hidden">
-                    <div class="flex items-center justify-between mb-8 pb-4 border-b-2 border-black/10">
+                <div id="rental-logs" class="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm mt-12 overflow-hidden">
+                    <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
                         <h3 class="font-black uppercase italic text-3xl tracking-tighter flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
                             </svg>
                             Court Rental Logs
                         </h3>
-                        <span class="text-xs bg-zinc-100 text-zinc-600 font-bold px-4 py-2 border-2 border-black rounded-xl">
+                        <span class="text-xs bg-gray-50 text-gray-600 font-bold px-3 py-1.5 border border-gray-200 rounded-lg">
                             ${fn:length(bookingList)} records
                         </span>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
+                    <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+                        <table class="w-full text-left border-collapse bg-white">
                             <thead>
-                                <tr class="border-b-4 border-black text-[10px] font-black uppercase tracking-widest text-zinc-400">
-                                    <th class="py-4 px-2">ID</th>
-                                    <th class="py-4 px-2">Customer</th>
-                                    <th class="py-4 px-2">Court</th>
-                                    <th class="py-4 px-2">Schedule</th>
-                                    <th class="py-4 px-2">Amount</th>
-                                    <th class="py-4 px-2">Status</th>
-                                    <th class="py-4 px-2 text-center">Actions</th>
+                                <tr class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider border-b border-gray-200">
+                                    <th class="py-3 px-4">ID</th>
+                                    <th class="py-3 px-4">Customer</th>
+                                    <th class="py-3 px-4">Court</th>
+                                    <th class="py-3 px-4">Schedule</th>
+                                    <th class="py-3 px-4">Amount</th>
+                                    <th class="py-3 px-4">Status</th>
+                                    <th class="py-3 px-4 text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-sm font-bold">
+                            <tbody class="text-sm font-semibold divide-y divide-gray-100">
                                 <c:choose>
                                     <c:when test="${empty bookingList}">
                                         <tr>
-                                            <td colspan="7" class="py-12 text-center text-zinc-400 uppercase tracking-widest">
+                                            <td colspan="7" class="py-12 text-center text-gray-400 font-medium italic bg-gray-50/50">
                                                 No bookings recorded yet
                                             </td>
                                         </tr>
                                     </c:when>
                                     <c:otherwise>
                                         <c:forEach var="b" items="${bookingList}">
-                                            <tr class="border-b-2 border-zinc-100 hover:bg-cyan-50/50 transition-colors">
+                                            <tr class="hover:bg-gray-50/50 transition-colors text-gray-700">
                                                 <!-- Booking ID -->
-                                                <td class="py-5 px-2 text-zinc-400">#${b.id}</td>
+                                                <td class="py-4 px-4 font-semibold text-gray-400">#${b.id}</td>
                                                 
                                                 <!-- Customer Username -->
-                                                <td class="py-5 px-2 uppercase font-black text-black tracking-tight">${b.username}</td>
+                                                <td class="py-4 px-4 uppercase font-semibold text-gray-900 tracking-tight">${b.username}</td>
                                                 
                                                 <!-- Court Name (Color Badge Specifics) -->
-                                                <td class="py-5 px-2">
+                                                <td class="py-4 px-4">
                                                     <c:choose>
                                                         <c:when test="${fn:contains(fn:toUpperCase(b.court), 'A')}">
-                                                            <span class="bg-blue-500 text-white border-2 border-black px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                            <span class="px-2.5 py-1 bg-blue-50 text-blue-800 border border-blue-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                                                 ${b.court}
                                                             </span>
                                                         </c:when>
                                                         <c:when test="${fn:contains(fn:toUpperCase(b.court), 'B')}">
-                                                            <span class="bg-emerald-500 text-white border-2 border-black px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                                                 ${b.court}
                                                             </span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="bg-black text-white border-2 border-black px-3 py-1 rounded-full text-[10px] uppercase font-black tracking-wider shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                            <span class="px-2.5 py-1 bg-gray-50 text-gray-800 border border-gray-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
                                                                 ${b.court}
                                                             </span>
                                                         </c:otherwise>
@@ -222,10 +222,10 @@
                                                 </td>
                                                 
                                                 <!-- Booking Time Range -->
-                                                <td class="py-5 px-2">
+                                                <td class="py-4 px-4">
                                                     <div class="flex flex-col">
-                                                        <span class="text-black uppercase text-xs font-black"><fmt:formatDate value="${b.date}" pattern="dd MMM yyyy" /></span>
-                                                        <span class="text-[10px] text-cyan-600 font-black italic mt-1 flex items-center gap-1">
+                                                        <span class="text-gray-900 uppercase text-xs font-semibold"><fmt:formatDate value="${b.date}" pattern="dd MMM yyyy" /></span>
+                                                        <span class="text-[10px] text-cyan-600 font-bold mt-1 flex items-center gap-1">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                                                 <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                                                             </svg>
@@ -235,26 +235,26 @@
                                                 </td>
                                                 
                                                 <!-- Total Price -->
-                                                <td class="py-5 px-2 font-black text-cyan-600">
+                                                <td class="py-4 px-4 font-semibold text-gray-900">
                                                     <fmt:formatNumber value="${b.total}" type="currency" currencySymbol="Rp " maxFractionDigits="0"/>
                                                 </td>
                                                 
-                                                <!-- Status Badge (Neo-Brutalist Block Style) -->
-                                                <td class="py-5 px-2">
+                                                <!-- Status Badge (Clean Border Style) -->
+                                                <td class="py-4 px-4">
                                                     <c:set var="statusLower" value="${fn:toLowerCase(b.status)}" />
                                                     <c:choose>
                                                         <c:when test="${statusLower == 'pending'}">
-                                                            <span class="bg-amber-300 text-black px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border-2 border-black inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">
                                                                 Pending
                                                             </span>
                                                         </c:when>
                                                         <c:when test="${statusLower == 'confirmed'}">
-                                                            <span class="bg-emerald-400 text-black px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border-2 border-black inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">
                                                                 Confirmed
                                                             </span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="bg-rose-400 text-black px-3 py-1.5 rounded-xl text-[10px] font-black uppercase border-2 border-black inline-block shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                            <span class="px-2.5 py-1 bg-rose-50 text-rose-800 border border-rose-200 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">
                                                                 ${b.status}
                                                             </span>
                                                         </c:otherwise>
@@ -262,22 +262,22 @@
                                                 </td>
 
                                                 <!-- Actions (Approve, Cancel, or Locked states) -->
-                                                <td class="py-5 px-2">
+                                                <td class="py-4 px-4">
                                                     <div class="flex justify-center gap-2">
                                                         <c:choose>
                                                             <c:when test="${statusLower == 'pending'}">
                                                                 <!-- For Pending: Admin can Approve or Cancel -->
                                                                 <a href="UpdateStatusController?id=${b.id}&status=Confirmed" 
                                                                    title="Setujui Booking"
-                                                                   class="bg-emerald-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                   class="bg-emerald-50 text-emerald-700 border border-emerald-200 p-2 rounded-xl hover:bg-emerald-100 transition-colors">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                                         <path d="M20 6L9 17l-5-5"/>
                                                                     </svg>
                                                                 </a>
                                                                 <a href="UpdateStatusController?id=${b.id}&status=Cancelled" 
                                                                    title="Batalkan Booking"
-                                                                   class="bg-rose-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                   class="bg-rose-50 text-rose-700 border border-rose-200 p-2 rounded-xl hover:bg-rose-100 transition-colors">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                                         <path d="M18 6L6 18M6 6l12 12"/>
                                                                     </svg>
                                                                 </a>
@@ -286,8 +286,8 @@
                                                                 <!-- For Confirmed (Model A): Admin can Cancel/Revoke -->
                                                                 <a href="UpdateStatusController?id=${b.id}&status=Cancelled" 
                                                                    title="Batalkan Booking (Revoke)"
-                                                                   class="bg-rose-400 text-black p-2 rounded-xl border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all flex items-center gap-1 text-[10px] font-black uppercase px-3 py-1.5">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                                                   class="bg-rose-50 text-rose-700 border border-rose-200 rounded-xl hover:bg-rose-100 transition-colors flex items-center gap-1 text-[10px] font-bold uppercase px-3 py-1.5">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                                                         <path d="M18 6L6 18M6 6l12 12"/>
                                                                     </svg>
                                                                     Cancel
@@ -295,7 +295,7 @@
                                                             </c:when>
                                                             <c:otherwise>
                                                                 <!-- For Cancelled: No further actions available -->
-                                                                <span class="text-zinc-400 text-[10px] font-black uppercase tracking-wider">Locked</span>
+                                                                <span class="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">Locked</span>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </div>
