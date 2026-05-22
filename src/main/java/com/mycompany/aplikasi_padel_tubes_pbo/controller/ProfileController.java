@@ -30,7 +30,6 @@ public class ProfileController extends HttpServlet {
         }
 
         int userId = (Integer) userIdObj;
-        List<Map<String, Object>> bookingHistory = new ArrayList<>();
         List<Map<String, Object>> transactionHistory = new ArrayList<>();
 
         String username = "";
@@ -87,30 +86,6 @@ public class ProfileController extends HttpServlet {
             if (fullname == null) fullname = "";
             if (gender == null) gender = "";
 
-            // 1. Fetch Court Bookings
-            String bookingsSql = "SELECT b.booking_id, c.name AS court_name, b.match_date, b.start_time, b.end_time, b.total_price, b.status " +
-                                 "FROM bookings b " +
-                                 "JOIN courts c ON b.court_id = c.court_id " +
-                                 "WHERE b.user_id = ? " +
-                                 "ORDER BY b.match_date DESC, b.start_time DESC";
-            
-            try (PreparedStatement ps = conn.prepareStatement(bookingsSql)) {
-                ps.setInt(1, userId);
-                try (ResultSet rs = ps.executeQuery()) {
-                    while (rs.next()) {
-                        Map<String, Object> booking = new HashMap<>();
-                        booking.put("id", rs.getInt("booking_id"));
-                        booking.put("court", rs.getString("court_name"));
-                        booking.put("date", rs.getDate("match_date"));
-                        booking.put("start", rs.getTime("start_time"));
-                        booking.put("end", rs.getTime("end_time"));
-                        booking.put("total", rs.getInt("total_price"));
-                        booking.put("status", rs.getString("status"));
-                        bookingHistory.add(booking);
-                    }
-                }
-            }
-
             // 2. Fetch Product Transactions (Purchases and Rentals)
             String transactionsSql = "SELECT t.transaction_id, p.name AS product_name, p.category, t.quantity, t.type, t.transaction_date, t.total_amount, t.status " +
                                      "FROM transaction t " +
@@ -145,7 +120,6 @@ public class ProfileController extends HttpServlet {
         request.setAttribute("role", role);
         request.setAttribute("fullname", fullname);
         request.setAttribute("gender", gender);
-        request.setAttribute("bookingHistory", bookingHistory);
         request.setAttribute("transactionHistory", transactionHistory);
 
         request.getRequestDispatcher("view/profile.jsp").forward(request, response);
