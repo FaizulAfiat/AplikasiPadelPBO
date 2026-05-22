@@ -45,6 +45,9 @@ public class ManageProducts extends HttpServlet {
                 p.put("category", rs.getString("category"));
                 p.put("price", rs.getInt("price"));
                 p.put("stock", rs.getInt("stock"));
+                p.put("type", rs.getString("type"));
+                p.put("description", rs.getString("description"));
+                p.put("rating", rs.getDouble("rating"));
                 productList.add(p);
             }
             request.setAttribute("productList", productList);
