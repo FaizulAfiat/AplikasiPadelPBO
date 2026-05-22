@@ -47,7 +47,7 @@
                                                         class="p-4 md:p-6 w-1/2 md:w-1/4 flex items-center justify-end gap-4">
                                                         <!-- Cart Icon Button -->
                                                         <button onclick="toggleCartDrawer()"
-                                                            class="relative p-2 border-2 border-black rounded-xl hover:bg-cyan-100 transition-colors flex items-center justify-center">
+                                                            class="relative p-2.5 border border-gray-200 rounded-xl hover:bg-cyan-50 hover:border-cyan-200 hover:text-cyan-600 transition-colors flex items-center justify-center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                 viewBox="0 0 24 24" stroke-width="2.5"
                                                                 stroke="currentColor" class="w-5 h-5 text-black">
@@ -56,7 +56,7 @@
                                                             </svg>
                                                             <% if (cartItemCount> 0) { %>
                                                                 <span
-                                                                    class="absolute -top-2 -right-2 bg-red-500 border-2 border-black text-white text-[9px] font-black w-5 h-5 rounded-full flex items-center justify-center">
+                                                                    class="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-extrabold w-4.5 h-4.5 rounded-full flex items-center justify-center">
                                                                     <%= cartItemCount %>
                                                                 </span>
                                                                 <% } %>
@@ -95,7 +95,7 @@
 
                                                                 <%-- FIXED-SIZE CARD ELEMENT --%>
                                                                     <div
-                                                                        class="product-card bg-white border-4 border-black rounded-[2.5rem] p-6 flex flex-col shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all group h-[530px] cursor-pointer"
+                                                                        class="product-card bg-white border border-gray-200 rounded-3xl p-6 flex flex-col shadow-sm hover:shadow-md transition-all group h-[530px] cursor-pointer"
                                                                         data-id="${product.id}"
                                                                         data-name="<c:out value='${product.name}' />"
                                                                         data-image="${product.image}"
@@ -110,13 +110,13 @@
                                                                         <%-- 1. Wadah Gambar dengan Tinggi Fixed Mutlak
                                                                             --%>
                                                                             <div
-                                                                                class="w-full h-56 bg-gray-100 rounded-2xl overflow-hidden mb-4 border-2 border-black/5 relative flex-none">
+                                                                                class="w-full h-56 bg-gray-50 rounded-2xl overflow-hidden mb-4 border border-gray-100 relative flex-none">
                                                                                 <img src="${pageContext.request.contextPath}/assets/images/${product.image}"
                                                                                     alt="${product.name}"
-                                                                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300">
+                                                                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
 
                                                                                 <span
-                                                                                    class="absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${product.type == 'Rent' ? 'bg-yellow-300 text-black' : 'bg-cyan-400 text-black'}">
+                                                                                    class="absolute top-3 left-3 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border ${product.type == 'Rent' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 'bg-cyan-100 text-cyan-800 border-cyan-200'}">
                                                                                     ${product.type}
                                                                                 </span>
                                                                             </div>
@@ -133,11 +133,8 @@
                                                                                             class="font-black uppercase italic text-xl leading-tight text-gray-900 line-clamp-2 h-14">
                                                                                             ${product.name}
                                                                                         </h3>
-                                                                                        <!-- Rating Badge in Neobrutalist Style -->
-                                                                                        <div
-                                                                                            class="flex items-center gap-2 pt-1.5">
-                                                                                            <div
-                                                                                                class="flex items-center gap-1 bg-yellow-300 border-2 border-black px-2 py-0.5 rounded-md text-[10px] font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                                        <div class="flex items-center gap-2 pt-1.5">
+                                                                                            <div class="flex items-center gap-1 bg-yellow-100 text-yellow-800 border border-yellow-200 px-2 py-0.5 rounded-full text-[10px] font-bold">
                                                                                                 <span>★</span>
                                                                                                 <span>${product.rating}</span>
                                                                                             </div>
@@ -193,7 +190,7 @@
                                                                                                 <button
                                                                                                     type="button"
                                                                                                     onclick="event.stopPropagation(); openProductModal(event, this.closest('.product-card'))"
-                                                                                                    class="flex-1 bg-white text-black hover:bg-cyan-100 border-2 border-black py-2.5 rounded-xl font-black uppercase text-[10px] tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all text-center">
+                                                                                                    class="flex-1 bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 py-2.5 rounded-xl font-bold uppercase text-[10px] tracking-wider transition-all text-center shadow-sm hover:shadow active:scale-95">
                                                                                                     Details
                                                                                                 </button>
 
@@ -213,7 +210,7 @@
                                                                                                             test="${product.stock > 0}">
                                                                                                             <button
                                                                                                                 type="submit"
-                                                                                                                class="w-full bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black py-2.5 rounded-xl font-black uppercase text-[10px] tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all">
+                                                                                                                class="w-full bg-black text-white hover:bg-zinc-800 border border-black py-2.5 rounded-xl font-bold uppercase text-[10px] tracking-wider transition-all shadow-sm hover:shadow active:scale-95">
                                                                                                                 ${product.type
                                                                                                                 == 'Rent' ?
                                                                                                                 'Rent' :
@@ -224,7 +221,7 @@
                                                                                                             <button
                                                                                                                 type="button"
                                                                                                                 disabled
-                                                                                                                class="w-full bg-gray-200 text-gray-400 border-2 border-gray-300 py-2.5 rounded-xl font-black uppercase text-[10px] tracking-wider cursor-not-allowed">
+                                                                                                                class="w-full bg-gray-100 text-gray-400 border border-gray-200 py-2.5 rounded-xl font-bold uppercase text-[10px] tracking-wider cursor-not-allowed">
                                                                                                                 Out Stock
                                                                                                             </button>
                                                                                                         </c:otherwise>
@@ -239,16 +236,16 @@
                                                         </div>
                                                     </div>
 
-                                                    <%-- Neobrutalist-styled Toast Notification --%>
+                                                    <%-- Toast Notification --%>
                                                         <c:if test="${not empty param.status}">
                                                             <div id="statusToast"
-                                                                class="fixed bottom-8 right-8 z-[9999] bg-white border-4 border-black p-6 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-w-sm flex flex-col gap-2 transition-all duration-300">
+                                                                class="fixed bottom-8 right-8 z-[9999] bg-white border border-gray-200 p-6 rounded-3xl shadow-lg max-w-sm flex flex-col gap-2 transition-all duration-300">
                                                                 <div class="flex items-center gap-3">
                                                                     <c:choose>
                                                                         <c:when
                                                                             test="${param.status == 'success' || param.status == 'cart_add_success'}">
                                                                             <span
-                                                                                class="w-8 h-8 rounded-full bg-emerald-400 border-2 border-black flex items-center justify-center font-black">✓</span>
+                                                                                class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center justify-center font-bold">✓</span>
                                                                             <h4
                                                                                 class="font-black uppercase tracking-tighter text-lg">
                                                                                 ${param.status == 'cart_add_success' ?
@@ -257,7 +254,7 @@
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <span
-                                                                                class="w-8 h-8 rounded-full bg-red-400 border-2 border-black flex items-center justify-center font-black">✗</span>
+                                                                                class="w-8 h-8 rounded-full bg-red-100 text-red-800 border border-red-200 flex items-center justify-center font-bold">✗</span>
                                                                             <h4
                                                                                 class="font-black uppercase tracking-tighter text-lg">
                                                                                 Action Failed
@@ -306,7 +303,7 @@
                                                                 </p>
                                                                 <button
                                                                     onclick="document.getElementById('statusToast').remove()"
-                                                                    class="mt-2 bg-black text-white hover:bg-red-500 border-2 border-black py-2 rounded-xl font-black uppercase text-[10px] tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all text-center">
+                                                                    class="mt-2 bg-black text-white hover:bg-zinc-800 border border-black py-2 rounded-xl font-bold uppercase text-[10px] tracking-wider transition-all text-center shadow-sm hover:shadow active:scale-95">
                                                                     Dismiss
                                                                 </button>
                                                             </div>
@@ -317,11 +314,11 @@
                                                             onclick="closeProductModal()"></div>
 
                                                         <div id="productDetailModal"
-                                                            class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-2xl bg-white border-4 border-black z-[1002] rounded-[2.5rem] p-6 md:p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hidden transition-all duration-300 transform scale-95 opacity-0 flex flex-col md:flex-row gap-6 md:gap-8">
+                                                            class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-2xl bg-white border border-gray-200 z-[1002] rounded-3xl p-6 md:p-8 shadow-xl hidden transition-all duration-300 transform scale-95 opacity-0 flex flex-col md:flex-row gap-6 md:gap-8">
                                                             
                                                             <!-- Close Button -->
                                                             <button onclick="closeProductModal()"
-                                                                class="absolute top-4 right-4 p-2 border-2 border-black rounded-lg hover:bg-red-100 transition-colors z-10">
+                                                                class="absolute top-4 right-4 p-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 hover:text-gray-800 transition-colors z-10">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                     viewBox="0 0 24 24" stroke-width="3"
                                                                     stroke="currentColor" class="w-4 h-4">
@@ -332,7 +329,7 @@
                                                             </button>
                                                             
                                                             <!-- Left Column: Product Image -->
-                                                            <div class="w-full md:w-1/2 h-64 md:h-80 bg-gray-100 rounded-3xl overflow-hidden border-2 border-black/10 relative flex-none">
+                                                            <div class="w-full md:w-1/2 h-64 md:h-80 bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 relative flex-none">
                                                                 <img id="modalProductImage" src="" alt="" class="w-full h-full object-cover">
                                                                 <span id="modalProductType" class=""></span>
                                                             </div>
@@ -342,14 +339,14 @@
                                                                 <div class="space-y-3">
                                                                     <div>
                                                                         <span class="text-[10px] font-black uppercase opacity-45 tracking-wider">Product Catalog</span>
-                                                                        <span id="modalProductCategory" class="ml-2 text-[10px] font-black uppercase bg-gray-100 text-gray-600 px-2 py-0.5 rounded border border-gray-300"></span>
+                                                                        <span id="modalProductCategory" class="ml-2 text-[10px] font-bold uppercase bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full border border-gray-200"></span>
                                                                     </div>
                                                                     
                                                                     <h2 id="modalProductName" class="font-black uppercase italic text-2xl md:text-3xl leading-tight text-gray-900"></h2>
                                                                     
                                                                     <!-- Rating Badge -->
                                                                     <div class="flex items-center gap-2">
-                                                                        <div class="flex items-center gap-1 bg-yellow-300 border-2 border-black px-2.5 py-0.5 rounded-md text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                                                        <div class="flex items-center gap-1 bg-yellow-100 text-yellow-800 border border-yellow-200 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-sm">
                                                                             <span>★</span>
                                                                             <span id="modalProductRating"></span>
                                                                         </div>
@@ -392,9 +389,9 @@
 
                                                         <!-- CART DRAWER PANEL -->
                                                         <div id="cartDrawer"
-                                                            class="fixed top-0 right-0 bottom-0 w-full sm:w-[450px] bg-white border-l-4 border-black z-[1000] translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-6 shadow-2xl">
+                                                            class="fixed top-0 right-0 bottom-0 w-full sm:w-[450px] bg-white border-l border-gray-200 z-[1000] translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-6 shadow-2xl">
                                                             <div
-                                                                class="flex justify-between items-center border-b-4 border-black pb-4 mb-6 flex-none">
+                                                                class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6 flex-none">
                                                                 <div class="flex items-center gap-2">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke-width="3"
