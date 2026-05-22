@@ -151,7 +151,8 @@
                             </div>
                             <div>
                                 <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Nama Pelanggan</p>
-                                <p class="text-lg font-black uppercase tracking-tight">${invoice.fullname}</p>
+                                <p class="text-lg font-black uppercase tracking-tight">${invoice.fullname} (${invoice.username})</p>
+                                <p class="text-xs text-gray-500 font-bold">${invoice.email}</p>
                             </div>
                             <div>
                                 <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Lapangan (Court)</p>
@@ -163,7 +164,7 @@
                                     <fmt:formatDate value="${invoice.date}" pattern="dd MMM yyyy" />
                                 </p>
                             </div>
-                            <div class="sm:col-span-2">
+                            <div>
                                 <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Waktu Sewa</p>
                                 <div class="flex items-center gap-2 mt-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 text-gray-800">
@@ -171,6 +172,10 @@
                                     </svg>
                                     <span class="text-lg font-black">${invoice.start} - ${invoice.end}</span>
                                 </div>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Waktu Pemesanan / Transaksi</p>
+                                <p class="text-sm font-black mt-1.5">${invoice.bookingTime}</p>
                             </div>
                         </div>
 

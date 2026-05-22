@@ -82,6 +82,10 @@ public class InvoiceController extends HttpServlet {
                             String fullname = rs.getString("fullname");
                             invoiceData.put("fullname", (fullname != null && !fullname.trim().isEmpty()) ? fullname : rs.getString("username"));
 
+                            // Generate formatted booking/transaction time
+                            String bookingTime = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm").format(new java.util.Date());
+                            invoiceData.put("bookingTime", bookingTime);
+
                             request.setAttribute("invoice", invoiceData);
                             request.getRequestDispatcher("view/invoice.jsp").forward(request, response);
                         } else {

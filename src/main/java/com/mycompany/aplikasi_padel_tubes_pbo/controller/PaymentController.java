@@ -39,9 +39,12 @@ public class PaymentController extends HttpServlet {
             int bookingId = Integer.parseInt(bookingIdParam);
             
             try (Connection conn = Koneksi.getConnection()) {
-                String sql = "SELECT b.booking_id, b.user_id, b.match_date, b.start_time, b.end_time, b.total_price, b.status, c.name AS court_name " +
+                String sql = "SELECT b.booking_id, b.user_id, b.match_date, b.start_time, b.end_time, b.total_price, b.status, " +
+                             "c.name AS court_name, u.username, u.email, p.fullname " +
                              "FROM bookings b " +
                              "JOIN courts c ON b.court_id = c.court_id " +
+                             "JOIN users u ON b.user_id = u.user_id " +
+                             "LEFT JOIN profiles p ON u.user_id = p.user_id " +
                              "WHERE b.booking_id = ?";
                 
                 try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -79,6 +82,15 @@ public class PaymentController extends HttpServlet {
                             booking.put("end", rs.getTime("end_time"));
                             booking.put("total", rs.getInt("total_price"));
                             booking.put("status", status);
+                            booking.put("username", rs.getString("username"));
+                            booking.put("email", rs.getString("email"));
+                            
+                            String fullname = rs.getString("fullname");
+                            booking.put("fullname", (fullname != null && !fullname.trim().isEmpty()) ? fullname : rs.getString("username"));
+                            
+                            // Generate formatted booking creation/transaction time
+                            String bookingTime = new java.text.SimpleDateFormat("dd MMM yyyy, HH:mm").format(new java.util.Date());
+                            booking.put("bookingTime", bookingTime);
                             
                             request.setAttribute("booking", booking);
                             request.getRequestDispatcher("view/payment.jsp").forward(request, response);

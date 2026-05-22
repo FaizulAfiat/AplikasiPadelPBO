@@ -94,6 +94,17 @@
                                     ${booking.start} - ${booking.end}
                                 </p>
                             </div>
+                            <div class="border-t-2 border-black/10 pt-2 col-span-2 space-y-2">
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Akun Pemesan</p>
+                                    <p class="text-sm font-black uppercase">${booking.fullname} (${booking.username})</p>
+                                    <p class="text-xs text-gray-600 font-bold">${booking.email}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Waktu Booking / Transaksi</p>
+                                    <p class="text-sm font-bold">${booking.bookingTime}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
