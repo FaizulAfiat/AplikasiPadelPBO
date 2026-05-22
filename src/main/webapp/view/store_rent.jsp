@@ -405,7 +405,7 @@
                                                                         Your Cart</h2>
                                                                 </div>
                                                                 <button onclick="toggleCartDrawer()"
-                                                                    class="p-2 border-2 border-black rounded-lg hover:bg-red-100 transition-colors">
+                                                                    class="p-2 border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500 hover:text-gray-800 transition-colors">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                                         viewBox="0 0 24 24" stroke-width="3"
                                                                         stroke="currentColor" class="w-4 h-4">
@@ -431,9 +431,9 @@
                                                                     <% } else { %>
                                                                         <% for (CartItem item : cart) { %>
                                                                             <div
-                                                                                class="flex gap-4 p-4 border-2 border-black rounded-2xl bg-gray-50 relative group shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                                                                class="flex gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50 relative group shadow-sm">
                                                                                 <div
-                                                                                    class="w-16 h-16 rounded-xl border-2 border-black overflow-hidden bg-white flex-none">
+                                                                                    class="w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-white flex-none">
                                                                                     <img src="${pageContext.request.contextPath}/assets/images/<%= item.getProduct().getImage() %>"
                                                                                         alt="<%= item.getProduct().getName() %>"
                                                                                         class="w-full h-full object-cover">
@@ -448,13 +448,13 @@
                                                                                                 <%= item.getProduct().getName()
                                                                                                     %>
                                                                                             </h4>
-                                                                                            <span class="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded border border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,1)] flex-none 
+                                                                                            <span class="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border flex-none 
                                                                                                 <c:choose>
                                                                                                     <c:when test="
                                                                                                 ${item.product.type=='Rent'
-                                                                                                }">bg-yellow-300
+                                                                                                }">bg-yellow-100 text-yellow-800 border-yellow-200
                                                                                                 </c:when>
-                                                                                                <c:otherwise>bg-cyan-400
+                                                                                                <c:otherwise>bg-cyan-100 text-cyan-800 border-cyan-200
                                                                                                 </c:otherwise>
                                                                                                 </c:choose>">
                                                                                                 ${item.product.type}
@@ -477,7 +477,7 @@
 
                                                                                         <!-- Qty Controls -->
                                                                                         <div
-                                                                                            class="flex items-center border-2 border-black rounded-lg overflow-hidden bg-white">
+                                                                                            class="flex items-center border border-gray-200 rounded-lg overflow-hidden bg-white">
                                                                                             <form
                                                                                                 action="${pageContext.request.contextPath}/Cart"
                                                                                                 method="POST"
@@ -492,7 +492,7 @@
                                                                                                     name="change"
                                                                                                     value="-1">
                                                                                                 <button type="submit"
-                                                                                                    class="px-2 py-1 font-black text-xs hover:bg-gray-100 border-r-2 border-black">-</button>
+                                                                                                    class="px-2.5 py-1 font-bold text-xs hover:bg-gray-50 border-r border-gray-200 text-gray-500 hover:text-black">-</button>
                                                                                             </form>
                                                                                             <span
                                                                                                 class="px-3 font-black text-xs">
@@ -513,7 +513,7 @@
                                                                                                     name="change"
                                                                                                     value="1">
                                                                                                 <button type="submit"
-                                                                                                    class="px-2 py-1 font-black text-xs hover:bg-gray-100 border-l-2 border-black">+</button>
+                                                                                                    class="px-2.5 py-1 font-bold text-xs hover:bg-gray-50 border-l border-gray-200 text-gray-500 hover:text-black">+</button>
                                                                                             </form>
                                                                                         </div>
                                                                                     </div>
@@ -529,7 +529,7 @@
                                                                                         name="productId"
                                                                                         value="<%= item.getProduct().getId() %>">
                                                                                     <button type="submit"
-                                                                                        class="w-6 h-6 rounded-full bg-red-400 border-2 border-black flex items-center justify-center text-xs font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none active:scale-95 transition-all">×</button>
+                                                                                        class="w-6 h-6 rounded-full bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs font-bold shadow-sm active:scale-95 transition-all">×</button>
                                                                                 </form>
                                                                             </div>
                                                                             <% } %>
@@ -539,7 +539,7 @@
                                                             <!-- Bottom Summary & Checkout -->
                                                             <% if (cart !=null && !cart.isEmpty()) { %>
                                                                 <div
-                                                                    class="border-t-4 border-black pt-6 mt-6 space-y-4 flex-none">
+                                                                    class="border-t border-gray-200 pt-6 mt-6 space-y-4 flex-none">
                                                                     <div class="flex justify-between items-end">
                                                                         <span
                                                                             class="font-black text-xs uppercase text-gray-400 tracking-widest">Total
@@ -556,7 +556,7 @@
                                                                             <input type="hidden" name="action"
                                                                                 value="clear">
                                                                             <button type="submit"
-                                                                                class="w-full border-2 border-black py-3 rounded-xl font-black uppercase text-xs hover:bg-red-100 transition-colors">
+                                                                                class="w-full border border-gray-200 text-gray-700 py-3 rounded-xl font-bold uppercase text-xs hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm">
                                                                                 Clear
                                                                             </button>
                                                                         </form>
@@ -566,7 +566,7 @@
                                                                             <input type="hidden" name="action"
                                                                                 value="checkout">
                                                                             <button type="submit"
-                                                                                class="w-full bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black py-3.5 rounded-xl font-black uppercase text-xs tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all text-center">
+                                                                                class="w-full bg-black text-white hover:bg-zinc-800 border border-black py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-sm active:scale-95 text-center">
                                                                                 Checkout Cart
                                                                             </button>
                                                                         </form>
@@ -619,9 +619,9 @@
 
                                                                 const typeBadge = document.getElementById('modalProductType');
                                                                 if (type === 'Rent') {
-                                                                    typeBadge.className = "absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-yellow-300 text-black";
+                                                                    typeBadge.className = "absolute top-3 left-3 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border bg-yellow-100 text-yellow-800 border-yellow-200";
                                                                 } else {
-                                                                    typeBadge.className = "absolute top-3 left-3 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-cyan-400 text-black";
+                                                                    typeBadge.className = "absolute top-3 left-3 text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full border bg-cyan-100 text-cyan-800 border-cyan-200";
                                                                 }
 
                                                                 document.getElementById('modalProductName').textContent = name;
@@ -653,11 +653,11 @@
                                                                 if (stock > 0) {
                                                                     submitBtn.disabled = false;
                                                                     submitBtn.textContent = type === 'Rent' ? 'Rent Equipment' : 'Purchase Item';
-                                                                    submitBtn.className = "w-full bg-black text-white hover:bg-cyan-400 hover:text-black border-2 border-black py-3.5 rounded-xl font-black uppercase text-xs tracking-wider transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none active:scale-95 transition-all text-center";
+                                                                    submitBtn.className = "w-full bg-black text-white hover:bg-zinc-800 border border-black py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-all shadow-sm active:scale-95 text-center";
                                                                 } else {
                                                                     submitBtn.disabled = true;
                                                                     submitBtn.textContent = 'Out of Stock';
-                                                                    submitBtn.className = "w-full bg-gray-200 text-gray-400 border-2 border-gray-300 py-3.5 rounded-xl font-black uppercase text-xs tracking-wider cursor-not-allowed text-center";
+                                                                    submitBtn.className = "w-full bg-gray-100 text-gray-400 border border-gray-200 py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider cursor-not-allowed text-center";
                                                                 }
 
                                                                 const modal = document.getElementById('productDetailModal');
