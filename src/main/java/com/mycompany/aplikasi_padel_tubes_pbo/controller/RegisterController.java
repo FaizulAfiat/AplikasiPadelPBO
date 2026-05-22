@@ -77,24 +77,57 @@ public class RegisterController extends HttpServlet {
         
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         String username = request.getParameter("username");
+        String fullname = request.getParameter("fullname");
+        String gender = request.getParameter("gender");
         String email = request.getParameter("email");
         String pass = request.getParameter("password");
 
         try (Connection conn = Koneksi.getConnection()) {
-            String sql = "INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, email);
-            ps.setString(3, pass);
-            ps.setTimestamp(4, currentTime);
+            conn.setAutoCommit(false);
+            try {
+                String sql = "INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, ?)";
+                try (PreparedStatement ps = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, username);
+                    ps.setString(2, email);
+                    ps.setString(3, pass);
+                    ps.setTimestamp(4, currentTime);
 
-            int result = ps.executeUpdate();
+                    int result = ps.executeUpdate();
 
-            if (result > 0) {
-                response.getWriter().println("<script>"
-                        + "alert('Registrasi Berhasil! Silakan Login.');"
-                        + "window.location='Login.html';"
-                        + "</script>");
+                    if (result > 0) {
+                        int userId = -1;
+                        try (java.sql.ResultSet rs = ps.getGeneratedKeys()) {
+                            if (rs.next()) {
+                                userId = rs.getInt(1);
+                            }
+                        }
+
+                        if (userId != -1) {
+                            String profileSql = "INSERT INTO profiles (user_id, fullname, username, gender) VALUES (?, ?, ?, ?)";
+                            try (PreparedStatement profilePs = conn.prepareStatement(profileSql)) {
+                                profilePs.setInt(1, userId);
+                                profilePs.setString(2, fullname);
+                                profilePs.setString(3, username);
+                                profilePs.setString(4, gender);
+                                profilePs.executeUpdate();
+                            }
+                        }
+
+                        conn.commit();
+                        response.getWriter().println("<script>"
+                                + "alert('Registrasi Berhasil! Silakan Login.');"
+                                + "window.location='Login.html';"
+                                + "</script>");
+                    } else {
+                        conn.rollback();
+                        response.getWriter().println("Gagal Registrasi: Gagal menyimpan data user.");
+                    }
+                }
+            } catch (SQLException ex) {
+                conn.rollback();
+                throw ex;
+            } finally {
+                conn.setAutoCommit(true);
             }
         } catch (SQLException e) {
             e.printStackTrace();
