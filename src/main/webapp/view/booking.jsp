@@ -15,6 +15,16 @@
                         border-color: #e5e5e5;
                     }
 
+                    /* Hide scrollbar for Chrome, Safari and Opera */
+                    .no-scrollbar::-webkit-scrollbar {
+                        display: none;
+                    }
+                    /* Hide scrollbar for IE, Edge and Firefox */
+                    .no-scrollbar {
+                        -ms-overflow-style: none;  /* IE and Edge */
+                        scrollbar-width: none;  /* Firefox */
+                    }
+
                     /* Custom scrollbar for premium calendar list */
                     #time-grid::-webkit-scrollbar {
                         width: 6px;
@@ -72,7 +82,7 @@
                 </style>
             </head>
 
-            <body class="bg-white text-black min-h-screen flex flex-col">
+            <body class="bg-white text-black min-h-screen md:h-screen md:overflow-hidden flex flex-col">
                 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
                     <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
@@ -98,9 +108,9 @@
                             </div>
                         </header>
 
-                        <main class="flex flex-col md:flex-row flex-1">
+                        <main class="flex flex-col md:flex-row flex-1 md:overflow-hidden">
                             <div
-                                class="w-full md:w-1/3 p-8 md:p-12 border-b md:border-b-0 md:border-r border-grid bg-white">
+                                class="w-full md:w-1/3 p-8 md:p-12 border-b md:border-b-0 md:border-r border-grid bg-white md:overflow-y-auto no-scrollbar">
                                 <span class="text-xs font-bold uppercase block mb-4 opacity-50">03 / Reservation</span>
                                 <h2
                                     class="text-5xl md:text-7xl font-black leading-none uppercase mb-8 tracking-tighter">
@@ -111,7 +121,7 @@
                                 </p>
                             </div>
 
-                            <div class="flex-1 p-8 md:p-12 bg-white">
+                            <div class="flex-1 p-8 md:p-12 bg-white md:overflow-y-auto">
                                 <c:if test="${not empty param.status && param.status != 'success'}">
                                     <div id="error-toast"
                                         class="mb-8 border-4 border-black p-5 rounded-2xl bg-rose-400 font-black uppercase italic shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] flex items-center justify-between">
