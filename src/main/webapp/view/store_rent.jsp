@@ -89,7 +89,79 @@
                                                                 with the best gear</p>
                                                         </div>
 
-                                                        <div
+                                                        <!-- Category and Sorting Controls Bar -->
+                                                        <div class="bg-white border border-gray-200 rounded-3xl p-6 mb-10 shadow-sm space-y-6 text-left">
+                                                            <!-- Upper row: Search and Filters -->
+                                                            <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                                                                <!-- Search Bar -->
+                                                                <div class="relative w-full md:w-80">
+                                                                    <input type="text" id="searchQuery" oninput="filterAndSortProducts()" 
+                                                                           placeholder="Search gear..." 
+                                                                           class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-2xl font-semibold text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black transition-all bg-gray-50/50">
+                                                                    <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
+                                                                        </svg>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Dropdowns: Type & Sort -->
+                                                                <div class="flex gap-4 w-full md:w-auto">
+                                                                    <!-- Type Filter -->
+                                                                    <div class="flex-1 md:flex-initial">
+                                                                        <select id="filterType" onchange="filterAndSortProducts()" 
+                                                                                class="w-full md:w-44 px-4 py-3 border border-gray-200 rounded-2xl font-semibold text-sm bg-white focus:outline-none focus:border-black transition-all">
+                                                                            <option value="All">All Types</option>
+                                                                            <option value="Sale">For Sale</option>
+                                                                            <option value="Rent">For Rent</option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <!-- Sort Dropdown -->
+                                                                    <div class="flex-1 md:flex-initial">
+                                                                        <select id="sortBy" onchange="filterAndSortProducts()" 
+                                                                                class="w-full md:w-48 px-4 py-3 border border-gray-200 rounded-2xl font-semibold text-sm bg-white focus:outline-none focus:border-black transition-all">
+                                                                            <option value="default">Default Sort</option>
+                                                                            <option value="price_asc">Price: Low to High</option>
+                                                                            <option value="price_desc">Price: High to Low</option>
+                                                                            <option value="rating">Rating: Highest First</option>
+                                                                            <option value="name_asc">Name: A to Z</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- Lower row: Category Tabs -->
+                                                            <div class="flex flex-wrap gap-2 border-t border-gray-100 pt-4">
+                                                                <button type="button" onclick="selectCategory(this)" data-category="All" 
+                                                                        class="category-btn active px-4 py-2 border border-black bg-black text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                                                                    All Items
+                                                                </button>
+                                                                <button type="button" onclick="selectCategory(this)" data-category="Racket" 
+                                                                        class="category-btn px-4 py-2 border border-gray-200 bg-white text-gray-700 hover:border-black rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                                                                    Rackets
+                                                                </button>
+                                                                <button type="button" onclick="selectCategory(this)" data-category="Balls" 
+                                                                        class="category-btn px-4 py-2 border border-gray-200 bg-white text-gray-700 hover:border-black rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                                                                    Balls
+                                                                </button>
+                                                                <button type="button" onclick="selectCategory(this)" data-category="Grip" 
+                                                                        class="category-btn px-4 py-2 border border-gray-200 bg-white text-gray-700 hover:border-black rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                                                                    Grips
+                                                                </button>
+                                                                <button type="button" onclick="selectCategory(this)" data-category="Bag" 
+                                                                        class="category-btn px-4 py-2 border border-gray-200 bg-white text-gray-700 hover:border-black rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                                                                    Bags
+                                                                </button>
+                                                                <button type="button" onclick="selectCategory(this)" data-category="Other" 
+                                                                        class="category-btn px-4 py-2 border border-gray-200 bg-white text-gray-700 hover:border-black rounded-xl text-xs font-bold uppercase tracking-wider transition-all">
+                                                                    Others
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Product Grid -->
+                                                        <div id="productGrid"
                                                             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                                                             <c:forEach var="product" items="${productList}">
 
@@ -576,6 +648,89 @@
                                                         </div>
 
                                                         <script>
+                                                            // Filter & Sort Logic for Products
+                                                            function filterAndSortProducts() {
+                                                                const searchQuery = document.getElementById('searchQuery').value.toLowerCase();
+                                                                const activeCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
+                                                                const activeType = document.getElementById('filterType').value;
+                                                                const activeSort = document.getElementById('sortBy').value;
+
+                                                                const grid = document.getElementById('productGrid');
+                                                                const cards = Array.from(grid.getElementsByClassName('product-card'));
+
+                                                                let visibleCount = 0;
+
+                                                                cards.forEach(card => {
+                                                                    const name = card.getAttribute('data-name').toLowerCase();
+                                                                    const category = card.getAttribute('data-category');
+                                                                    const type = card.getAttribute('data-type');
+
+                                                                    const matchesSearch = name.includes(searchQuery);
+                                                                    const matchesCategory = (activeCategory === 'All') || (category === activeCategory);
+                                                                    const matchesType = (activeType === 'All') || (type === activeType);
+
+                                                                    if (matchesSearch && matchesCategory && matchesType) {
+                                                                        card.style.display = 'flex';
+                                                                        visibleCount++;
+                                                                    } else {
+                                                                        card.style.display = 'none';
+                                                                    }
+                                                                });
+
+                                                                // Sort DOM nodes
+                                                                cards.sort((a, b) => {
+                                                                    if (activeSort === 'price_asc') {
+                                                                        return parseInt(a.getAttribute('data-price')) - parseInt(b.getAttribute('data-price'));
+                                                                    } else if (activeSort === 'price_desc') {
+                                                                        return parseInt(b.getAttribute('data-price')) - parseInt(a.getAttribute('data-price'));
+                                                                    } else if (activeSort === 'rating') {
+                                                                        return parseFloat(b.getAttribute('data-rating')) - parseFloat(a.getAttribute('data-rating'));
+                                                                    } else if (activeSort === 'name_asc') {
+                                                                        return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+                                                                    } else {
+                                                                        // Default: sort by database id
+                                                                        return parseInt(a.getAttribute('data-id')) - parseInt(b.getAttribute('data-id'));
+                                                                    }
+                                                                });
+
+                                                                // Re-append sorted cards
+                                                                cards.forEach(card => grid.appendChild(card));
+
+                                                                // If no products matched, display a friendly placeholder
+                                                                let placeholder = document.getElementById('noProductsPlaceholder');
+                                                                if (visibleCount === 0) {
+                                                                    if (!placeholder) {
+                                                                        placeholder = document.createElement('div');
+                                                                        placeholder.id = 'noProductsPlaceholder';
+                                                                        placeholder.className = 'col-span-full py-16 text-center text-gray-400 font-bold uppercase tracking-widest bg-white border border-gray-200 rounded-3xl';
+                                                                        placeholder.innerHTML = `
+                                                                            <span class="text-4xl block mb-2">🔍</span>
+                                                                            No gear matched your filter
+                                                                        `;
+                                                                        grid.appendChild(placeholder);
+                                                                    }
+                                                                } else {
+                                                                    if (placeholder) {
+                                                                        placeholder.remove();
+                                                                    }
+                                                                }
+                                                            }
+
+                                                            function selectCategory(button) {
+                                                                const buttons = document.querySelectorAll('.category-btn');
+                                                                buttons.forEach(btn => {
+                                                                    btn.classList.remove('bg-black', 'text-white', 'border-black');
+                                                                    btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+                                                                    btn.classList.remove('active');
+                                                                });
+
+                                                                button.classList.add('bg-black', 'text-white', 'border-black');
+                                                                button.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+                                                                button.classList.add('active');
+
+                                                                filterAndSortProducts();
+                                                            }
+
                                                             function toggleCartDrawer() {
                                                                 const drawer = document.getElementById('cartDrawer');
                                                                 const overlay = document.getElementById('cartDrawerOverlay');
