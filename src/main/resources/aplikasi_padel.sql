@@ -194,6 +194,24 @@ CREATE TABLE `transaction` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rentals`
+--
+
+CREATE TABLE `rentals` (
+  `rental_id` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `rental_date` date NOT NULL,
+  `due_date` date NOT NULL,
+  `return_date` date DEFAULT NULL,
+  `status` enum('Active','Returned','Overdue') NOT NULL DEFAULT 'Active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -293,6 +311,15 @@ ALTER TABLE `transaction`
   ADD KEY `product_id` (`product_id`);
 
 --
+-- Indexes for table `rentals`
+--
+ALTER TABLE `rentals`
+  ADD PRIMARY KEY (`rental_id`),
+  ADD KEY `transaction_id` (`transaction_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -358,6 +385,12 @@ ALTER TABLE `transaction`
   MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `rentals`
+--
+ALTER TABLE `rentals`
+  MODIFY `rental_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -411,6 +444,14 @@ ALTER TABLE `session`
 ALTER TABLE `transaction`
   ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE,
   ADD CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `rentals`
+--
+ALTER TABLE `rentals`
+  ADD CONSTRAINT `rentals_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `rentals_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `rentals_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE;
 
 --
 -- Constraints for table `verifications`

@@ -126,6 +126,41 @@ public class DatabaseSeeder implements ServletContextListener {
                         e.printStackTrace();
                     }
                 }
+                
+                // Cek apakah tabel 'rentals' perlu dibuat
+                boolean rentalsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "rentals", null)) {
+                    if (rs.next()) {
+                        rentalsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                
+                if (!rentalsExists) {
+                    System.out.println("[Seeder] Tabel 'rentals' belum ada. Membuat tabel...");
+                    try {
+                        String createRentalsSql = "CREATE TABLE `rentals` ("
+                                + "  `rental_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `transaction_id` int(11) NOT NULL,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `product_id` int(11) NOT NULL,"
+                                + "  `quantity` int(11) NOT NULL DEFAULT 1,"
+                                + "  `rental_date` date NOT NULL,"
+                                + "  `due_date` date NOT NULL,"
+                                + "  `return_date` date DEFAULT NULL,"
+                                + "  `status` enum('Active','Returned','Overdue') NOT NULL DEFAULT 'Active',"
+                                + "  FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`) ON DELETE CASCADE,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createRentalsSql);
+                        System.out.println("[Seeder] Tabel 'rentals' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'rentals': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
                 return;
             }
 

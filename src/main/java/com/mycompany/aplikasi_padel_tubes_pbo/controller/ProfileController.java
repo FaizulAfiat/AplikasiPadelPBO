@@ -198,6 +198,46 @@ public class ProfileController extends HttpServlet {
             }
             request.setAttribute("matchHistory", matchHistory);
 
+            // 4. Auto-update Overdue rentals for current user
+            String updateOverdueSql = "UPDATE rentals SET status = 'Overdue' WHERE user_id = ? AND status = 'Active' AND due_date < CURRENT_DATE()";
+            try (PreparedStatement psUpdate = conn.prepareStatement(updateOverdueSql)) {
+                psUpdate.setInt(1, userId);
+                psUpdate.executeUpdate();
+            }
+
+            // 5. Fetch Active Product Rentals for current user
+            List<Map<String, Object>> activeRentals = new ArrayList<>();
+            String activeRentalsSql = "SELECT r.rental_id, p.name AS product_name, p.category, r.quantity, r.rental_date, r.due_date, r.status, p.image " +
+                                      "FROM rentals r " +
+                                      "JOIN products p ON r.product_id = p.product_id " +
+                                      "WHERE r.user_id = ? AND r.status != 'Returned' " +
+                                      "ORDER BY r.rental_id DESC";
+            try (PreparedStatement ps = conn.prepareStatement(activeRentalsSql)) {
+                ps.setInt(1, userId);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        Map<String, Object> rental = new HashMap<>();
+                        rental.put("id", rs.getInt("rental_id"));
+                        rental.put("productName", rs.getString("product_name"));
+                        rental.put("category", rs.getString("category"));
+                        rental.put("quantity", rs.getInt("quantity"));
+                        rental.put("rentalDate", rs.getDate("rental_date"));
+                        rental.put("dueDate", rs.getDate("due_date"));
+                        rental.put("status", rs.getString("status"));
+                        rental.put("image", rs.getString("image"));
+                        
+                        // Calculate remaining days (due_date - current_date)
+                        java.sql.Date dueDate = rs.getDate("due_date");
+                        long diffMs = dueDate.getTime() - System.currentTimeMillis();
+                        long diffDays = diffMs / (1000 * 60 * 60 * 24);
+                        rental.put("remainingDays", diffDays);
+                        
+                        activeRentals.add(rental);
+                    }
+                }
+            }
+            request.setAttribute("activeRentals", activeRentals);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
