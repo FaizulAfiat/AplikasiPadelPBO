@@ -126,8 +126,7 @@
                             <form id="matchForm" action="${pageContext.request.contextPath}/view/scoring/score.jsp"
                                 method="GET" onsubmit="return finalValidation();"
                                 class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
-                                <input type="hidden" name="booking_id"
-                                    value="${param.booking_id}">
+                                <input type="hidden" name="booking_id" value="${param.booking_id}">
                                 <input type="hidden" name="scoring_style" id="form_scoring_style">
 
                                 <input type="hidden" name="is_guest_p1" id="is_guest_p1" value="false">
@@ -307,7 +306,7 @@
                             const el = document.getElementById(teamIds[i]);
                             const pIdx = el.options[el.selectedIndex].getAttribute('data-idx');
                             document.getElementById('is_guest_p' + (i + 1)).value = poolData[pIdx].isManual;
-                            
+
                             // Set the names
                             const nameParamId = (i < 2 ? 'p' + (i + 1) + '_tim1_name' : 'p' + (i - 1) + '_tim2_name');
                             document.getElementById(nameParamId).value = poolData[pIdx].name;
