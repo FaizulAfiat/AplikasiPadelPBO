@@ -200,6 +200,7 @@ CREATE TABLE `transaction` (
 CREATE TABLE `rentals` (
   `rental_id` int(11) NOT NULL,
   `transaction_id` int(11) NOT NULL,
+  `booking_id` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL DEFAULT 1,
@@ -312,6 +313,7 @@ ALTER TABLE `transaction`
 ALTER TABLE `rentals`
   ADD PRIMARY KEY (`rental_id`),
   ADD KEY `transaction_id` (`transaction_id`),
+  ADD KEY `booking_id` (`booking_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `product_id` (`product_id`);
 
@@ -447,7 +449,8 @@ ALTER TABLE `transaction`
 ALTER TABLE `rentals`
   ADD CONSTRAINT `rentals_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `rentals_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `rentals_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `rentals_ibfk_3` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `rentals_ibfk_4` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `verifications`

@@ -228,11 +228,23 @@
                                         <!-- Quantity -->
                                         <td class="py-5 px-6 text-center text-black font-bold">${r.quantity} pcs</td>
                                         
-                                        <!-- Rental & Due Date -->
+                                        <!-- Rental Period (Court Session) -->
                                         <td class="py-5 px-6">
                                             <div class="flex flex-col">
-                                                <span class="text-xs text-gray-400">Start: <span class="text-black font-semibold"><fmt:formatDate value="${r.rentalDate}" pattern="dd MMM yyyy"/></span></span>
-                                                <span class="text-xs text-rose-500 font-bold mt-1">Due: <span><fmt:formatDate value="${r.dueDate}" pattern="dd MMM yyyy"/></span></span>
+                                                <span class="text-xs text-black font-bold"><fmt:formatDate value="${r.rentalDate}" pattern="dd MMM yyyy"/></span>
+                                                <c:choose>
+                                                    <c:when test="${not empty r.courtName}">
+                                                        <span class="text-[11px] text-cyan-600 font-black mt-1 uppercase tracking-wider">
+                                                            ${r.courtName}
+                                                        </span>
+                                                        <span class="text-[11px] text-gray-500 font-bold">
+                                                            <fmt:formatDate value="${r.bookingStartTime}" type="time" pattern="HH:mm"/> - <fmt:formatDate value="${r.bookingEndTime}" type="time" pattern="HH:mm"/>
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="text-xs text-gray-400 font-normal mt-1">-</span>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </td>
                                         

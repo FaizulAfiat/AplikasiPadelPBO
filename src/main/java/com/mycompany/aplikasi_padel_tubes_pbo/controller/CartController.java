@@ -217,6 +217,53 @@ public class CartController extends HttpServlet {
             return;
         }
 
+        String bookingIdStr = request.getParameter("bookingId");
+        int bookingId = -1;
+        double bookingHours = 1.0;
+        java.sql.Date bookingDate = new java.sql.Date(System.currentTimeMillis());
+
+        boolean hasRentals = false;
+        for (CartItem item : cart) {
+            if ("Rent".equalsIgnoreCase(item.getProduct().getType())) {
+                hasRentals = true;
+                break;
+            }
+        }
+
+        if (hasRentals) {
+            if (bookingIdStr == null || bookingIdStr.trim().isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/ShopController?status=booking_required");
+                return;
+            }
+            try {
+                bookingId = Integer.parseInt(bookingIdStr);
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/ShopController?status=invalid_booking");
+                return;
+            }
+
+            try (Connection conn = Koneksi.getConnection()) {
+                String bookingSql = "SELECT match_date, start_time, end_time FROM bookings WHERE booking_id = ? AND user_id = ?";
+                try (PreparedStatement ps = conn.prepareStatement(bookingSql)) {
+                    ps.setInt(1, bookingId);
+                    ps.setInt(2, userId);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            bookingDate = rs.getDate("match_date");
+                            java.sql.Time start = rs.getTime("start_time");
+                            java.sql.Time end = rs.getTime("end_time");
+                            long diffMs = end.getTime() - start.getTime();
+                            bookingHours = diffMs / (1000.0 * 60 * 60);
+                            if (bookingHours < 0) bookingHours += 24;
+                        } else {
+                            response.sendRedirect(request.getContextPath() + "/ShopController?status=booking_not_found");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         try (Connection conn = Koneksi.getConnection()) {
             // Start transaction
             conn.setAutoCommit(false);
@@ -251,8 +298,14 @@ public class CartController extends HttpServlet {
                     }
 
                     // 3. Create transaction record
-                    // Note: total_amount = price * quantity
-                    int subtotal = item.getProduct().getPrice() * item.getQuantity();
+                    // Note: total_amount = price * quantity * hours (if Rent)
+                    int subtotal;
+                    if ("Rent".equalsIgnoreCase(item.getProduct().getType())) {
+                        subtotal = (int) (item.getProduct().getPrice() * item.getQuantity() * bookingHours);
+                    } else {
+                        subtotal = item.getProduct().getPrice() * item.getQuantity();
+                    }
+
                     String insertTxSql = "INSERT INTO transaction (user_id, product_id, quantity, type, transaction_date, total_amount, status) VALUES (?, ?, ?, ?, CURRENT_DATE(), ?, 'Completed')";
                     int generatedTxId = -1;
                     try (PreparedStatement insertPs = conn.prepareStatement(insertTxSql, Statement.RETURN_GENERATED_KEYS)) {
@@ -272,13 +325,20 @@ public class CartController extends HttpServlet {
 
                     // 4. Create rental record if type is 'Rent'
                     if ("Rent".equalsIgnoreCase(item.getProduct().getType())) {
-                        String insertRentalSql = "INSERT INTO rentals (transaction_id, user_id, product_id, quantity, rental_date, due_date, status) "
-                                + "VALUES (?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURRENT_DATE(), INTERVAL 3 DAY), 'Active')";
+                        String insertRentalSql = "INSERT INTO rentals (transaction_id, booking_id, user_id, product_id, quantity, rental_date, due_date, status) "
+                                + "VALUES (?, ?, ?, ?, ?, ?, ?, 'Active')";
                         try (PreparedStatement rentalPs = conn.prepareStatement(insertRentalSql)) {
                             rentalPs.setInt(1, generatedTxId);
-                            rentalPs.setInt(2, userId);
-                            rentalPs.setInt(3, item.getProduct().getId());
-                            rentalPs.setInt(4, item.getQuantity());
+                            if (bookingId != -1) {
+                                rentalPs.setInt(2, bookingId);
+                            } else {
+                                rentalPs.setNull(2, java.sql.Types.INTEGER);
+                            }
+                            rentalPs.setInt(3, userId);
+                            rentalPs.setInt(4, item.getProduct().getId());
+                            rentalPs.setInt(5, item.getQuantity());
+                            rentalPs.setDate(6, bookingDate);
+                            rentalPs.setDate(7, bookingDate);
                             rentalPs.executeUpdate();
                         }
                     }

@@ -449,8 +449,8 @@
                                                     <th class="p-4">Kategori</th>
                                                     <th class="p-4">Jumlah</th>
                                                     <th class="p-4">Tanggal Sewa</th>
-                                                    <th class="p-4">Batas Pengembalian</th>
-                                                    <th class="p-4">Sisa Waktu</th>
+                                                    <th class="p-4">Sesi Lapangan</th>
+                                                    <th class="p-4">Jam Booking</th>
                                                     <th class="p-4">Status</th>
                                                 </tr>
                                             </thead>
@@ -483,19 +483,23 @@
                                                                 <td class="p-4">
                                                                     <fmt:formatDate value="${rental.rentalDate}" pattern="dd MMM yyyy" />
                                                                 </td>
-                                                                <td class="p-4 text-rose-600 font-semibold">
-                                                                    <fmt:formatDate value="${rental.dueDate}" pattern="dd MMM yyyy" />
-                                                                </td>
-                                                                <td class="p-4 font-semibold">
+                                                                <td class="p-4 font-bold text-black">
                                                                     <c:choose>
-                                                                        <c:when test="${rental.remainingDays < 0}">
-                                                                            <span class="text-rose-600 font-black animate-pulse">Terlambat ${-rental.remainingDays} Hari</span>
-                                                                        </c:when>
-                                                                        <c:when test="${rental.remainingDays == 0}">
-                                                                            <span class="text-yellow-600 font-bold">Hari ini</span>
+                                                                        <c:when test="${not empty rental.courtName}">
+                                                                            ${rental.courtName}
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <span class="text-cyan-600">${rental.remainingDays} Hari lagi</span>
+                                                                            <span class="text-gray-400 font-normal">-</span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </td>
+                                                                <td class="p-4 font-semibold text-cyan-600">
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty rental.bookingStartTime}">
+                                                                            <fmt:formatDate value="${rental.bookingStartTime}" type="time" pattern="HH:mm" /> - <fmt:formatDate value="${rental.bookingEndTime}" type="time" pattern="HH:mm" />
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span class="text-gray-400 font-normal">-</span>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </td>

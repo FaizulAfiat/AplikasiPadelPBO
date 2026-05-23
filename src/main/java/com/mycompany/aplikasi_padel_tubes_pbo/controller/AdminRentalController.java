@@ -45,10 +45,13 @@ public class AdminRentalController extends HttpServlet {
 
             StringBuilder sqlBuilder = new StringBuilder(
                 "SELECT r.rental_id, r.transaction_id, r.user_id, r.product_id, r.quantity, r.rental_date, r.due_date, r.return_date, r.status, " +
-                "u.username, p.name AS product_name, p.category, p.image " +
+                "u.username, p.name AS product_name, p.category, p.image, " +
+                "r.booking_id, c.name AS court_name, b.start_time, b.end_time " +
                 "FROM rentals r " +
                 "JOIN users u ON r.user_id = u.user_id " +
                 "JOIN products p ON r.product_id = p.product_id " +
+                "LEFT JOIN bookings b ON r.booking_id = b.booking_id " +
+                "LEFT JOIN courts c ON b.court_id = c.court_id " +
                 "WHERE 1=1 "
             );
 
@@ -91,6 +94,15 @@ public class AdminRentalController extends HttpServlet {
                         rental.setProductName(rs.getString("product_name"));
                         rental.setCategory(rs.getString("category"));
                         rental.setImage(rs.getString("image"));
+                        
+                        rental.setBookingId(rs.getInt("booking_id"));
+                        if (rs.wasNull()) {
+                            rental.setBookingId(0);
+                        }
+                        rental.setCourtName(rs.getString("court_name"));
+                        rental.setBookingStartTime(rs.getTime("start_time"));
+                        rental.setBookingEndTime(rs.getTime("end_time"));
+                        
                         rentalsList.add(rental);
                     }
                 }
