@@ -207,9 +207,12 @@ public class ProfileController extends HttpServlet {
 
             // 5. Fetch Active Product Rentals for current user
             List<Map<String, Object>> activeRentals = new ArrayList<>();
-            String activeRentalsSql = "SELECT r.rental_id, p.name AS product_name, p.category, r.quantity, r.rental_date, r.due_date, r.status, p.image " +
+            String activeRentalsSql = "SELECT r.rental_id, p.name AS product_name, p.category, r.quantity, r.rental_date, r.due_date, r.status, p.image, " +
+                                      "c.name AS court_name, b.start_time, b.end_time " +
                                       "FROM rentals r " +
                                       "JOIN products p ON r.product_id = p.product_id " +
+                                      "LEFT JOIN bookings b ON r.booking_id = b.booking_id " +
+                                      "LEFT JOIN courts c ON b.court_id = c.court_id " +
                                       "WHERE r.user_id = ? AND r.status != 'Returned' " +
                                       "ORDER BY r.rental_id DESC";
             try (PreparedStatement ps = conn.prepareStatement(activeRentalsSql)) {
@@ -225,6 +228,9 @@ public class ProfileController extends HttpServlet {
                         rental.put("dueDate", rs.getDate("due_date"));
                         rental.put("status", rs.getString("status"));
                         rental.put("image", rs.getString("image"));
+                        rental.put("courtName", rs.getString("court_name"));
+                        rental.put("bookingStart", rs.getTime("start_time"));
+                        rental.put("bookingEnd", rs.getTime("end_time"));
                         
                         // Calculate remaining days (due_date - current_date)
                         java.sql.Date dueDate = rs.getDate("due_date");

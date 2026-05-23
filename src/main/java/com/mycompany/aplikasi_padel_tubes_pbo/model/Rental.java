@@ -1,10 +1,12 @@
 package com.mycompany.aplikasi_padel_tubes_pbo.model;
 
 import java.sql.Date;
+import java.sql.Time;
 
 public class Rental {
     private int rentalId;
     private int transactionId;
+    private int bookingId; // linked booking
     private int userId;
     private int productId;
     private int quantity;
@@ -18,6 +20,11 @@ public class Rental {
     private String productName;
     private String category;
     private String image;
+
+    // Booking Details
+    private String courtName;
+    private Time bookingStartTime;
+    private Time bookingEndTime;
 
     public Rental() {
     }
@@ -36,6 +43,14 @@ public class Rental {
 
     public void setTransactionId(int transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public int getUserId() {
@@ -124,5 +139,29 @@ public class Rental {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getCourtName() {
+        return courtName;
+    }
+
+    public void setCourtName(String courtName) {
+        this.courtName = courtName;
+    }
+
+    public Time getBookingStartTime() {
+        return bookingStartTime;
+    }
+
+    public void setBookingStartTime(Time bookingStartTime) {
+        this.bookingStartTime = bookingStartTime;
+    }
+
+    public Time getBookingEndTime() {
+        return bookingEndTime;
+    }
+
+    public void setBookingEndTime(Time bookingEndTime) {
+        this.bookingEndTime = bookingEndTime;
     }
 }

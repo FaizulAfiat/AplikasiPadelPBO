@@ -238,7 +238,7 @@
                                                                                                             <span
                                                                                                                 class="text-xs font-bold text-gray-400 opacity-60">
                                                                                                                 /
-                                                                                                                Session</span>
+                                                                                                                Hour</span>
                                                                                                         </c:if>
                                                                                                     </p>
                                                                                                 </div>
@@ -503,7 +503,10 @@
                                                                     <% } else { %>
                                                                         <% for (CartItem item : cart) { %>
                                                                             <div
-                                                                                class="flex gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50 relative group shadow-sm">
+                                                                                class="cart-item flex gap-4 p-4 border border-gray-200 rounded-2xl bg-gray-50 relative group shadow-sm"
+                                                                                data-type="<%= item.getProduct().getType() %>"
+                                                                                data-price="<%= item.getProduct().getPrice() %>"
+                                                                                data-qty="<%= item.getQuantity() %>">
                                                                                 <div
                                                                                     class="w-16 h-16 rounded-xl border border-gray-200 overflow-hidden bg-white flex-none">
                                                                                     <img src="${pageContext.request.contextPath}/assets/images/<%= item.getProduct().getImage() %>"
@@ -541,7 +544,7 @@
                                                                                     <div
                                                                                         class="flex justify-between items-end mt-2">
                                                                                         <p
-                                                                                            class="font-black text-sm text-black">
+                                                                                            class="item-price-display font-black text-sm text-black">
                                                                                             Rp <%=
                                                                                                 rupiahFormat.format(item.getProduct().getPrice())
                                                                                                 %>
@@ -610,13 +613,43 @@
 
                                                             <!-- Bottom Summary & Checkout -->
                                                             <% if (cart !=null && !cart.isEmpty()) { %>
+                                                                <% 
+                                                                boolean cartHasRentals = false;
+                                                                for (CartItem item : cart) {
+                                                                    if ("Rent".equalsIgnoreCase(item.getProduct().getType())) {
+                                                                        cartHasRentals = true;
+                                                                        break;
+                                                                    }
+                                                                }
+                                                                List<java.util.Map<String, Object>> userBookings = (List<java.util.Map<String, Object>>) request.getAttribute("userBookings");
+                                                                %>
                                                                 <div
                                                                     class="border-t border-gray-200 pt-6 mt-6 space-y-4 flex-none">
+                                                                    
+                                                                    <% if (cartHasRentals) { %>
+                                                                        <div class="border-b border-gray-100 pb-4 mb-2">
+                                                                            <label class="block text-[10px] font-black uppercase text-gray-400 tracking-widest mb-2">Select Linked Court Booking</label>
+                                                                            <% if (userBookings == null || userBookings.isEmpty()) { %>
+                                                                                <div class="p-3 border border-red-200 bg-red-50 text-red-700 rounded-2xl text-[11px] font-bold leading-snug">
+                                                                                    ⚠️ You must have an active/confirmed court booking to rent equipment. Please book a court first.
+                                                                                </div>
+                                                                            <% } else { %>
+                                                                                <select id="bookingSelect" onchange="updateCartPricesWithBooking()" class="w-full px-4 py-2.5 border border-gray-200 rounded-2xl font-bold text-xs bg-white focus:outline-none focus:border-black transition-all">
+                                                                                    <% for (java.util.Map<String, Object> bk : userBookings) { %>
+                                                                                        <option value="<%= bk.get("id") %>" data-hours="<%= bk.get("hours") %>">
+                                                                                            <%= bk.get("court") %> - <%= bk.get("date") %> (<%= bk.get("hours") %> hrs)
+                                                                                        </option>
+                                                                                    <% } %>
+                                                                                </select>
+                                                                            <% } %>
+                                                                        </div>
+                                                                    <% } %>
+
                                                                     <div class="flex justify-between items-end">
                                                                         <span
                                                                             class="font-black text-xs uppercase text-gray-400 tracking-widest">Total
                                                                             Amount</span>
-                                                                        <p class="font-black text-2xl text-black">Rp <%=
+                                                                        <p id="cartTotalDisplay" class="font-black text-2xl text-black">Rp <%=
                                                                                 rupiahFormat.format(cartTotal) %>
                                                                         </p>
                                                                     </div>
@@ -637,8 +670,11 @@
                                                                             method="POST" class="w-2/3 m-0 p-0">
                                                                             <input type="hidden" name="action"
                                                                                 value="checkout">
+                                                                            <input type="hidden" name="bookingId" id="checkoutBookingId" value="">
                                                                             <button type="submit"
-                                                                                class="w-full bg-black text-white hover:bg-zinc-800 border border-black py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-sm active:scale-95 text-center">
+                                                                                id="checkoutBtn"
+                                                                                <%= (cartHasRentals && (userBookings == null || userBookings.isEmpty())) ? "disabled" : "" %>
+                                                                                class="w-full bg-black text-white hover:bg-zinc-800 border border-black py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider transition-colors shadow-sm active:scale-95 text-center disabled:bg-gray-200 disabled:text-gray-400 disabled:border-gray-200 disabled:cursor-not-allowed">
                                                                                 Checkout Cart
                                                                             </button>
                                                                         </form>
@@ -791,7 +827,7 @@
                                                                     minimumFractionDigits: 0
                                                                 }).format(price).replace("IDR", "Rp");
                                                                 
-                                                                document.getElementById('modalProductPrice').innerHTML = rupiahFormat + (type === 'Rent' ? ' <span class="text-xs font-bold text-gray-400 opacity-60">/ Session</span>' : '');
+                                                                document.getElementById('modalProductPrice').innerHTML = rupiahFormat + (type === 'Rent' ? ' <span class="text-xs font-bold text-gray-400 opacity-60">/ Hour</span>' : '');
 
                                                                 const stockBadge = document.getElementById('modalProductStock');
                                                                 if (stock > 0) {
@@ -838,12 +874,72 @@
                                                                 }, 300);
                                                             }
 
+                                                            function updateCartPricesWithBooking() {
+                                                                const bookingSelect = document.getElementById('bookingSelect');
+                                                                let hours = 1.0;
+                                                                if (bookingSelect) {
+                                                                    const selectedOption = bookingSelect.options[bookingSelect.selectedIndex];
+                                                                    if (selectedOption) {
+                                                                        hours = parseFloat(selectedOption.getAttribute('data-hours')) || 1.0;
+                                                                        const checkoutBookingId = document.getElementById('checkoutBookingId');
+                                                                        if (checkoutBookingId) {
+                                                                            checkoutBookingId.value = selectedOption.value;
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                let cartTotal = 0;
+                                                                const cartItems = document.querySelectorAll('.cart-item');
+                                                                cartItems.forEach(item => {
+                                                                    const type = item.getAttribute('data-type');
+                                                                    const price = parseInt(item.getAttribute('data-price')) || 0;
+                                                                    const qty = parseInt(item.getAttribute('data-qty')) || 0;
+                                                                    
+                                                                    let itemTotal = 0;
+                                                                    if (type === 'Rent') {
+                                                                        itemTotal = price * qty * hours;
+                                                                        const priceDisplay = item.querySelector('.item-price-display');
+                                                                        if (priceDisplay) {
+                                                                            const formattedItemTotal = new Intl.NumberFormat('id-ID', {
+                                                                                style: 'currency',
+                                                                                currency: 'IDR',
+                                                                                minimumFractionDigits: 0
+                                                                            }).format(price).replace("IDR", "Rp") + " × " + qty + " × " + hours + "h";
+                                                                            priceDisplay.textContent = formattedItemTotal;
+                                                                        }
+                                                                    } else {
+                                                                        itemTotal = price * qty;
+                                                                        const priceDisplay = item.querySelector('.item-price-display');
+                                                                        if (priceDisplay) {
+                                                                            const formattedItemTotal = new Intl.NumberFormat('id-ID', {
+                                                                                style: 'currency',
+                                                                                currency: 'IDR',
+                                                                                minimumFractionDigits: 0
+                                                                            }).format(price).replace("IDR", "Rp") + " × " + qty;
+                                                                            priceDisplay.textContent = formattedItemTotal;
+                                                                        }
+                                                                    }
+                                                                    cartTotal += itemTotal;
+                                                                });
+
+                                                                const totalDisplay = document.getElementById('cartTotalDisplay');
+                                                                if (totalDisplay) {
+                                                                    const formattedTotal = new Intl.NumberFormat('id-ID', {
+                                                                        style: 'currency',
+                                                                        currency: 'IDR',
+                                                                        minimumFractionDigits: 0
+                                                                    }).format(cartTotal).replace("IDR", "Rp");
+                                                                    totalDisplay.textContent = formattedTotal;
+                                                                }
+                                                            }
+
                                                             // Auto open cart if url has cartOpen=true parameter
                                                             window.addEventListener('DOMContentLoaded', () => {
                                                                 const urlParams = new URLSearchParams(window.location.search);
                                                                 if (urlParams.get('cartOpen') === 'true') {
                                                                     toggleCartDrawer();
                                                                 }
+                                                                updateCartPricesWithBooking();
                                                             });
                                                         </script>
                                         </body>
