@@ -137,12 +137,13 @@ public class DatabaseSeeder implements ServletContextListener {
                     // Abaikan
                 }
                 
-                if (!rentalsExists) {
+                 if (!rentalsExists) {
                     System.out.println("[Seeder] Tabel 'rentals' belum ada. Membuat tabel...");
                     try {
                         String createRentalsSql = "CREATE TABLE `rentals` ("
                                 + "  `rental_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                                 + "  `transaction_id` int(11) NOT NULL,"
+                                + "  `booking_id` int(11) DEFAULT NULL,"
                                 + "  `user_id` int(11) NOT NULL,"
                                 + "  `product_id` int(11) NOT NULL,"
                                 + "  `quantity` int(11) NOT NULL DEFAULT 1,"
@@ -151,6 +152,7 @@ public class DatabaseSeeder implements ServletContextListener {
                                 + "  `return_date` date DEFAULT NULL,"
                                 + "  `status` enum('Active','Returned','Overdue') NOT NULL DEFAULT 'Active',"
                                 + "  FOREIGN KEY (`transaction_id`) REFERENCES `transaction` (`transaction_id`) ON DELETE CASCADE,"
+                                + "  FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE SET NULL ON UPDATE CASCADE,"
                                 + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON UPDATE CASCADE,"
                                 + "  FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON UPDATE CASCADE"
                                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
@@ -159,6 +161,29 @@ public class DatabaseSeeder implements ServletContextListener {
                     } catch (Exception e) {
                         System.err.println("[Seeder] Gagal membuat tabel 'rentals': " + e.getMessage());
                         e.printStackTrace();
+                    }
+                } else {
+                    // Cek apakah kolom booking_id sudah ada di tabel rentals
+                    boolean hasBookingId = false;
+                    try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "rentals", "booking_id")) {
+                        if (colRs.next()) {
+                            hasBookingId = true;
+                        }
+                    } catch (Exception e) {
+                        // Abaikan
+                    }
+                    
+                    if (!hasBookingId) {
+                        System.out.println("[Seeder] Tabel 'rentals' membutuhkan migrasi booking_id. Menjalankan ALTER...");
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `rentals` ADD COLUMN `booking_id` int(11) DEFAULT NULL AFTER `transaction_id`");
+                            stmt.executeUpdate("ALTER TABLE `rentals` ADD KEY `booking_id` (`booking_id`)");
+                            stmt.executeUpdate("ALTER TABLE `rentals` ADD CONSTRAINT `rentals_ibfk_4` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE SET NULL ON UPDATE CASCADE");
+                            System.out.println("[Seeder] Kolom 'booking_id' berhasil ditambahkan ke tabel 'rentals'.");
+                        } catch (Exception e) {
+                            System.err.println("[Seeder] Gagal melakukan migrasi booking_id ke tabel 'rentals': " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
                 }
                 return;

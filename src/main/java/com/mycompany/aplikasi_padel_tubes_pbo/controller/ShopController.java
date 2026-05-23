@@ -84,6 +84,43 @@ public class ShopController extends HttpServlet {
             }
                         
             request.setAttribute("productList", productList);
+
+            // Fetch user's active bookings
+            jakarta.servlet.http.HttpSession session = request.getSession();
+            Object userIdObj = session.getAttribute("user_id");
+            List<java.util.Map<String, Object>> userBookings = new ArrayList<>();
+            if (userIdObj != null) {
+                int userId = (Integer) userIdObj;
+                String bookingSql = "SELECT b.booking_id, b.match_date, b.start_time, b.end_time, c.name AS court_name " +
+                                    "FROM bookings b " +
+                                    "JOIN courts c ON b.court_id = c.court_id " +
+                                    "WHERE b.user_id = ? AND b.status IN ('Pending', 'Confirmed') " +
+                                    "ORDER BY b.match_date DESC, b.start_time DESC";
+                try (PreparedStatement bookingPs = conn.prepareStatement(bookingSql)) {
+                    bookingPs.setInt(1, userId);
+                    try (ResultSet bookingRs = bookingPs.executeQuery()) {
+                        while (bookingRs.next()) {
+                            java.util.Map<String, Object> bk = new java.util.HashMap<>();
+                            bk.put("id", bookingRs.getInt("booking_id"));
+                            bk.put("date", bookingRs.getDate("match_date"));
+                            bk.put("start", bookingRs.getTime("start_time"));
+                            bk.put("end", bookingRs.getTime("end_time"));
+                            bk.put("court", bookingRs.getString("court_name"));
+                            
+                            // Calculate hours
+                            java.sql.Time start = bookingRs.getTime("start_time");
+                            java.sql.Time end = bookingRs.getTime("end_time");
+                            long diffMs = end.getTime() - start.getTime();
+                            double hours = diffMs / (1000.0 * 60 * 60);
+                            if (hours < 0) hours += 24;
+                            bk.put("hours", hours);
+                            
+                            userBookings.add(bk);
+                        }
+                    }
+                }
+            }
+            request.setAttribute("userBookings", userBookings);
             request.getRequestDispatcher("view/store_rent.jsp").forward(request, response);
             
         } catch (SQLException e) {
