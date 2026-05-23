@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,13 +254,33 @@ public class CartController extends HttpServlet {
                     // Note: total_amount = price * quantity
                     int subtotal = item.getProduct().getPrice() * item.getQuantity();
                     String insertTxSql = "INSERT INTO transaction (user_id, product_id, quantity, type, transaction_date, total_amount, status) VALUES (?, ?, ?, ?, CURRENT_DATE(), ?, 'Completed')";
-                    try (PreparedStatement insertPs = conn.prepareStatement(insertTxSql)) {
+                    int generatedTxId = -1;
+                    try (PreparedStatement insertPs = conn.prepareStatement(insertTxSql, Statement.RETURN_GENERATED_KEYS)) {
                         insertPs.setInt(1, userId);
                         insertPs.setInt(2, item.getProduct().getId());
                         insertPs.setInt(3, item.getQuantity());
                         insertPs.setString(4, item.getProduct().getType());
                         insertPs.setInt(5, subtotal);
                         insertPs.executeUpdate();
+                        
+                        try (ResultSet rsGenerated = insertPs.getGeneratedKeys()) {
+                            if (rsGenerated.next()) {
+                                generatedTxId = rsGenerated.getInt(1);
+                            }
+                        }
+                    }
+
+                    // 4. Create rental record if type is 'Rent'
+                    if ("Rent".equalsIgnoreCase(item.getProduct().getType())) {
+                        String insertRentalSql = "INSERT INTO rentals (transaction_id, user_id, product_id, quantity, rental_date, due_date, status) "
+                                + "VALUES (?, ?, ?, ?, CURRENT_DATE(), DATE_ADD(CURRENT_DATE(), INTERVAL 3 DAY), 'Active')";
+                        try (PreparedStatement rentalPs = conn.prepareStatement(insertRentalSql)) {
+                            rentalPs.setInt(1, generatedTxId);
+                            rentalPs.setInt(2, userId);
+                            rentalPs.setInt(3, item.getProduct().getId());
+                            rentalPs.setInt(4, item.getQuantity());
+                            rentalPs.executeUpdate();
+                        }
                     }
                 }
 

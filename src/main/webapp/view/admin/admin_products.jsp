@@ -23,6 +23,8 @@
                             <a href="ManageProducts"
                                 class="block font-black text-xs uppercase tracking-widest border-l-4 border-cyan-400 pl-4">Manage
                                 Shop</a>
+                            <a href="AdminRentalController"
+                                class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">Track Rentals</a>
                             <a href="AdminController#rental-logs"
                                 class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">Schedules</a>
                             <a href="${pageContext.request.contextPath}/Profile"

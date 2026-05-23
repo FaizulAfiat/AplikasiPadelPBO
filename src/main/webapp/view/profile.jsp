@@ -87,10 +87,18 @@
                                         Manage Shop
                                     </a>
                                     
-                                    <a href="${pageContext.request.contextPath}/AdminController#rental-logs" 
+                                    <a href="${pageContext.request.contextPath}/AdminRentalController" 
                                        class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
                                             <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+                                        </svg>
+                                        Track Rentals
+                                    </a>
+                                    
+                                    <a href="${pageContext.request.contextPath}/AdminController#rental-logs" 
+                                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                                         </svg>
                                         Schedules
                                     </a>
@@ -423,6 +431,97 @@
                             </c:if>
 
 
+
+                            <!-- Active Rentals Section -->
+                            <div class="space-y-4 mb-8">
+                                <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse"></span>
+                                    Rental Aktif Saya
+                                </h3>
+
+                                <div class="border border-grid rounded-2xl overflow-hidden shadow-sm bg-white">
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider border-b border-grid">
+                                                    <th class="p-4">Rental ID</th>
+                                                    <th class="p-4">Produk</th>
+                                                    <th class="p-4">Kategori</th>
+                                                    <th class="p-4">Jumlah</th>
+                                                    <th class="p-4">Tanggal Sewa</th>
+                                                    <th class="p-4">Batas Pengembalian</th>
+                                                    <th class="p-4">Sisa Waktu</th>
+                                                    <th class="p-4">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-100">
+                                                <c:choose>
+                                                    <c:when test="${empty activeRentals}">
+                                                        <tr>
+                                                            <td colspan="8" class="p-8 text-center text-gray-400 font-medium italic bg-gray-50/50">
+                                                                Anda tidak memiliki sewa barang yang sedang aktif.
+                                                            </td>
+                                                        </tr>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:forEach var="rental" items="${activeRentals}">
+                                                            <tr class="hover:bg-gray-50 transition-colors duration-150 text-gray-700 text-sm">
+                                                                <td class="p-4 font-semibold">#${rental.id}</td>
+                                                                <td class="p-4">
+                                                                    <div class="flex items-center gap-3">
+                                                                        <div class="w-8 h-8 bg-gray-100 border border-gray-200 rounded overflow-hidden shrink-0 flex items-center justify-center">
+                                                                            <img src="${pageContext.request.contextPath}/img/${not empty rental.image ? rental.image : 'default.png'}" 
+                                                                                 alt="${rental.productName}" 
+                                                                                 class="object-contain w-6 h-6"
+                                                                                 onerror="this.src='${pageContext.request.contextPath}/img/default.png'">
+                                                                        </div>
+                                                                        <span class="font-bold text-black max-w-xs truncate">${rental.productName}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="p-4 uppercase text-xs text-gray-500">${rental.category}</td>
+                                                                <td class="p-4">${rental.quantity} pcs</td>
+                                                                <td class="p-4">
+                                                                    <fmt:formatDate value="${rental.rentalDate}" pattern="dd MMM yyyy" />
+                                                                </td>
+                                                                <td class="p-4 text-rose-600 font-semibold">
+                                                                    <fmt:formatDate value="${rental.dueDate}" pattern="dd MMM yyyy" />
+                                                                </td>
+                                                                <td class="p-4 font-semibold">
+                                                                    <c:choose>
+                                                                        <c:when test="${rental.remainingDays < 0}">
+                                                                            <span class="text-rose-600 font-black animate-pulse">Terlambat ${-rental.remainingDays} Hari</span>
+                                                                        </c:when>
+                                                                        <c:when test="${rental.remainingDays == 0}">
+                                                                            <span class="text-yellow-600 font-bold">Hari ini</span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span class="text-cyan-600">${rental.remainingDays} Hari lagi</span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </td>
+                                                                <td class="p-4">
+                                                                    <c:choose>
+                                                                        <c:when test="${rental.status eq 'Active'}">
+                                                                            <span class="px-2 py-0.5 bg-cyan-50 text-cyan-800 border border-cyan-200 rounded text-[9px] font-bold uppercase tracking-wider">
+                                                                                Active
+                                                                            </span>
+                                                                        </c:when>
+                                                                        <c:when test="${rental.status eq 'Overdue'}">
+                                                                            <span class="px-2 py-0.5 bg-rose-50 text-rose-800 border border-rose-200 rounded text-[9px] font-bold uppercase tracking-wider animate-pulse">
+                                                                                Overdue
+                                                                            </span>
+                                                                        </c:when>
+                                                                    </c:choose>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Product Purchase/Rental History -->
                             <div class="space-y-4">
