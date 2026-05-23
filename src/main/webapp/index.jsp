@@ -237,6 +237,32 @@
                                     </div>
                                     <span class="font-black uppercase text-sm tracking-tighter">Profile</span>
                                 </a>
+                                    
+                                    <a href="view/chat.jsp" class="group flex flex-col items-center gap-4 text-center">
+
+    <div class="w-20 h-20 bg-pink-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-[4px_4px_0px_#000] group-hover:-translate-y-1 transition">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width="34"
+             height="34"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="black"
+             stroke-width="2.5">
+
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M8 10h8M8 14h5m-9 6l2.3-2.3A2 2 0 0 1 7.7 17H19a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h1"/>
+
+        </svg>
+
+    </div>
+
+    <span class="font-black uppercase text-sm tracking-tight">
+        CHAT ROOM
+    </span>
+
+</a>
                             </div>
                         </div>
                     </div>
