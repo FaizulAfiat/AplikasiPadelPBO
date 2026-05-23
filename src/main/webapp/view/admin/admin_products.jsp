@@ -25,6 +25,8 @@
                                 Shop</a>
                             <a href="AdminController#rental-logs"
                                 class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">Schedules</a>
+                            <a href="${pageContext.request.contextPath}/Profile"
+                                class="block font-black text-xs uppercase tracking-widest opacity-40 hover:opacity-100 transition-all">Profile</a>
                         </nav>
 
                         <a href="${pageContext.request.contextPath}/Logout"

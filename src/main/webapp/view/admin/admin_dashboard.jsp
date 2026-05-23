@@ -59,6 +59,14 @@
                         </svg>
                         Schedules
                     </a>
+
+                    <a href="${pageContext.request.contextPath}/Profile" 
+                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Admin Profile
+                    </a>
                 </nav>
 
                 <div class="pt-6 border-t-4 border-zinc-800 mt-auto">
