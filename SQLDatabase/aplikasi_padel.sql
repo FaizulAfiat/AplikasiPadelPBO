@@ -211,12 +211,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `role`, `created_at`) VALUES
-(1, 'faizul', 'faizulafiat1411@gmail.com', 'halo', 'Regular', '2026-05-04 10:26:59'),
-(2, 'faizulafiat', 'admin', 'admin', 'Admin', '2026-05-11 14:10:40'),
-(4, 'joan', 'joan@yahoo.com', '1234', 'Regular', '2026-05-07 14:52:29'),
-(5, 'Halo halo', 'halo@gmail.com', 'halo', 'Regular', '2026-05-11 12:23:37'),
-(6, 'a', 'alfinnurhakim17@gmail.com', 'aaaaa', 'Regular', '2026-05-11 12:33:54');
-
+(1, 'user', 'user@gmail.com', 'user', 'Regular', '2026-05-04 10:26:59'),
+(2, 'admin', 'admin@gmail.com', 'admin', 'Admin', '2026-05-11 14:10:40')
 -- --------------------------------------------------------
 
 --
