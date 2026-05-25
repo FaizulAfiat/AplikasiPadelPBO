@@ -91,10 +91,33 @@ public class AdminController extends HttpServlet {
                 bookingList.add(map);
             }
 
+            // Query music request queue
+            String sqlMusic = "SELECT r.request_id, u.username, c.name AS court_name, r.track_name, r.artist, r.platform, r.status, r.requested_at "
+                    + "FROM music_requests r "
+                    + "JOIN users u ON r.user_id = u.user_id "
+                    + "LEFT JOIN courts c ON r.court_id = c.court_id "
+                    + "ORDER BY r.requested_at DESC";
+            PreparedStatement psMusic = conn.prepareStatement(sqlMusic);
+            ResultSet rsMusic = psMusic.executeQuery();
+            List<Map<String, Object>> musicList = new ArrayList<>();
+            while (rsMusic.next()) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("id", rsMusic.getInt("request_id"));
+                map.put("username", rsMusic.getString("username"));
+                map.put("court", rsMusic.getString("court_name"));
+                map.put("track", rsMusic.getString("track_name"));
+                map.put("artist", rsMusic.getString("artist"));
+                map.put("platform", rsMusic.getString("platform"));
+                map.put("status", rsMusic.getString("status"));
+                map.put("requestedAt", rsMusic.getTimestamp("requested_at"));
+                musicList.add(map);
+            }
+
             request.setAttribute("revenue", totalRevenue);
             request.setAttribute("productCount", totalProducts);
             request.setAttribute("bookingCount", totalBookings);
             request.setAttribute("bookingList", bookingList);
+            request.setAttribute("musicList", musicList);
 
             request.getRequestDispatcher("view/admin/admin_dashboard.jsp").forward(request, response);
 

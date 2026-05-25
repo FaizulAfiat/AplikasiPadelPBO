@@ -324,6 +324,146 @@
                         </table>
                     </div>
                 </div>
+
+                <!-- Jukebox Queue Log -->
+                <div id="jukebox-queue" class="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm mt-12 overflow-hidden">
+                    <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+                        <h3 class="font-black uppercase italic text-3xl tracking-tighter flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path d="M9 18V5l12-2v13"></path>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <circle cx="18" cy="16" r="3"></circle>
+                            </svg>
+                            Court Jukebox Queue
+                        </h3>
+                        <span class="text-xs bg-gray-50 text-gray-600 font-bold px-3 py-1.5 border border-gray-200 rounded-lg">
+                            ${fn:length(musicList)} requests
+                        </span>
+                    </div>
+
+                    <div class="overflow-x-auto border border-gray-200 rounded-2xl">
+                        <table class="w-full text-left border-collapse bg-white">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider border-b border-gray-200">
+                                    <th class="py-3 px-4">ID</th>
+                                    <th class="py-3 px-4">User</th>
+                                    <th class="py-3 px-4">Court</th>
+                                    <th class="py-3 px-4">Track Detail</th>
+                                    <th class="py-3 px-4">Platform</th>
+                                    <th class="py-3 px-4">Status</th>
+                                    <th class="py-3 px-4 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm font-semibold divide-y divide-gray-100">
+                                <c:choose>
+                                    <c:when test="${empty musicList}">
+                                        <tr>
+                                            <td colspan="7" class="py-12 text-center text-gray-400 font-medium italic bg-gray-50/50">
+                                                No music requests recorded yet
+                                            </td>
+                                        </tr>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:forEach var="m" items="${musicList}">
+                                            <tr class="hover:bg-gray-50/50 transition-colors text-gray-700">
+                                                <td class="py-4 px-4 font-semibold text-gray-400">#${m.id}</td>
+                                                <td class="py-4 px-4 uppercase font-semibold text-gray-900 tracking-tight">@${m.username}</td>
+                                                <td class="py-4 px-4">
+                                                    <c:choose>
+                                                        <c:when test="${empty m.court}">
+                                                            <span class="px-2 py-0.5 bg-gray-100 text-gray-600 border border-gray-200 rounded text-[9px] font-bold uppercase tracking-wider">
+                                                                Venue-wide
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="px-2.5 py-1 bg-purple-50 text-purple-800 border border-purple-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                                                ${m.court}
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td class="py-4 px-4">
+                                                    <div class="flex flex-col">
+                                                        <span class="text-gray-900 font-bold">${m.track}</span>
+                                                        <span class="text-xs text-gray-400 mt-0.5">by ${m.artist}</span>
+                                                        <c:if test="${not empty m.trackUrl}">
+                                                            <a href="${m.trackUrl}" target="_blank" class="text-[10px] text-blue-500 hover:underline mt-1 font-medium truncate max-w-xs block">
+                                                                View Track Link ↗
+                                                            </a>
+                                                        </c:if>
+                                                    </div>
+                                                </td>
+                                                <td class="py-4 px-4">
+                                                    <c:choose>
+                                                        <c:when test="${m.platform eq 'Spotify'}">
+                                                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded text-[10px] font-bold uppercase tracking-wider inline-block">
+                                                                Spotify
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="px-2 py-0.5 bg-rose-50 text-rose-800 border border-rose-200 rounded text-[10px] font-bold uppercase tracking-wider inline-block">
+                                                                Apple Music
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td class="py-4 px-4">
+                                                    <c:set var="mStatusLower" value="${fn:toLowerCase(m.status)}" />
+                                                    <c:choose>
+                                                        <c:when test="${mStatusLower eq 'pending'}">
+                                                            <span class="px-2.5 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">
+                                                                Queued
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${mStatusLower eq 'played'}">
+                                                            <span class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">
+                                                                Played
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="px-2.5 py-1 bg-rose-50 text-rose-800 border border-rose-200 rounded-full text-[10px] font-bold uppercase tracking-wider inline-block">
+                                                                Rejected
+                                                            </span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td class="py-4 px-4">
+                                                    <div class="flex justify-center gap-2">
+                                                        <c:if test="${mStatusLower eq 'pending'}">
+                                                            <a href="MusicRequestController?action=played&id=${m.id}" 
+                                                               title="Mark as Played"
+                                                               class="bg-emerald-50 text-emerald-700 border border-emerald-200 p-2 rounded-xl hover:bg-emerald-100 transition-colors">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                                    <path d="M20 6L9 17l-5-5"/>
+                                                                </svg>
+                                                            </a>
+                                                            <a href="MusicRequestController?action=reject&id=${m.id}" 
+                                                               title="Reject Song"
+                                                               class="bg-rose-50 text-rose-700 border border-rose-200 p-2 rounded-xl hover:bg-rose-100 transition-colors">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                                    <path d="M18 6L6 18M6 6l12 12"/>
+                                                                </svg>
+                                                            </a>
+                                                        </c:if>
+                                                        <a href="MusicRequestController?action=delete&id=${m.id}" 
+                                                           title="Delete Request"
+                                                           class="bg-gray-50 text-gray-700 border border-zinc-200 p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                                                           onclick="return confirm('Apakah Anda yakin ingin menghapus request lagu ini?')">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </c:otherwise>
+                                </c:choose>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </main>
         </div>
     </body>

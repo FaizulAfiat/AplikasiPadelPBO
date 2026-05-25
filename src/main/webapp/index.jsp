@@ -239,7 +239,7 @@
                                 </a>
                                 <a href="view/chat.jsp" class="group flex flex-col items-center gap-4 text-center">
                                     <div
-                                        class="w-20 h-20 bg-pink-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
+                                        class="w-20 h-20 bg-pink-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-cyan-400/50 transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="none"
                                             viewBox="0 0 24 24" stroke="black" stroke-width="2.5">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -247,6 +247,20 @@
                                         </svg>
                                     </div>
                                     <span class="font-black uppercase text-sm tracking-tighter">Chat Room</span>
+                                </a>
+                                <a href="${pageContext.request.contextPath}/MusicRequest" class="group flex flex-col items-center gap-4 text-center relative">
+                                    <div class="absolute -top-2 -right-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] z-10">
+                                        PREMIUM
+                                    </div>
+                                    <div
+                                        class="w-20 h-20 bg-violet-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-violet-400/50 transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M9 18V5l12-2v13"></path>
+                                            <circle cx="6" cy="18" r="3"></circle>
+                                            <circle cx="18" cy="16" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <span class="font-black uppercase text-sm tracking-tighter">Music Jukebox</span>
                                 </a>
 
                             </div>

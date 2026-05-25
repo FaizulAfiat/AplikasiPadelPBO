@@ -186,6 +186,41 @@ public class DatabaseSeeder implements ServletContextListener {
                         }
                     }
                 }
+                
+                // Cek apakah tabel 'music_requests' perlu dibuat
+                boolean musicRequestsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "music_requests", null)) {
+                    if (rs.next()) {
+                        musicRequestsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                
+                if (!musicRequestsExists) {
+                    System.out.println("[Seeder] Tabel 'music_requests' belum ada. Membuat tabel...");
+                    try {
+                        String createMusicRequestsSql = "CREATE TABLE `music_requests` ("
+                                + "  `request_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `court_id` int(11) DEFAULT NULL,"
+                                + "  `track_name` varchar(255) NOT NULL,"
+                                + "  `artist` varchar(255) NOT NULL,"
+                                + "  `platform` enum('Spotify','Apple Music') NOT NULL,"
+                                + "  `track_url` varchar(500) DEFAULT NULL,"
+                                + "  `status` enum('Pending','Played','Rejected') NOT NULL DEFAULT 'Pending',"
+                                + "  `requested_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`court_id`) REFERENCES `courts` (`court_id`) ON DELETE SET NULL ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createMusicRequestsSql);
+                        System.out.println("[Seeder] Tabel 'music_requests' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'music_requests': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+                
                 return;
             }
 

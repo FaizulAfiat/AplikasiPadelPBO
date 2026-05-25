@@ -461,6 +461,27 @@ ALTER TABLE `rentals`
 --
 ALTER TABLE `verifications`
   ADD CONSTRAINT `verifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Table structure for table `music_requests`
+--
+CREATE TABLE `music_requests` (
+  `request_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `court_id` int(11) DEFAULT NULL,
+  `track_name` varchar(255) NOT NULL,
+  `artist` varchar(255) NOT NULL,
+  `platform` enum('Spotify','Apple Music') NOT NULL,
+  `track_url` varchar(500) DEFAULT NULL,
+  `status` enum('Pending','Played','Rejected') NOT NULL DEFAULT 'Pending',
+  `requested_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`request_id`),
+  KEY `user_id` (`user_id`),
+  KEY `court_id` (`court_id`),
+  CONSTRAINT `music_requests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `music_requests_ibfk_2` FOREIGN KEY (`court_id`) REFERENCES `courts` (`court_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
