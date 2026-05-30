@@ -56,6 +56,7 @@
         <body class="${role eq 'Admin' ? 'bg-[#f0f0f0] text-black min-h-screen admin-mode' : 'bg-[#FCFCFC] text-black min-h-screen md:h-screen md:overflow-hidden flex flex-col antialiased'}">
             <%@ taglib prefix="c" uri="jakarta.tags.core" %>
                 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+                <c:set var="isSelf" value="${empty viewingSelf or viewingSelf}" />
 
                 <c:choose>
                     <c:when test="${role eq 'Admin'}">
@@ -236,10 +237,20 @@
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/index.jsp"
-                                        class="text-xs font-bold uppercase tracking-widest hover:underline flex items-center gap-1">
-                                        ← Back to Dashboard
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${isSelf}">
+                                            <a href="${pageContext.request.contextPath}/index.jsp"
+                                                class="text-xs font-bold uppercase tracking-widest hover:underline flex items-center gap-1">
+                                                ← Back to Dashboard
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${pageContext.request.contextPath}/Profile"
+                                                class="text-xs font-bold uppercase tracking-widest hover:underline flex items-center gap-1">
+                                                ← Back to My Profile
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -265,7 +276,10 @@
                             <span class="text-xs font-bold uppercase block mb-2 tracking-widest text-gray-400">02 /
                                 Profile</span>
                             <h2 class="text-3xl font-black leading-none uppercase mb-6 tracking-tighter">
-                                My Account
+                                <c:choose>
+                                    <c:when test="${isSelf}">My Account</c:when>
+                                    <c:otherwise>@${username}</c:otherwise>
+                                </c:choose>
                             </h2>
 
                             <!-- Account Info Block -->
@@ -273,6 +287,17 @@
                                 <div
                                     class="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center text-2xl font-bold uppercase mx-auto mb-6 shadow-sm">
                                     <%= initial %>
+                                </div>
+
+                                <div class="flex justify-center gap-6 my-4 border-y border-gray-150 py-3 mb-6 bg-white rounded-xl shadow-sm">
+                                    <div class="text-center">
+                                        <span class="block text-lg font-black text-black">${followingCount}</span>
+                                        <span class="block text-[8px] font-bold uppercase tracking-wider text-gray-400">Following</span>
+                                    </div>
+                                    <div class="text-center">
+                                        <span class="block text-lg font-black text-black">${followersCount}</span>
+                                        <span class="block text-[8px] font-bold uppercase tracking-wider text-gray-400">Followers</span>
+                                    </div>
                                 </div>
 
                                 <div class="space-y-4">
@@ -336,16 +361,25 @@
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="space-y-3">
-                                <button onclick="openModal()"
-                                    class="w-full text-center bg-black text-white py-3 rounded-xl font-bold uppercase text-xs tracking-wider hover:bg-zinc-800 transition-colors shadow-sm">
-                                    Edit Profil
-                                </button>
-                                <a href="${pageContext.request.contextPath}/Logout"
-                                    class="inline-block w-full text-center border border-gray-300 bg-white text-gray-700 py-3 rounded-xl font-bold uppercase text-xs tracking-wider hover:bg-gray-50 hover:text-black transition-colors shadow-sm">
-                                    Keluar Akun
-                                </a>
-                            </div>
+                            <c:choose>
+                                <c:when test="${isSelf}">
+                                    <div class="space-y-3">
+                                        <button onclick="openModal()"
+                                            class="w-full text-center bg-black text-white py-3 rounded-xl font-bold uppercase text-xs tracking-wider hover:bg-zinc-800 transition-colors shadow-sm">
+                                            Edit Profil
+                                        </button>
+                                        <a href="${pageContext.request.contextPath}/Logout"
+                                            class="inline-block w-full text-center border border-gray-300 bg-white text-gray-700 py-3 rounded-xl font-bold uppercase text-xs tracking-wider hover:bg-gray-50 hover:text-black transition-colors shadow-sm">
+                                            Keluar Akun
+                                        </a>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="border-2 border-black bg-blue-400 text-black p-4 rounded-xl text-center font-black text-xs uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                        ✓ Connected Friends
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </aside>
 
                         <!-- Right Tables Panel -->
@@ -432,7 +466,51 @@
 
 
 
+                            <!-- Friend Requests Inbox -->
+                            <c:if test="${isSelf}">
+                            <div class="space-y-4 mb-8">
+                                <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 bg-yellow-400 rounded-full animate-pulse"></span>
+                                    Friend Requests Inbox
+                                </h3>
+                                <div class="border border-grid rounded-2xl p-6 bg-white shadow-sm">
+                                    <c:choose>
+                                        <c:when test="${empty pendingRequests}">
+                                            <p class="text-xs text-gray-400 font-medium italic">No pending friend requests.</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="space-y-4">
+                                                <c:forEach var="req" items="${pendingRequests}">
+                                                    <div class="flex items-center justify-between border-b border-gray-150 pb-3 last:border-0 last:pb-0">
+                                                        <div>
+                                                            <span class="font-bold text-sm text-black">@${req.senderUsername}</span>
+                                                            <span class="text-[10px] text-gray-400 block uppercase tracking-wider mt-0.5">Sent you a request</span>
+                                                        </div>
+                                                        <div class="flex gap-2">
+                                                            <form action="${pageContext.request.contextPath}/FriendActionController" method="POST" class="inline">
+                                                                <input type="hidden" name="action" value="accept">
+                                                                <input type="hidden" name="friendshipId" value="${req.friendshipId}">
+                                                                <input type="hidden" name="redirect" value="profile">
+                                                                <button type="submit" class="bg-black text-white hover:bg-zinc-800 px-3.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all">Accept</button>
+                                                            </form>
+                                                            <form action="${pageContext.request.contextPath}/FriendActionController" method="POST" class="inline">
+                                                                <input type="hidden" name="action" value="reject">
+                                                                <input type="hidden" name="friendshipId" value="${req.friendshipId}">
+                                                                <input type="hidden" name="redirect" value="profile">
+                                                                <button type="submit" class="bg-white text-gray-500 hover:text-red-500 border border-gray-200 hover:border-red-200 px-3.5 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all">Reject</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </div>
+                            </div>
+                            </c:if>
+
                             <!-- Active Rentals Section -->
+                            <c:if test="${isSelf}">
                             <div class="space-y-4 mb-8">
                                 <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse"></span>
@@ -526,8 +604,68 @@
                                     </div>
                                 </div>
                             </div>
+                            </c:if>
+
+                            <!-- Friend List Section -->
+                            <c:if test="${isSelf}">
+                            <div class="space-y-4 mb-8">
+                                <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 bg-blue-500 rounded-full"></span>
+                                    Daftar Teman Saya
+                                </h3>
+
+                                <div class="border border-grid rounded-2xl overflow-hidden shadow-sm bg-white">
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr class="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] tracking-wider border-b border-grid">
+                                                    <th class="p-4">Username</th>
+                                                    <th class="p-4">Email</th>
+                                                    <th class="p-4">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-100">
+                                                <c:choose>
+                                                    <c:when test="${empty friends}">
+                                                        <tr>
+                                                            <td colspan="3" class="p-8 text-center text-gray-400 font-medium italic bg-gray-50/50">
+                                                                Anda belum menambahkan teman.
+                                                            </td>
+                                                        </tr>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:forEach var="friend" items="${friends}">
+                                                            <tr class="hover:bg-gray-50 transition-colors duration-150 text-gray-700 text-sm friend-row"
+                                                                data-userid="${friend.userId}"
+                                                                data-username="${friend.username}"
+                                                                data-fullname="${not empty friend.fullname ? friend.fullname : 'Belum diatur'}"
+                                                                data-email="${friend.email}"
+                                                                data-gender="${friend.gender eq 'L' ? 'Laki-laki' : (friend.gender eq 'P' ? 'Perempuan' : 'Belum diatur')}">
+                                                                <td class="p-4 font-bold text-black cursor-pointer hover:text-blue-500 transition-colors" onclick="openFriendDetailModal(this.closest('tr'))">@${friend.username}</td>
+                                                                <td class="p-4 text-gray-500">${friend.email}</td>
+                                                                <td class="p-4">
+                                                                    <form action="${pageContext.request.contextPath}/FriendActionController" method="POST" class="inline">
+                                                                        <input type="hidden" name="action" value="remove">
+                                                                        <input type="hidden" name="friendshipId" value="${friend.friendshipId}">
+                                                                        <input type="hidden" name="redirect" value="profile">
+                                                                        <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menghapus pertemanan ini?');" class="text-red-500 hover:text-red-700 text-xs font-bold uppercase tracking-wider">
+                                                                            Unfriend
+                                                                        </button>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            </c:if>
 
                             <!-- Product Purchase/Rental History -->
+                            <c:if test="${isSelf}">
                             <div class="space-y-4">
                                 <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
@@ -588,46 +726,50 @@
                                                                 <td class="p-4">
                                                                     <c:choose>
                                                                         <c:when test="${tx.status eq 'Processing'}">
-                                                                            <span
-                                                                                class="px-2.5 py-1 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                                                                Processing
-                                                                            </span>
+                                                                             <span
+                                                                                 class="px-2.5 py-1 bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                                                                 Processing
+                                                                             </span>
                                                                         </c:when>
                                                                         <c:when test="${tx.status eq 'Completed'}">
-                                                                            <span
-                                                                                class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                                                                Completed
-                                                                            </span>
+                                                                             <span
+                                                                                 class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                                                                 Completed
+                                                                             </span>
                                                                         </c:when>
                                                                         <c:when test="${tx.status eq 'Failed'}">
-                                                                            <span
-                                                                                class="px-2.5 py-1 bg-rose-50 text-rose-800 border border-rose-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                                                                Failed
-                                                                            </span>
+                                                                             <span
+                                                                                 class="px-2.5 py-1 bg-rose-50 text-rose-800 border border-rose-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                                                                 Failed
+                                                                             </span>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <span
-                                                                                class="px-2.5 py-1 bg-gray-50 text-gray-600 border border-gray-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                                                                ${tx.status}
-                                                                            </span>
+                                                                             <span
+                                                                                 class="px-2.5 py-1 bg-gray-50 text-gray-600 border border-gray-200 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                                                                 ${tx.status}
+                                                                             </span>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                                                             </tr>
+                                                         </c:forEach>
+                                                     </c:otherwise>
+                                                 </c:choose>
+                                             </tbody>
+                                         </table>
+                                     </div>
+                                 </div>
+                             </div>
+                             </c:if>
 
                             <!-- Match History -->
                             <div class="space-y-4">
                                 <h3 class="text-lg font-bold uppercase tracking-tight flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 bg-purple-400 rounded-full"></span>
-                                    Riwayat Pertandingan
+                                    <c:choose>
+                                        <c:when test="${isSelf}">Riwayat Pertandingan Saya</c:when>
+                                        <c:otherwise>Riwayat Pertandingan @${username}</c:otherwise>
+                                    </c:choose>
                                 </h3>
 
                                 <div class="border border-grid rounded-2xl overflow-hidden shadow-sm bg-white">
@@ -785,6 +927,61 @@
                         </div>
                     </div>
 
+                    <!-- Friend Detail Modal (Clean & Premium Neobrutalist Style) -->
+                    <div id="friend-detail-modal"
+                        class="fixed inset-0 z-50 hidden bg-black/55 backdrop-blur-sm flex items-center justify-center p-4">
+                        <div
+                            class="w-full max-w-sm bg-white border-4 border-black rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden transition-all transform duration-300">
+                            <!-- Modal Header -->
+                            <div
+                                class="bg-blue-400 text-black p-5 flex justify-between items-center border-b-4 border-black">
+                                <h3 class="font-black uppercase tracking-tight text-sm">Profil Teman</h3>
+                                <button onclick="closeFriendDetailModal()" class="text-black hover:opacity-75 transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="3">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Modal Body -->
+                            <div class="p-6 space-y-5">
+                                <div class="text-center">
+                                    <div id="friend-modal-avatar"
+                                        class="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center text-2xl font-bold uppercase mx-auto mb-3 border-4 border-black shadow-sm">
+                                        ?
+                                    </div>
+                                    <h4 id="friend-modal-username" class="font-black text-lg uppercase tracking-tight text-black">@username</h4>
+                                    <p id="friend-modal-fullname" class="text-xs text-gray-500 font-bold uppercase tracking-wider">Full Name</p>
+                                </div>
+
+                                <div class="border-2 border-black p-4 rounded-xl bg-gray-50 space-y-3">
+                                    <div>
+                                        <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 block mb-0.5">Email</span>
+                                        <span id="friend-modal-email" class="text-xs font-bold text-black block break-all">email@example.com</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-[9px] font-black uppercase tracking-wider text-gray-400 block mb-0.5">Jenis Kelamin</span>
+                                        <span id="friend-modal-gender" class="text-xs font-bold text-black block">Laki-laki</span>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Footer -->
+                                <div class="flex gap-4 pt-2">
+                                    <button type="button" onclick="closeFriendDetailModal()"
+                                        class="flex-1 text-center border-2 border-black bg-white text-black py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider hover:bg-gray-150 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+                                        Tutup
+                                    </button>
+                                    <a id="friend-modal-view-btn" href="#"
+                                        class="flex-1 text-center bg-black text-white border-2 border-black py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider hover:bg-zinc-800 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none block">
+                                        View Account
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <script>
                         function openModal() {
                             const modal = document.getElementById('edit-profile-modal');
@@ -798,11 +995,44 @@
                             document.body.style.overflow = '';
                         }
 
-                        // Close modal if user clicks outside of the modal content
+                        function openFriendDetailModal(row) {
+                            const userId = row.getAttribute('data-userid');
+                            const username = row.getAttribute('data-username');
+                            const fullname = row.getAttribute('data-fullname');
+                            const email = row.getAttribute('data-email');
+                            const gender = row.getAttribute('data-gender');
+
+                            document.getElementById('friend-modal-username').innerText = '@' + username;
+                            document.getElementById('friend-modal-fullname').innerText = fullname;
+                            document.getElementById('friend-modal-email').innerText = email;
+                            document.getElementById('friend-modal-gender').innerText = gender;
+                            
+                            const initial = username ? username.substring(0, 1).toUpperCase() : '?';
+                            document.getElementById('friend-modal-avatar').innerText = initial;
+
+                            const viewBtn = document.getElementById('friend-modal-view-btn');
+                            viewBtn.href = '${pageContext.request.contextPath}/Profile?viewUserId=' + userId;
+
+                            const modal = document.getElementById('friend-detail-modal');
+                            modal.classList.remove('hidden');
+                            document.body.style.overflow = 'hidden';
+                        }
+
+                        function closeFriendDetailModal() {
+                            const modal = document.getElementById('friend-detail-modal');
+                            modal.classList.add('hidden');
+                            document.body.style.overflow = '';
+                        }
+
+                        // Close modals if clicked outside
                         window.addEventListener('click', function (e) {
-                            const modal = document.getElementById('edit-profile-modal');
-                            if (e.target === modal) {
+                            const editModal = document.getElementById('edit-profile-modal');
+                            if (e.target === editModal) {
                                 closeModal();
+                            }
+                            const friendModal = document.getElementById('friend-detail-modal');
+                            if (e.target === friendModal) {
+                                closeFriendDetailModal();
                             }
                         });
                     </script>

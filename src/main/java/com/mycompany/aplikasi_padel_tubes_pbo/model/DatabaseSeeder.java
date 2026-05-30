@@ -186,6 +186,37 @@ public class DatabaseSeeder implements ServletContextListener {
                         }
                     }
                 }
+
+                // Cek apakah tabel 'friendships' perlu dibuat
+                boolean friendshipsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "friendships", null)) {
+                    if (rs.next()) {
+                        friendshipsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                
+                if (!friendshipsExists) {
+                    System.out.println("[Seeder] Tabel 'friendships' belum ada. Membuat tabel...");
+                    try {
+                        String createFriendshipsSql = "CREATE TABLE `friendships` ("
+                                + "  `friendship_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `friend_id` int(11) NOT NULL,"
+                                + "  `status` enum('PENDING','ACCEPTED','REJECTED') NOT NULL DEFAULT 'PENDING',"
+                                + "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`friend_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createFriendshipsSql);
+                        System.out.println("[Seeder] Tabel 'friendships' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'friendships': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
                 return;
             }
 
