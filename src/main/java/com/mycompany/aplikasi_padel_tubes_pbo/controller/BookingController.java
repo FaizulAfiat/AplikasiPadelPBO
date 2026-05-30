@@ -27,6 +27,12 @@ public class BookingController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/view/Login.html");
+            return;
+        }
+
         String date = request.getParameter("date");
         
         java.time.LocalDate today = java.time.LocalDate.now();

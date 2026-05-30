@@ -2,8 +2,7 @@
 
     <%@page contentType="text/html" pageEncoding="UTF-8" %>
         <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-            <% /* Jika tidak ada data user di session, tendang balik ke login */ if (session.getAttribute("user")==null)
-                { response.sendRedirect("view/Login.html"); } %>
+            <%-- Guest is allowed to access index.jsp directly --%>
                 <!DOCTYPE html>
                 <html lang="id">
 
@@ -40,31 +39,37 @@
                         </div>
 
                         <div class="p-4 md:p-6 w-1/2 md:w-1/4 flex items-center justify-end gap-4 md:gap-6">
-                            <button id="launchpad-trigger" class="hover:bg-gray-200 p-2 rounded-lg transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <rect x="3" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="3" width="7" height="7"></rect>
-                                    <rect x="14" y="14" width="7" height="7"></rect>
-                                    <rect x="3" y="14" width="7" height="7"></rect>
-                                </svg>
-                            </button>
-                            <div class="flex items-center gap-2 group cursor-pointer">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                    stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                </svg>
-                                <span class="hidden lg:inline text-[10px] font-bold uppercase tracking-widest">
-                                    <%= (session.getAttribute("user") !=null) ? session.getAttribute("user") : "Guest"
-                                        %>
-                                </span>
-                            </div>
-                            <button onclick="window.location.href='${pageContext.request.contextPath}/Logout'"
-                                class="bg-black text-white px-4 py-2 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-red-600 transition-colors">
-                                Logout
-                            </button>
+                            <% if (session.getAttribute("user") != null) { %>
+                                <button id="launchpad-trigger" class="hover:bg-gray-200 p-2 rounded-lg transition-all">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="3" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="3" width="7" height="7"></rect>
+                                        <rect x="14" y="14" width="7" height="7"></rect>
+                                        <rect x="3" y="14" width="7" height="7"></rect>
+                                    </svg>
+                                </button>
+                                <div class="flex items-center gap-2 group cursor-pointer" onclick="window.location.href='${pageContext.request.contextPath}/ProfileController'">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                        stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                    </svg>
+                                    <span class="hidden lg:inline text-[10px] font-bold uppercase tracking-widest">
+                                        <%= session.getAttribute("user") %>
+                                    </span>
+                                </div>
+                                <button onclick="window.location.href='${pageContext.request.contextPath}/Logout'"
+                                    class="bg-black text-white px-4 py-2 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-red-600 transition-colors">
+                                    Logout
+                                </button>
+                            <% } else { %>
+                                <button onclick="window.location.href='${pageContext.request.contextPath}/view/Login.html'"
+                                    class="bg-black text-white px-4 py-2 md:px-6 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest hover:bg-blue-600 transition-colors">
+                                    Login
+                                </button>
+                            <% } %>
                         </div>
                     </header>
 
@@ -95,7 +100,7 @@
                                 class="w-full h-64 md:h-96 object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
 
                             <div class="absolute bottom-8 right-8 z-20">
-                                <a href="BookingController" class="bg-blue-400 text-black px-8 py-4 font-black uppercase tracking-tighter text-xl 
+                                <a href="<%= (session.getAttribute("user") != null) ? "BookingController" : "view/Login.html" %>" class="bg-blue-400 text-black px-8 py-4 font-black uppercase tracking-tighter text-xl 
                        border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] 
                        hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] 
                        transition-all inline-block">
@@ -146,6 +151,7 @@
                             </div>
                         </div>
                     </main>
+                    <% if (session.getAttribute("user") != null) { %>
                     <div id="launchpad"
                         class="fixed inset-0 z-[999] hidden bg-white/80 backdrop-blur-xl transition-all duration-300 opacity-0">
                         <button id="launchpad-close"
@@ -275,19 +281,28 @@
                         }, 300);
                     }
 
-                    trigger.addEventListener('click', openLaunchpad);
-                    closeBtn.addEventListener('click', closeLaunchpad);
+                    if (trigger) {
+                        trigger.addEventListener('click', openLaunchpad);
+                    }
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', closeLaunchpad);
+                    }
 
                     // Close jika klik area di luar grid
-                    launchpad.addEventListener('click', (e) => {
-                        if (e.target === launchpad)
-                            closeLaunchpad();
-                    });
+                    if (launchpad) {
+                        launchpad.addEventListener('click', (e) => {
+                            if (e.target === launchpad)
+                                closeLaunchpad();
+                        });
+                    }
 
                     // Close jika tekan tombol ESC
                     document.addEventListener('keydown', (e) => {
                         if (e.key === "Escape")
                             closeLaunchpad();
                     });
-                    // halohalo tes tes
                 </script>
+                <% } else { %>
+                </body>
+                </html>
+                <% } %>
