@@ -348,6 +348,7 @@ public class ProfileController extends HttpServlet {
         request.setAttribute("fullname", fullname);
         request.setAttribute("gender", gender);
         request.setAttribute("transactionHistory", transactionHistory);
+        request.setAttribute("targetUserId", targetUserId);
 
         request.getRequestDispatcher("view/profile.jsp").forward(request, response);
     }

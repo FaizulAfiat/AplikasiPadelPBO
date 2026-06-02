@@ -375,8 +375,14 @@
                                     </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <div class="border-2 border-black bg-blue-400 text-black p-4 rounded-xl text-center font-black text-xs uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                                        ✓ Connected Friends
+                                    <div class="space-y-3">
+                                        <div class="border-2 border-black bg-blue-400 text-black p-4 rounded-xl text-center font-black text-xs uppercase tracking-wider shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                            ✓ Connected Friends
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/chat?friendUserId=${targetUserId}"
+                                            class="block w-full text-center bg-emerald-400 text-black border-2 border-black py-3 rounded-xl font-black uppercase text-xs tracking-wider hover:bg-emerald-300 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 active:scale-95 transition-all">
+                                            Send Message
+                                        </a>
                                     </div>
                                 </c:otherwise>
                             </c:choose>
@@ -968,15 +974,21 @@
                                 </div>
 
                                 <!-- Modal Footer -->
-                                <div class="flex gap-4 pt-2">
+                                <div class="flex flex-col gap-3 pt-2">
+                                    <div class="flex gap-4">
+                                        <a id="friend-modal-chat-btn" href="#"
+                                            class="flex-1 text-center bg-emerald-400 text-black border-2 border-black py-3 rounded-xl font-black uppercase text-[10px] tracking-wider hover:bg-emerald-300 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none block">
+                                            Chat Friend
+                                        </a>
+                                        <a id="friend-modal-view-btn" href="#"
+                                            class="flex-1 text-center bg-black text-white border-2 border-black py-3 rounded-xl font-black uppercase text-[10px] tracking-wider hover:bg-zinc-800 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none block">
+                                            View Account
+                                        </a>
+                                    </div>
                                     <button type="button" onclick="closeFriendDetailModal()"
-                                        class="flex-1 text-center border-2 border-black bg-white text-black py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider hover:bg-gray-150 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+                                        class="w-full text-center border-2 border-black bg-white text-black py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider hover:bg-gray-150 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
                                         Tutup
                                     </button>
-                                    <a id="friend-modal-view-btn" href="#"
-                                        class="flex-1 text-center bg-black text-white border-2 border-black py-3 rounded-xl font-bold uppercase text-[10px] tracking-wider hover:bg-zinc-800 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none block">
-                                        View Account
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -1012,6 +1024,9 @@
 
                             const viewBtn = document.getElementById('friend-modal-view-btn');
                             viewBtn.href = '${pageContext.request.contextPath}/Profile?viewUserId=' + userId;
+
+                            const chatBtn = document.getElementById('friend-modal-chat-btn');
+                            chatBtn.href = '${pageContext.request.contextPath}/chat?friendUserId=' + userId;
 
                             const modal = document.getElementById('friend-detail-modal');
                             modal.classList.remove('hidden');

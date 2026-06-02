@@ -217,6 +217,89 @@ public class DatabaseSeeder implements ServletContextListener {
                     }
                 }
 
+                // Cek apakah tabel 'chats' perlu dibuat
+                boolean chatsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "chats", null)) {
+                    if (rs.next()) {
+                        chatsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                if (!chatsExists) {
+                    System.out.println("[Seeder] Tabel 'chats' belum ada. Membuat tabel...");
+                    try {
+                        String createChatsSql = "CREATE TABLE `chats` ("
+                                + "  `id_chat` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `is_group` tinyint(1) NOT NULL DEFAULT 0,"
+                                + "  `nama_grup` varchar(100) DEFAULT NULL,"
+                                + "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createChatsSql);
+                        System.out.println("[Seeder] Tabel 'chats' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'chats': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                // Cek apakah tabel 'chat_participants' perlu dibuat
+                boolean participantsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "chat_participants", null)) {
+                    if (rs.next()) {
+                        participantsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                if (!participantsExists) {
+                    System.out.println("[Seeder] Tabel 'chat_participants' belum ada. Membuat tabel...");
+                    try {
+                        String createParticipantsSql = "CREATE TABLE `chat_participants` ("
+                                + "  `id_chat` int(11) NOT NULL,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  PRIMARY KEY (`id_chat`, `user_id`),"
+                                + "  FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createParticipantsSql);
+                        System.out.println("[Seeder] Tabel 'chat_participants' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'chat_participants': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                // Cek apakah tabel 'pesan' perlu dibuat
+                boolean pesanExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "pesan", null)) {
+                    if (rs.next()) {
+                        pesanExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                if (!pesanExists) {
+                    System.out.println("[Seeder] Tabel 'pesan' belum ada. Membuat tabel...");
+                    try {
+                        String createPesanSql = "CREATE TABLE `pesan` ("
+                                + "  `id_pesan` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `id_chat` int(11) NOT NULL,"
+                                + "  `pengirim_id` int(11) NOT NULL,"
+                                + "  `isi_pesan` text NOT NULL,"
+                                + "  `waktu_kirim` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                + "  `status` enum('terkirim','dibaca') NOT NULL DEFAULT 'terkirim',"
+                                + "  FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`pengirim_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createPesanSql);
+                        System.out.println("[Seeder] Tabel 'pesan' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'pesan': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
                 return;
             }
 

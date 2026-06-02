@@ -254,7 +254,7 @@
                                     </div>
                                     <span class="font-black uppercase text-sm tracking-tighter">Profile</span>
                                 </a>
-                                <a href="view/chat.jsp" class="group flex flex-col items-center gap-4 text-center">
+                                <a href="${pageContext.request.contextPath}/chat" class="group flex flex-col items-center gap-4 text-center">
                                     <div
                                         class="w-20 h-20 bg-pink-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="none"
