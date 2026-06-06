@@ -31,11 +31,22 @@
                                     class="text-blue-400">App</span></h1>
                         </div>
 
-                        <div class="hidden md:flex flex-1 items-center justify-center border-r border-grid p-6">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-                                <span class="text-[10px] font-bold uppercase tracking-widest">Open for Bookings</span>
-                            </div>
+                        <div class="hidden md:flex flex-1 items-center justify-center border-r border-grid p-6 relative">
+                            <% if (session.getAttribute("user") != null) { %>
+                                <div class="w-full max-w-md relative">
+                                    <form action="${pageContext.request.contextPath}/SearchFriendController" method="GET" class="w-full flex items-center border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm hover:border-black transition-colors" id="search-form">
+                                        <input type="text" id="search-input" name="keyword" autocomplete="off" placeholder="Search users by username..." class="w-full px-4 py-2.5 text-xs font-semibold outline-none placeholder:text-gray-400" required>
+                                        <button type="submit" class="bg-black text-white hover:bg-zinc-800 px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-colors shrink-0">Search</button>
+                                    </form>
+                                    <div id="suggestions-dropdown" class="absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg z-50 hidden overflow-hidden divide-y divide-gray-100">
+                                    </div>
+                                </div>
+                            <% } else { %>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest">Open for Bookings</span>
+                                </div>
+                            <% } %>
                         </div>
 
                         <div class="p-4 md:p-6 w-1/2 md:w-1/4 flex items-center justify-end gap-4 md:gap-6">
@@ -243,9 +254,10 @@
                                     </div>
                                     <span class="font-black uppercase text-sm tracking-tighter">Profile</span>
                                 </a>
-                                <a href="view/chat.jsp" class="group flex flex-col items-center gap-4 text-center">
+
+                                <a href="${pageContext.request.contextPath}/chat" class="group flex flex-col items-center gap-4 text-center">
                                     <div
-                                        class="w-20 h-20 bg-pink-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
+                                        class="w-20 h-20 bg-pink-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-pink-400/50 transition-all duration-300">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="none"
                                             viewBox="0 0 24 24" stroke="black" stroke-width="2.5">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -253,6 +265,17 @@
                                         </svg>
                                     </div>
                                     <span class="font-black uppercase text-sm tracking-tighter">Chat Room</span>
+                                </a>
+
+                                <a href="${pageContext.request.contextPath}/TournamentNewsController" class="group flex flex-col items-center gap-4 text-center">
+                                    <div
+                                        class="w-20 h-20 bg-amber-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-amber-400/50 transition-all duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                                            <path d="M18 14h-8M18 18h-8M16 6H10v4h6V6Z"></path>
+                                        </svg>
+                                    </div>
+                                    <span class="font-black uppercase text-sm tracking-tighter">Tournaments</span>
                                 </a>
 
                             </div>
@@ -301,6 +324,58 @@
                         if (e.key === "Escape")
                             closeLaunchpad();
                     });
+
+                    // Autocomplete Search Suggestions
+                    const searchInput = document.getElementById('search-input');
+                    const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+                    const searchForm = document.getElementById('search-form');
+
+                    if (searchInput && suggestionsDropdown) {
+                        searchInput.addEventListener('input', () => {
+                            const val = searchInput.value.trim();
+                            if (val.length === 0) {
+                                suggestionsDropdown.innerHTML = '';
+                                suggestionsDropdown.classList.add('hidden');
+                                return;
+                            }
+
+                            fetch('${pageContext.request.contextPath}/SearchSuggestionsController?keyword=' + encodeURIComponent(val))
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.length === 0) {
+                                        suggestionsDropdown.innerHTML = '';
+                                        suggestionsDropdown.classList.add('hidden');
+                                        return;
+                                    }
+
+                                    let html = '';
+                                    data.forEach(item => {
+                                        html += `<button type="button" class="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-xs font-semibold text-gray-700 uppercase tracking-wider transition-colors select-suggestion-btn" data-value="${item}">
+                                                    @${item}
+                                                 </button>`;
+                                    });
+                                    suggestionsDropdown.innerHTML = html;
+                                    suggestionsDropdown.classList.remove('hidden');
+
+                                    // Add event listeners to buttons
+                                    document.querySelectorAll('.select-suggestion-btn').forEach(btn => {
+                                        btn.addEventListener('click', () => {
+                                            searchInput.value = btn.getAttribute('data-value');
+                                            suggestionsDropdown.classList.add('hidden');
+                                            searchForm.submit();
+                                        });
+                                    });
+                                })
+                                .catch(err => console.error('Error fetching suggestions:', err));
+                        });
+
+                        // Close dropdown when clicked outside
+                        document.addEventListener('click', (e) => {
+                            if (e.target !== searchInput && e.target !== suggestionsDropdown && !suggestionsDropdown.contains(e.target)) {
+                                suggestionsDropdown.classList.add('hidden');
+                            }
+                        });
+                    }
                 </script>
                 <% } else { %>
                 </body>
