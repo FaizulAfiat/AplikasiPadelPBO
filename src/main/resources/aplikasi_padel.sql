@@ -461,24 +461,6 @@ ALTER TABLE `rentals`
 --
 ALTER TABLE `verifications`
   ADD CONSTRAINT `verifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `music_requests`
---
-
-CREATE TABLE `music_requests` (
-  `request_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `song_title` varchar(255) NOT NULL,
-  `artist` varchar(255) NOT NULL,
-  `status` enum('Pending','Playing','Played','Cancelled') NOT NULL DEFAULT 'Pending',
-  `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`request_id`),
-  KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

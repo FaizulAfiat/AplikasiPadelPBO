@@ -186,36 +186,6 @@ public class DatabaseSeeder implements ServletContextListener {
                         }
                     }
                 }
-
-                // Cek apakah tabel 'music_requests' perlu dibuat
-                boolean musicRequestsExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "music_requests", null)) {
-                    if (rs.next()) {
-                        musicRequestsExists = true;
-                    }
-                } catch (Exception e) {
-                    // Abaikan
-                }
-
-                if (!musicRequestsExists) {
-                    System.out.println("[Seeder] Tabel 'music_requests' belum ada. Membuat tabel...");
-                    try {
-                        String createMusicRequestsSql = "CREATE TABLE `music_requests` ("
-                                + "  `request_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                                + "  `user_id` int(11) NOT NULL,"
-                                + "  `song_title` varchar(255) NOT NULL,"
-                                + "  `artist` varchar(255) NOT NULL,"
-                                + "  `status` enum('Pending','Playing','Played','Cancelled') NOT NULL DEFAULT 'Pending',"
-                                + "  `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),"
-                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
-                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createMusicRequestsSql);
-                        System.out.println("[Seeder] Tabel 'music_requests' berhasil dibuat.");
-                    } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'music_requests': " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
                 return;
             }
 
