@@ -300,6 +300,90 @@ public class DatabaseSeeder implements ServletContextListener {
                     }
                 }
 
+                // Cek apakah tabel 'tournament_news' perlu dibuat
+                boolean newsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "tournament_news", null)) {
+                    if (rs.next()) {
+                        newsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                if (!newsExists) {
+                    System.out.println("[Seeder] Tabel 'tournament_news' belum ada. Membuat tabel...");
+                    try {
+                        String createNewsSql = "CREATE TABLE `tournament_news` ("
+                                + "  `news_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `title` varchar(255) NOT NULL,"
+                                + "  `content` text NOT NULL,"
+                                + "  `court_id` int(11) DEFAULT NULL,"
+                                + "  `image_url` varchar(255) DEFAULT NULL,"
+                                + "  `tournament_date` date DEFAULT NULL,"
+                                + "  `max_participants` int(11) NOT NULL DEFAULT 16,"
+                                + "  `current_participants` int(11) NOT NULL DEFAULT 0,"
+                                + "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                + "  FOREIGN KEY (`court_id`) REFERENCES `courts` (`court_id`) ON DELETE SET NULL ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createNewsSql);
+                        System.out.println("[Seeder] Tabel 'tournament_news' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'tournament_news': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                // Cek apakah tabel 'tournament_registrations' perlu dibuat
+                boolean regExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "tournament_registrations", null)) {
+                    if (rs.next()) {
+                        regExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+                if (!regExists) {
+                    System.out.println("[Seeder] Tabel 'tournament_registrations' belum ada. Membuat tabel...");
+                    try {
+                        String createRegSql = "CREATE TABLE `tournament_registrations` ("
+                                + "  `registration_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `news_id` int(11) NOT NULL,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `registration_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                + "  UNIQUE KEY `news_user_unique` (`news_id`, `user_id`),"
+                                + "  FOREIGN KEY (`news_id`) REFERENCES `tournament_news` (`news_id`) ON DELETE CASCADE,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createRegSql);
+                        System.out.println("[Seeder] Tabel 'tournament_registrations' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'tournament_registrations': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
+                // Seeding beberapa turnamen awal jika tabel tournament_news kosong
+                try {
+                    String checkEmptySql = "SELECT COUNT(*) FROM tournament_news";
+                    try (ResultSet rs = stmt.executeQuery(checkEmptySql)) {
+                        if (rs.next() && rs.getInt(1) == 0) {
+                            System.out.println("[Seeder] Mengisi data turnamen awal...");
+                            String seedNews1 = "INSERT INTO tournament_news (title, content, court_id, image_url, tournament_date, max_participants, current_participants) VALUES "
+                                    + "('Padel Grand Championship 2026', 'Sambut kejuaraan padel terbesar tahun ini! Turnamen resmi PadelApp akan diselenggarakan untuk menentukan pemain ganda terbaik di kota ini. Hadiah total senilai Rp 10.000.000 menanti Anda. Semua peserta akan mendapatkan jersey eksklusif dan konsumsi selama acara berlangsung. Segera daftarkan tim Anda sebelum slot penuh!', 1, 'img/padel.jpg', '2026-07-15', 16, 0)";
+                            String seedNews2 = "INSERT INTO tournament_news (title, content, court_id, image_url, tournament_date, max_participants, current_participants) VALUES "
+                                    + "('Summer Padel Doubles Cup', 'Turnamen musim panas khusus untuk member Premium PadelApp. Format pertandingan menggunakan sistem grup dilanjutkan dengan sistem gugur. Cocok untuk mengasah kemampuan taktis dan kerja sama tim Anda di Court B.', 2, 'img/padel.jpg', '2026-08-01', 8, 0)";
+                            String seedNews3 = "INSERT INTO tournament_news (title, content, court_id, image_url, tournament_date, max_participants, current_participants) VALUES "
+                                    + "('Premium Members Friendly League', 'Ajang latih tanding santai yang diadakan khusus bagi para member premium untuk saling mengenal, berjejaring, dan meningkatkan peringkat internal klub padel.', 1, 'img/padel.jpg', '2026-05-10', 32, 0)";
+                            stmt.executeUpdate(seedNews1);
+                            stmt.executeUpdate(seedNews2);
+                            stmt.executeUpdate(seedNews3);
+                            System.out.println("[Seeder] Berhasil mengisi data turnamen awal.");
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("[Seeder] Gagal melakukan seeding data turnamen: " + e.getMessage());
+                    e.printStackTrace();
+                }
+
                 return;
             }
 
