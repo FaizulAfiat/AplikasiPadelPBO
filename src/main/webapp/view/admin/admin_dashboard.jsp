@@ -75,6 +75,14 @@
                         </svg>
                         Admin Profile
                     </a>
+
+                    <a href="${pageContext.request.contextPath}/MusicController" 
+                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+                        </svg>
+                        Music Request 🎵
+                    </a>
                 </nav>
 
                 <div class="pt-6 border-t-4 border-zinc-800 mt-auto">
