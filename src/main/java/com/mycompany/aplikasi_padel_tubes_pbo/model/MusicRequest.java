@@ -9,6 +9,8 @@ public class MusicRequest {
     private String artist;
     private String status; // Pending, Playing, Played, Cancelled
     private Timestamp requestedAt;
+    private Timestamp playedAt;
+    private Timestamp startedAt;
     
     // Auxiliary fields for displaying requester details
     private String username;
@@ -79,5 +81,21 @@ public class MusicRequest {
 
     public void setUserRole(String userRole) {
         this.userRole = userRole;
+    }
+
+    public Timestamp getPlayedAt() {
+        return playedAt;
+    }
+
+    public void setPlayedAt(Timestamp playedAt) {
+        this.playedAt = playedAt;
+    }
+
+    public Timestamp getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(Timestamp startedAt) {
+        this.startedAt = startedAt;
     }
 }

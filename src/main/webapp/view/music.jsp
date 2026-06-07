@@ -24,6 +24,15 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        @keyframes shrink {
+            from { width: 100%; }
+            to   { width: 0%; }
+        }
+        .song-progress-bar {
+            animation-name: shrink;
+            animation-timing-function: linear;
+            animation-fill-mode: forwards;
+        }
     </style>
 </head>
 
@@ -201,7 +210,12 @@
                                 <div class="border-2 border-black rounded-2xl p-6 bg-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-transform duration-300 hover:-translate-y-1 relative overflow-hidden flex flex-col justify-between min-h-[170px]">
                                     <!-- Now Playing overlay color line -->
                                     <c:if test="${mr.status eq 'Playing'}">
-                                        <div class="absolute top-0 left-0 right-0 h-2 bg-[#B6FF2D]"></div>
+                                        <div class="absolute top-0 left-0 right-0 h-2 bg-gray-200 overflow-hidden">
+                                            <div class="song-progress-bar h-full bg-[#B6FF2D]"
+                                                 data-started="${mr.startedAt.time}"
+                                                 data-duration="240000">
+                                            </div>
+                                        </div>
                                     </c:if>
 
                                     <!-- Top Card Details -->
@@ -236,7 +250,18 @@
                                         </div>
 
                                         <h4 class="text-2xl font-black uppercase tracking-tight leading-none mb-1 break-words">${mr.songTitle}</h4>
-                                        <p class="text-sm font-extrabold text-gray-500 break-words mb-4">by ${mr.artist}</p>
+                                        <p class="text-sm font-extrabold text-gray-500 break-words mb-2">by ${mr.artist}</p>
+                                        <!-- Countdown Timer (hanya tampil untuk status Playing) -->
+                                        <c:if test="${mr.status eq 'Playing' && mr.startedAt != null}">
+                                            <div class="flex items-center gap-1.5 mb-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                                                </svg>
+                                                <span class="countdown-timer text-[11px] font-black text-gray-500 uppercase tracking-wider"
+                                                      data-started="${mr.startedAt.time}"
+                                                      data-duration="240">--:--</span>
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <!-- Bottom Card Actions -->
@@ -307,7 +332,7 @@
                                         <th class="p-3 text-xs font-black uppercase tracking-wider">Artis</th>
                                         <th class="p-3 text-xs font-black uppercase tracking-wider">Oleh</th>
                                         <th class="p-3 text-xs font-black uppercase tracking-wider">Status</th>
-                                        <th class="p-3 text-xs font-black uppercase tracking-wider text-right">Waktu</th>
+                                        <th class="p-3 text-xs font-black uppercase tracking-wider text-right">Waktu Diputar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -326,7 +351,15 @@
                                                 </span>
                                             </td>
                                             <td class="p-3 text-xs text-gray-400 font-bold text-right">
-                                                <fmt:formatDate value="${h.requestedAt}" pattern="dd MMM, HH:mm"/>
+                                                <c:choose>
+                                                    <c:when test="${h.status eq 'Played' && h.playedAt != null}">
+                                                        <span class="block text-green-600"><fmt:formatDate value="${h.playedAt}" pattern="dd MMM, HH:mm"/></span>
+                                                        <span class="text-[9px] text-gray-300">req: <fmt:formatDate value="${h.requestedAt}" pattern="HH:mm"/></span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <fmt:formatDate value="${h.requestedAt}" pattern="dd MMM, HH:mm"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -338,6 +371,83 @@
             </div>
         </div>
     </main>
+
+    <script>
+        // =============================================
+        // COUNTDOWN TIMER untuk card "Now Playing"
+        // =============================================
+        const SONG_DURATION_SEC = 240; // harus sama dengan MusicAutoPlayedScheduler.java
+        const AUTO_REFRESH_INTERVAL_MS = 30000; // auto-refresh setiap 30 detik
+
+        function updateCountdowns() {
+            const timers = document.querySelectorAll('.countdown-timer');
+            timers.forEach(el => {
+                const startedMs = parseInt(el.dataset.started, 10);
+                const durationSec = parseInt(el.dataset.duration, 10);
+                const now = Date.now();
+                const elapsedSec = Math.floor((now - startedMs) / 1000);
+                const remainingSec = Math.max(0, durationSec - elapsedSec);
+
+                const mm = String(Math.floor(remainingSec / 60)).padStart(2, '0');
+                const ss = String(remainingSec % 60).padStart(2, '0');
+
+                if (remainingSec <= 0) {
+                    el.textContent = 'Selesai ✓';
+                    el.classList.add('text-green-600');
+                } else if (remainingSec <= 30) {
+                    el.textContent = mm + ':' + ss + ' tersisa';
+                    el.classList.add('text-red-500');
+                    el.classList.remove('text-gray-500');
+                } else {
+                    el.textContent = mm + ':' + ss + ' tersisa';
+                    el.classList.remove('text-red-500');
+                    el.classList.add('text-gray-500');
+                }
+            });
+
+            // Update progress bars
+            const bars = document.querySelectorAll('.song-progress-bar');
+            bars.forEach(bar => {
+                const startedMs = parseInt(bar.dataset.started, 10);
+                const durationMs = parseInt(bar.dataset.duration, 10);
+                const now = Date.now();
+                const elapsed = now - startedMs;
+                const pct = Math.max(0, Math.min(100, 100 - (elapsed / durationMs * 100)));
+                bar.style.width = pct + '%';
+                // Set animasi dari sisa ke 0
+                const remainingMs = Math.max(0, durationMs - elapsed);
+                bar.style.transition = 'width ' + (remainingMs / 1000) + 's linear';
+                bar.style.width = '0%';
+            });
+        }
+
+        // Jalankan segera dan update setiap detik
+        updateCountdowns();
+        setInterval(updateCountdowns, 1000);
+
+        // =============================================
+        // AUTO-REFRESH halaman setiap 30 detik
+        // (hanya jika tidak ada lagu yg sedang Playing,
+        //  atau jika ada Playing agar history terupdate)
+        // =============================================
+        let refreshTimer = setTimeout(function() {
+            // Jangan refresh jika user sedang mengetik di form
+            const songInput = document.getElementById('song_title');
+            const artistInput = document.getElementById('artist');
+            if ((songInput && songInput.value.trim() !== '') ||
+                (artistInput && artistInput.value.trim() !== '')) {
+                // Tunda refresh 30 detik lagi jika user sedang isi form
+                refreshTimer = setTimeout(arguments.callee, AUTO_REFRESH_INTERVAL_MS);
+                return;
+            }
+            window.location.reload();
+        }, AUTO_REFRESH_INTERVAL_MS);
+
+        // Batalkan auto-refresh jika user klik tombol submit
+        document.querySelectorAll('form').forEach(f => {
+            f.addEventListener('submit', () => clearTimeout(refreshTimer));
+        });
+    </script>
 </body>
 
 </html>
