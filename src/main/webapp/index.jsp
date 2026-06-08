@@ -285,6 +285,17 @@
                                         <span class="font-black uppercase text-sm tracking-tighter">Chat Room</span>
                                     </a>
 
+                                    <a href="${pageContext.request.contextPath}/TournamentNewsController" class="group flex flex-col items-center gap-4 text-center">
+                                        <div
+                                            class="w-20 h-20 bg-amber-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-amber-400/50 transition-all duration-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                                                <path d="M18 14h-8M18 18h-8M16 6H10v4h6V6Z"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="font-black uppercase text-sm tracking-tighter">Tournaments</span>
+                                    </a>
+
                                     <a href="${pageContext.request.contextPath}/MusicController"
                                         class="group flex flex-col items-center gap-4 text-center">
                                         <div
