@@ -187,203 +187,79 @@ public class DatabaseSeeder implements ServletContextListener {
                     }
                 }
 
-                // Cek apakah tabel 'friendships' perlu dibuat
-                boolean friendshipsExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "friendships", null)) {
+                // Cek apakah tabel 'music_requests' perlu dibuat
+                boolean musicRequestsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "music_requests", null)) {
                     if (rs.next()) {
-                        friendshipsExists = true;
+                        musicRequestsExists = true;
                     }
                 } catch (Exception e) {
                     // Abaikan
-                }
-                
-                if (!friendshipsExists) {
-                    System.out.println("[Seeder] Tabel 'friendships' belum ada. Membuat tabel...");
-                    try {
-                        String createFriendshipsSql = "CREATE TABLE `friendships` ("
-                                + "  `friendship_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                                + "  `user_id` int(11) NOT NULL,"
-                                + "  `friend_id` int(11) NOT NULL,"
-                                + "  `status` enum('PENDING','ACCEPTED','REJECTED') NOT NULL DEFAULT 'PENDING',"
-                                + "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,"
-                                + "  FOREIGN KEY (`friend_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
-                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createFriendshipsSql);
-                        System.out.println("[Seeder] Tabel 'friendships' berhasil dibuat.");
-                    } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'friendships': " + e.getMessage());
-                        e.printStackTrace();
-                    }
                 }
 
-                // Cek apakah tabel 'chats' perlu dibuat
-                boolean chatsExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "chats", null)) {
-                    if (rs.next()) {
-                        chatsExists = true;
-                    }
-                } catch (Exception e) {
-                    // Abaikan
-                }
-                if (!chatsExists) {
-                    System.out.println("[Seeder] Tabel 'chats' belum ada. Membuat tabel...");
+                if (!musicRequestsExists) {
+                    System.out.println("[Seeder] Tabel 'music_requests' belum ada. Membuat tabel...");
                     try {
-                        String createChatsSql = "CREATE TABLE `chats` ("
-                                + "  `id_chat` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                                + "  `is_group` tinyint(1) NOT NULL DEFAULT 0,"
-                                + "  `nama_grup` varchar(100) DEFAULT NULL,"
-                                + "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"
-                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createChatsSql);
-                        System.out.println("[Seeder] Tabel 'chats' berhasil dibuat.");
-                    } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'chats': " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-
-                // Cek apakah tabel 'chat_participants' perlu dibuat
-                boolean participantsExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "chat_participants", null)) {
-                    if (rs.next()) {
-                        participantsExists = true;
-                    }
-                } catch (Exception e) {
-                    // Abaikan
-                }
-                if (!participantsExists) {
-                    System.out.println("[Seeder] Tabel 'chat_participants' belum ada. Membuat tabel...");
-                    try {
-                        String createParticipantsSql = "CREATE TABLE `chat_participants` ("
-                                + "  `id_chat` int(11) NOT NULL,"
+                        String createMusicRequestsSql = "CREATE TABLE `music_requests` ("
+                                + "  `request_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
                                 + "  `user_id` int(11) NOT NULL,"
-                                + "  PRIMARY KEY (`id_chat`, `user_id`),"
-                                + "  FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  `song_title` varchar(255) NOT NULL,"
+                                + "  `artist` varchar(255) NOT NULL,"
+                                + "  `status` enum('Pending','Playing','Played','Cancelled') NOT NULL DEFAULT 'Pending',"
+                                + "  `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),"
+                                + "  `started_at` timestamp NULL DEFAULT NULL,"
+                                + "  `played_at` timestamp NULL DEFAULT NULL,"
                                 + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
                                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createParticipantsSql);
-                        System.out.println("[Seeder] Tabel 'chat_participants' berhasil dibuat.");
+                        stmt.executeUpdate(createMusicRequestsSql);
+                        System.out.println("[Seeder] Tabel 'music_requests' berhasil dibuat.");
                     } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'chat_participants': " + e.getMessage());
+                        System.err.println("[Seeder] Gagal membuat tabel 'music_requests': " + e.getMessage());
                         e.printStackTrace();
                     }
-                }
-
-                // Cek apakah tabel 'pesan' perlu dibuat
-                boolean pesanExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "pesan", null)) {
-                    if (rs.next()) {
-                        pesanExists = true;
-                    }
-                } catch (Exception e) {
-                    // Abaikan
-                }
-                if (!pesanExists) {
-                    System.out.println("[Seeder] Tabel 'pesan' belum ada. Membuat tabel...");
-                    try {
-                        String createPesanSql = "CREATE TABLE `pesan` ("
-                                + "  `id_pesan` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                                + "  `id_chat` int(11) NOT NULL,"
-                                + "  `pengirim_id` int(11) NOT NULL,"
-                                + "  `isi_pesan` text NOT NULL,"
-                                + "  `waktu_kirim` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                                + "  `status` enum('terkirim','dibaca') NOT NULL DEFAULT 'terkirim',"
-                                + "  FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,"
-                                + "  FOREIGN KEY (`pengirim_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
-                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createPesanSql);
-                        System.out.println("[Seeder] Tabel 'pesan' berhasil dibuat.");
+                } else {
+                    // Cek apakah kolom 'played_at' sudah ada di tabel music_requests
+                    boolean hasPlayedAt = false;
+                    try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "music_requests", "played_at")) {
+                        if (colRs.next()) {
+                            hasPlayedAt = true;
+                        }
                     } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'pesan': " + e.getMessage());
-                        e.printStackTrace();
+                        // Abaikan
                     }
-                }
 
-                // Cek apakah tabel 'tournament_news' perlu dibuat
-                boolean newsExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "tournament_news", null)) {
-                    if (rs.next()) {
-                        newsExists = true;
-                    }
-                } catch (Exception e) {
-                    // Abaikan
-                }
-                if (!newsExists) {
-                    System.out.println("[Seeder] Tabel 'tournament_news' belum ada. Membuat tabel...");
-                    try {
-                        String createNewsSql = "CREATE TABLE `tournament_news` ("
-                                + "  `news_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                                + "  `title` varchar(255) NOT NULL,"
-                                + "  `content` text NOT NULL,"
-                                + "  `court_id` int(11) DEFAULT NULL,"
-                                + "  `image_url` varchar(255) DEFAULT NULL,"
-                                + "  `tournament_date` date DEFAULT NULL,"
-                                + "  `max_participants` int(11) NOT NULL DEFAULT 16,"
-                                + "  `current_participants` int(11) NOT NULL DEFAULT 0,"
-                                + "  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                                + "  FOREIGN KEY (`court_id`) REFERENCES `courts` (`court_id`) ON DELETE SET NULL ON UPDATE CASCADE"
-                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createNewsSql);
-                        System.out.println("[Seeder] Tabel 'tournament_news' berhasil dibuat.");
-                    } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'tournament_news': " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-
-                // Cek apakah tabel 'tournament_registrations' perlu dibuat
-                boolean regExists = false;
-                try (ResultSet rs = conn.getMetaData().getTables(null, null, "tournament_registrations", null)) {
-                    if (rs.next()) {
-                        regExists = true;
-                    }
-                } catch (Exception e) {
-                    // Abaikan
-                }
-                if (!regExists) {
-                    System.out.println("[Seeder] Tabel 'tournament_registrations' belum ada. Membuat tabel...");
-                    try {
-                        String createRegSql = "CREATE TABLE `tournament_registrations` ("
-                                + "  `registration_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-                                + "  `news_id` int(11) NOT NULL,"
-                                + "  `user_id` int(11) NOT NULL,"
-                                + "  `registration_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
-                                + "  UNIQUE KEY `news_user_unique` (`news_id`, `user_id`),"
-                                + "  FOREIGN KEY (`news_id`) REFERENCES `tournament_news` (`news_id`) ON DELETE CASCADE,"
-                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
-                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
-                        stmt.executeUpdate(createRegSql);
-                        System.out.println("[Seeder] Tabel 'tournament_registrations' berhasil dibuat.");
-                    } catch (Exception e) {
-                        System.err.println("[Seeder] Gagal membuat tabel 'tournament_registrations': " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-
-                // Seeding beberapa turnamen awal jika tabel tournament_news kosong
-                try {
-                    String checkEmptySql = "SELECT COUNT(*) FROM tournament_news";
-                    try (ResultSet rs = stmt.executeQuery(checkEmptySql)) {
-                        if (rs.next() && rs.getInt(1) == 0) {
-                            System.out.println("[Seeder] Mengisi data turnamen awal...");
-                            String seedNews1 = "INSERT INTO tournament_news (title, content, court_id, image_url, tournament_date, max_participants, current_participants) VALUES "
-                                    + "('Padel Grand Championship 2026', 'Sambut kejuaraan padel terbesar tahun ini! Turnamen resmi PadelApp akan diselenggarakan untuk menentukan pemain ganda terbaik di kota ini. Hadiah total senilai Rp 10.000.000 menanti Anda. Semua peserta akan mendapatkan jersey eksklusif dan konsumsi selama acara berlangsung. Segera daftarkan tim Anda sebelum slot penuh!', 1, 'img/padel.jpg', '2026-07-15', 16, 0)";
-                            String seedNews2 = "INSERT INTO tournament_news (title, content, court_id, image_url, tournament_date, max_participants, current_participants) VALUES "
-                                    + "('Summer Padel Doubles Cup', 'Turnamen musim panas khusus untuk member Premium PadelApp. Format pertandingan menggunakan sistem grup dilanjutkan dengan sistem gugur. Cocok untuk mengasah kemampuan taktis dan kerja sama tim Anda di Court B.', 2, 'img/padel.jpg', '2026-08-01', 8, 0)";
-                            String seedNews3 = "INSERT INTO tournament_news (title, content, court_id, image_url, tournament_date, max_participants, current_participants) VALUES "
-                                    + "('Premium Members Friendly League', 'Ajang latih tanding santai yang diadakan khusus bagi para member premium untuk saling mengenal, berjejaring, dan meningkatkan peringkat internal klub padel.', 1, 'img/padel.jpg', '2026-05-10', 32, 0)";
-                            stmt.executeUpdate(seedNews1);
-                            stmt.executeUpdate(seedNews2);
-                            stmt.executeUpdate(seedNews3);
-                            System.out.println("[Seeder] Berhasil mengisi data turnamen awal.");
+                    if (!hasPlayedAt) {
+                        System.out.println("[Seeder] Tabel 'music_requests' membutuhkan migrasi played_at. Menjalankan ALTER...");
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `music_requests` ADD COLUMN `played_at` timestamp NULL DEFAULT NULL AFTER `requested_at`");
+                            System.out.println("[Seeder] Kolom 'played_at' berhasil ditambahkan ke tabel 'music_requests'.");
+                        } catch (Exception e) {
+                            System.err.println("[Seeder] Gagal melakukan migrasi played_at ke tabel 'music_requests': " + e.getMessage());
+                            e.printStackTrace();
                         }
                     }
-                } catch (Exception e) {
-                    System.err.println("[Seeder] Gagal melakukan seeding data turnamen: " + e.getMessage());
-                    e.printStackTrace();
-                }
 
+                    // Cek apakah kolom 'started_at' sudah ada di tabel music_requests
+                    boolean hasStartedAt = false;
+                    try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "music_requests", "started_at")) {
+                        if (colRs.next()) {
+                            hasStartedAt = true;
+                        }
+                    } catch (Exception e) {
+                        // Abaikan
+                    }
+
+                    if (!hasStartedAt) {
+                        System.out.println("[Seeder] Tabel 'music_requests' membutuhkan migrasi started_at. Menjalankan ALTER...");
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `music_requests` ADD COLUMN `started_at` timestamp NULL DEFAULT NULL AFTER `requested_at`");
+                            System.out.println("[Seeder] Kolom 'started_at' berhasil ditambahkan ke tabel 'music_requests'.");
+                        } catch (Exception e) {
+                            System.err.println("[Seeder] Gagal melakukan migrasi started_at ke tabel 'music_requests': " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 return;
             }
 
