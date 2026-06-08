@@ -54,6 +54,7 @@ public class MusicController extends HttpServlet {
                     mr.setUserId(rs.getInt("user_id"));
                     mr.setSongTitle(rs.getString("song_title"));
                     mr.setArtist(rs.getString("artist"));
+                    mr.setDurationSeconds(rs.getInt("duration_seconds"));
                     mr.setStatus(rs.getString("status"));
                     mr.setRequestedAt(rs.getTimestamp("requested_at"));
                     mr.setStartedAt(rs.getTimestamp("started_at"));
@@ -76,6 +77,7 @@ public class MusicController extends HttpServlet {
                     mr.setUserId(rs.getInt("user_id"));
                     mr.setSongTitle(rs.getString("song_title"));
                     mr.setArtist(rs.getString("artist"));
+                    mr.setDurationSeconds(rs.getInt("duration_seconds"));
                     mr.setStatus(rs.getString("status"));
                     mr.setRequestedAt(rs.getTimestamp("requested_at"));
                     mr.setPlayedAt(rs.getTimestamp("played_at"));
@@ -142,6 +144,24 @@ public class MusicController extends HttpServlet {
                     return;
                 }
 
+                // Ambil parameter durasi lagu
+                String durationMinParam = request.getParameter("duration_minutes");
+                String durationSecParam = request.getParameter("duration_seconds");
+                int durationSeconds = 240; // default 4 menit
+                try {
+                    int min = (durationMinParam != null && !durationMinParam.trim().isEmpty()) ? Integer.parseInt(durationMinParam.trim()) : 4;
+                    int sec = (durationSecParam != null && !durationSecParam.trim().isEmpty()) ? Integer.parseInt(durationSecParam.trim()) : 0;
+                    if (min >= 0 && sec >= 0 && sec < 60) {
+                        durationSeconds = (min * 60) + sec;
+                        // Mencegah durasi 0
+                        if (durationSeconds <= 0) {
+                            durationSeconds = 240;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    // Gunakan default
+                }
+
                 // If user is Regular, check request limit
                 if ("Regular".equalsIgnoreCase(userRole)) {
                     String countSql = "SELECT COUNT(*) FROM music_requests WHERE user_id = ? AND status IN ('Pending', 'Playing')";
@@ -162,11 +182,12 @@ public class MusicController extends HttpServlet {
                 }
 
                 // Insert new request
-                String insertSql = "INSERT INTO music_requests (user_id, song_title, artist, status) VALUES (?, ?, ?, 'Pending')";
+                String insertSql = "INSERT INTO music_requests (user_id, song_title, artist, duration_seconds, status) VALUES (?, ?, ?, ?, 'Pending')";
                 try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
                     ps.setInt(1, userId);
                     ps.setString(2, songTitle.trim());
                     ps.setString(3, artist.trim());
+                    ps.setInt(4, durationSeconds);
                     ps.executeUpdate();
                 }
 
@@ -236,6 +257,43 @@ public class MusicController extends HttpServlet {
                             ps.executeUpdate();
                         }
                         response.sendRedirect(request.getContextPath() + "/MusicController?status=cancelled");
+                    } else {
+                        response.sendRedirect(request.getContextPath() + "/MusicController?status=unauthorized");
+                    }
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/MusicController");
+                }
+            } else if ("deleteHistory".equalsIgnoreCase(action)) {
+                String requestIdParam = request.getParameter("request_id");
+                if (requestIdParam != null) {
+                    int requestId = Integer.parseInt(requestIdParam);
+
+                    // Check if owner or admin
+                    boolean isAuthorized = false;
+                    if ("Admin".equalsIgnoreCase(userRole)) {
+                        isAuthorized = true;
+                    } else {
+                        String ownerSql = "SELECT user_id FROM music_requests WHERE request_id = ?";
+                        try (PreparedStatement ps = conn.prepareStatement(ownerSql)) {
+                            ps.setInt(1, requestId);
+                            try (ResultSet rs = ps.executeQuery()) {
+                                if (rs.next()) {
+                                    int ownerId = rs.getInt("user_id");
+                                    if (ownerId == userId) {
+                                        isAuthorized = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (isAuthorized) {
+                        String deleteSql = "DELETE FROM music_requests WHERE request_id = ?";
+                        try (PreparedStatement ps = conn.prepareStatement(deleteSql)) {
+                            ps.setInt(1, requestId);
+                            ps.executeUpdate();
+                        }
+                        response.sendRedirect(request.getContextPath() + "/MusicController?status=history_deleted");
                     } else {
                         response.sendRedirect(request.getContextPath() + "/MusicController?status=unauthorized");
                     }

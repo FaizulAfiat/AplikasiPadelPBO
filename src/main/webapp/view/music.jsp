@@ -110,6 +110,17 @@
                         <input type="text" id="artist" name="artist" placeholder="Contoh: BTS" class="w-full bg-transparent text-xl font-black outline-none placeholder-gray-300" required>
                     </div>
 
+                    <div class="grid grid-cols-2 gap-4 pb-2 border-b-2 border-black">
+                        <div>
+                            <label for="duration_minutes" class="text-xs font-bold uppercase opacity-50 block mb-1">Durasi (Menit)</label>
+                            <input type="number" id="duration_minutes" name="duration_minutes" min="0" max="20" value="4" class="w-full bg-transparent text-xl font-black outline-none" required>
+                        </div>
+                        <div>
+                            <label for="duration_seconds" class="text-xs font-bold uppercase opacity-50 block mb-1">Durasi (Detik)</label>
+                            <input type="number" id="duration_seconds" name="duration_seconds" min="0" max="59" value="0" class="w-full bg-transparent text-xl font-black outline-none" required>
+                        </div>
+                    </div>
+
                     <c:choose>
                         <c:when test="${role eq 'Regular' && activeCount >= limit}">
                             <button type="button" disabled class="w-full bg-gray-300 text-gray-500 px-8 py-4 font-black uppercase tracking-widest text-sm border-2 border-black cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)]">
@@ -170,6 +181,9 @@
                             <c:when test="${param.status eq 'cancelled'}">
                                 <span>Request musik berhasil dibatalkan.</span>
                             </c:when>
+                            <c:when test="${param.status eq 'history_deleted'}">
+                                <span>Riwayat request musik berhasil dihapus secara permanen.</span>
+                            </c:when>
                             <c:when test="${param.status eq 'updated'}">
                                 <span>Status antrean musik berhasil diperbarui!</span>
                             </c:when>
@@ -213,7 +227,7 @@
                                         <div class="absolute top-0 left-0 right-0 h-2 bg-gray-200 overflow-hidden">
                                             <div class="song-progress-bar h-full bg-[#B6FF2D]"
                                                  data-started="${mr.startedAt.time}"
-                                                 data-duration="240000">
+                                                 data-duration="${mr.durationSeconds * 1000}">
                                             </div>
                                         </div>
                                     </c:if>
@@ -259,7 +273,7 @@
                                                 </svg>
                                                 <span class="countdown-timer text-[11px] font-black text-gray-500 uppercase tracking-wider"
                                                       data-started="${mr.startedAt.time}"
-                                                      data-duration="240">--:--</span>
+                                                      data-duration="${mr.durationSeconds}">--:--</span>
                                             </div>
                                         </c:if>
                                     </div>
@@ -333,6 +347,7 @@
                                         <th class="p-3 text-xs font-black uppercase tracking-wider">Oleh</th>
                                         <th class="p-3 text-xs font-black uppercase tracking-wider">Status</th>
                                         <th class="p-3 text-xs font-black uppercase tracking-wider text-right">Waktu Diputar</th>
+                                        <th class="p-3 text-xs font-black uppercase tracking-wider text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -360,6 +375,17 @@
                                                         <fmt:formatDate value="${h.requestedAt}" pattern="dd MMM, HH:mm"/>
                                                     </c:otherwise>
                                                 </c:choose>
+                                            </td>
+                                            <td class="p-3 text-center">
+                                                <c:if test="${role eq 'Admin' || sessionScope.user_id == h.userId}">
+                                                    <form action="${pageContext.request.contextPath}/MusicController" method="POST" class="inline">
+                                                        <input type="hidden" name="action" value="deleteHistory">
+                                                        <input type="hidden" name="request_id" value="${h.requestId}">
+                                                        <button type="submit" class="hover:bg-red-600 hover:text-white text-red-600 px-2.5 py-1 rounded border border-red-300 hover:border-red-600 text-[10px] font-black uppercase tracking-wider transition-colors" onclick="return confirm('Hapus lagu ini dari riwayat secara permanen?')">
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                </c:if>
                                             </td>
                                         </tr>
                                     </c:forEach>

@@ -205,6 +205,7 @@ public class DatabaseSeeder implements ServletContextListener {
                                 + "  `user_id` int(11) NOT NULL,"
                                 + "  `song_title` varchar(255) NOT NULL,"
                                 + "  `artist` varchar(255) NOT NULL,"
+                                + "  `duration_seconds` int(11) NOT NULL DEFAULT 240,"
                                 + "  `status` enum('Pending','Playing','Played','Cancelled') NOT NULL DEFAULT 'Pending',"
                                 + "  `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),"
                                 + "  `started_at` timestamp NULL DEFAULT NULL,"
@@ -256,6 +257,27 @@ public class DatabaseSeeder implements ServletContextListener {
                             System.out.println("[Seeder] Kolom 'started_at' berhasil ditambahkan ke tabel 'music_requests'.");
                         } catch (Exception e) {
                             System.err.println("[Seeder] Gagal melakukan migrasi started_at ke tabel 'music_requests': " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // Cek apakah kolom 'duration_seconds' sudah ada di tabel music_requests
+                    boolean hasDurationSeconds = false;
+                    try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "music_requests", "duration_seconds")) {
+                        if (colRs.next()) {
+                            hasDurationSeconds = true;
+                        }
+                    } catch (Exception e) {
+                        // Abaikan
+                    }
+
+                    if (!hasDurationSeconds) {
+                        System.out.println("[Seeder] Tabel 'music_requests' membutuhkan migrasi duration_seconds. Menjalankan ALTER...");
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `music_requests` ADD COLUMN `duration_seconds` int(11) NOT NULL DEFAULT 240 AFTER `artist`");
+                            System.out.println("[Seeder] Kolom 'duration_seconds' berhasil ditambahkan ke tabel 'music_requests'.");
+                        } catch (Exception e) {
+                            System.err.println("[Seeder] Gagal melakukan migrasi duration_seconds ke tabel 'music_requests': " + e.getMessage());
                             e.printStackTrace();
                         }
                     }

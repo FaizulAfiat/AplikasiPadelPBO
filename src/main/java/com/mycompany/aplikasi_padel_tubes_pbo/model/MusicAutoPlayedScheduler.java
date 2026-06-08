@@ -59,10 +59,9 @@ public class MusicAutoPlayedScheduler implements ServletContextListener {
             String countSql = "SELECT COUNT(*) FROM music_requests " +
                               "WHERE status = 'Playing' " +
                               "AND started_at IS NOT NULL " +
-                              "AND TIMESTAMPDIFF(SECOND, started_at, NOW()) >= ?";
+                              "AND TIMESTAMPDIFF(SECOND, started_at, NOW()) >= duration_seconds";
             int count = 0;
             try (PreparedStatement ps = conn.prepareStatement(countSql)) {
-                ps.setInt(1, SONG_DURATION_SECONDS);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         count = rs.getInt(1);
@@ -76,9 +75,8 @@ public class MusicAutoPlayedScheduler implements ServletContextListener {
                                    "SET status = 'Played', played_at = NOW() " +
                                    "WHERE status = 'Playing' " +
                                    "AND started_at IS NOT NULL " +
-                                   "AND TIMESTAMPDIFF(SECOND, started_at, NOW()) >= ?";
+                                   "AND TIMESTAMPDIFF(SECOND, started_at, NOW()) >= duration_seconds";
                 try (PreparedStatement ps = conn.prepareStatement(updateSql)) {
-                    ps.setInt(1, SONG_DURATION_SECONDS);
                     int updated = ps.executeUpdate();
                     System.out.println("[MusicScheduler] " + updated +
                         " lagu otomatis dipindahkan ke history (Played).");
