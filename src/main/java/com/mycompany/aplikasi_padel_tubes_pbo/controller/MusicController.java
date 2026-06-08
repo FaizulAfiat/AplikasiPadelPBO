@@ -56,6 +56,7 @@ public class MusicController extends HttpServlet {
                     mr.setArtist(rs.getString("artist"));
                     mr.setStatus(rs.getString("status"));
                     mr.setRequestedAt(rs.getTimestamp("requested_at"));
+                    mr.setStartedAt(rs.getTimestamp("started_at"));
                     mr.setUsername(rs.getString("username"));
                     mr.setUserRole(rs.getString("role"));
                     activeQueue.add(mr);
@@ -66,7 +67,7 @@ public class MusicController extends HttpServlet {
             String historySql = "SELECT mr.*, u.username, u.role FROM music_requests mr " +
                                 "JOIN users u ON mr.user_id = u.user_id " +
                                 "WHERE mr.status IN ('Played', 'Cancelled') " +
-                                "ORDER BY mr.requested_at DESC LIMIT 10";
+                                "ORDER BY COALESCE(mr.played_at, mr.requested_at) DESC LIMIT 10";
             try (PreparedStatement ps = conn.prepareStatement(historySql);
                  ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -77,6 +78,7 @@ public class MusicController extends HttpServlet {
                     mr.setArtist(rs.getString("artist"));
                     mr.setStatus(rs.getString("status"));
                     mr.setRequestedAt(rs.getTimestamp("requested_at"));
+                    mr.setPlayedAt(rs.getTimestamp("played_at"));
                     mr.setUsername(rs.getString("username"));
                     mr.setUserRole(rs.getString("role"));
                     recentlyPlayed.add(mr);
@@ -182,7 +184,16 @@ public class MusicController extends HttpServlet {
 
                 if (requestIdParam != null && newStatus != null) {
                     int requestId = Integer.parseInt(requestIdParam);
-                    String updateSql = "UPDATE music_requests SET status = ? WHERE request_id = ?";
+                    String updateSql;
+                    if ("Playing".equalsIgnoreCase(newStatus)) {
+                        // Catat waktu mulai diputar (digunakan oleh scheduler auto-complete)
+                        updateSql = "UPDATE music_requests SET status = ?, started_at = NOW() WHERE request_id = ?";
+                    } else if ("Played".equalsIgnoreCase(newStatus)) {
+                        // Catat waktu selesai diputar
+                        updateSql = "UPDATE music_requests SET status = ?, played_at = NOW() WHERE request_id = ?";
+                    } else {
+                        updateSql = "UPDATE music_requests SET status = ? WHERE request_id = ?";
+                    }
                     try (PreparedStatement ps = conn.prepareStatement(updateSql)) {
                         ps.setString(1, newStatus);
                         ps.setInt(2, requestId);

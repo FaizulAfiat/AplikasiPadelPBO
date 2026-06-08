@@ -186,6 +186,80 @@ public class DatabaseSeeder implements ServletContextListener {
                         }
                     }
                 }
+
+                // Cek apakah tabel 'music_requests' perlu dibuat
+                boolean musicRequestsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "music_requests", null)) {
+                    if (rs.next()) {
+                        musicRequestsExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+
+                if (!musicRequestsExists) {
+                    System.out.println("[Seeder] Tabel 'music_requests' belum ada. Membuat tabel...");
+                    try {
+                        String createMusicRequestsSql = "CREATE TABLE `music_requests` ("
+                                + "  `request_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `song_title` varchar(255) NOT NULL,"
+                                + "  `artist` varchar(255) NOT NULL,"
+                                + "  `status` enum('Pending','Playing','Played','Cancelled') NOT NULL DEFAULT 'Pending',"
+                                + "  `requested_at` timestamp NOT NULL DEFAULT current_timestamp(),"
+                                + "  `started_at` timestamp NULL DEFAULT NULL,"
+                                + "  `played_at` timestamp NULL DEFAULT NULL,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createMusicRequestsSql);
+                        System.out.println("[Seeder] Tabel 'music_requests' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'music_requests': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Cek apakah kolom 'played_at' sudah ada di tabel music_requests
+                    boolean hasPlayedAt = false;
+                    try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "music_requests", "played_at")) {
+                        if (colRs.next()) {
+                            hasPlayedAt = true;
+                        }
+                    } catch (Exception e) {
+                        // Abaikan
+                    }
+
+                    if (!hasPlayedAt) {
+                        System.out.println("[Seeder] Tabel 'music_requests' membutuhkan migrasi played_at. Menjalankan ALTER...");
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `music_requests` ADD COLUMN `played_at` timestamp NULL DEFAULT NULL AFTER `requested_at`");
+                            System.out.println("[Seeder] Kolom 'played_at' berhasil ditambahkan ke tabel 'music_requests'.");
+                        } catch (Exception e) {
+                            System.err.println("[Seeder] Gagal melakukan migrasi played_at ke tabel 'music_requests': " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // Cek apakah kolom 'started_at' sudah ada di tabel music_requests
+                    boolean hasStartedAt = false;
+                    try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "music_requests", "started_at")) {
+                        if (colRs.next()) {
+                            hasStartedAt = true;
+                        }
+                    } catch (Exception e) {
+                        // Abaikan
+                    }
+
+                    if (!hasStartedAt) {
+                        System.out.println("[Seeder] Tabel 'music_requests' membutuhkan migrasi started_at. Menjalankan ALTER...");
+                        try {
+                            stmt.executeUpdate("ALTER TABLE `music_requests` ADD COLUMN `started_at` timestamp NULL DEFAULT NULL AFTER `requested_at`");
+                            System.out.println("[Seeder] Kolom 'started_at' berhasil ditambahkan ke tabel 'music_requests'.");
+                        } catch (Exception e) {
+                            System.err.println("[Seeder] Gagal melakukan migrasi started_at ke tabel 'music_requests': " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 return;
             }
 
