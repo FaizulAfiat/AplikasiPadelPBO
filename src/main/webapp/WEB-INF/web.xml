@@ -76,6 +76,22 @@
         <servlet-name>MatchRecapController</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.MatchRecapController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchFriendController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.SearchFriendController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FriendActionController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.FriendActionController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchSuggestionsController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.SearchSuggestionsController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChatController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ChatController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>PadelController</servlet-name>
         <url-pattern>/padel</url-pattern>
@@ -157,6 +173,22 @@
         <servlet-name>MatchRecapController</servlet-name>
         <url-pattern>/MatchRecapController</url-pattern>
         <url-pattern>/MatchRecap</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchFriendController</servlet-name>
+        <url-pattern>/SearchFriendController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FriendActionController</servlet-name>
+        <url-pattern>/FriendActionController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchSuggestionsController</servlet-name>
+        <url-pattern>/SearchSuggestionsController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChatController</servlet-name>
+        <url-pattern>/chat</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
