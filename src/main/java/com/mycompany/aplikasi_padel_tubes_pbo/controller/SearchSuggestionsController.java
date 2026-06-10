@@ -1,5 +1,6 @@
 package com.mycompany.aplikasi_padel_tubes_pbo.controller;
 
+import com.google.gson.Gson;
 import com.mycompany.aplikasi_padel_tubes_pbo.model.Koneksi;
 import java.io.IOException;
 import java.sql.Connection;
@@ -52,19 +53,8 @@ public class SearchSuggestionsController extends HttpServlet {
             }
         }
 
-        // Format JSON manually: ["user1", "user2"]
-        StringBuilder json = new StringBuilder("[");
-        for (int i = 0; i < suggestions.size(); i++) {
-            String escaped = suggestions.get(i).replace("\"", "\\\"");
-            json.append("\"").append(escaped).append("\"");
-            if (i < suggestions.size() - 1) {
-                json.append(",");
-            }
-        }
-        json.append("]");
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(json.toString());
+        response.getWriter().write(new Gson().toJson(suggestions));
     }
 }
