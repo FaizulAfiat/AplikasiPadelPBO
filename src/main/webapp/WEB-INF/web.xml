@@ -2,95 +2,95 @@
 <web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <servlet>
         <servlet-name>PadelController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.PadelController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.core.PadelController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>RegisterController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.RegisterController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.auth.RegisterController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.LoginController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.auth.LoginController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.LogoutController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.auth.LogoutController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>CartController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.CartController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.shop.CartController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>BookingController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.BookingController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.booking.BookingController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ShopController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ShopController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.shop.ShopController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AdminController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.AdminController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.admin.AdminController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>UpdateStatusController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.UpdateStatusController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.user.UpdateStatusController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ManageProducts</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ManageProducts</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.admin.ManageProducts</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AddProduct</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.AddProduct</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.admin.AddProduct</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>MatchSetupController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.MatchSetupController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.match.MatchSetupController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SaveScoreController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.SaveScoreController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.match.SaveScoreController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>DeleteProduct</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.DeleteProduct</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.admin.DeleteProduct</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EditProduct</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.EditProduct</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.admin.EditProduct</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProfileController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ProfileController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.user.ProfileController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PaymentController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.PaymentController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.booking.PaymentController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>InvoiceController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.InvoiceController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.booking.InvoiceController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>MatchRecapController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.MatchRecapController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.match.MatchRecapController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchFriendController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.SearchFriendController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.chat.SearchFriendController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>FriendActionController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.FriendActionController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.chat.FriendActionController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>SearchSuggestionsController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.SearchSuggestionsController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.chat.SearchSuggestionsController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ChatController</servlet-name>
-        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ChatController</servlet-class>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.chat.ChatController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ProductApiController</servlet-name>
@@ -103,6 +103,22 @@
     <servlet>
         <servlet-name>BookingApiController</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.api.BookingApiController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AuthApiController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.api.AuthApiController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AdminProductApiController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.api.AdminProductApiController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PaymentApiController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.api.PaymentApiController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ProfileApiController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.api.ProfileApiController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>PadelController</servlet-name>
@@ -213,6 +229,22 @@
     <servlet-mapping>
         <servlet-name>BookingApiController</servlet-name>
         <url-pattern>/api/bookings/slots</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AuthApiController</servlet-name>
+        <url-pattern>/api/auth</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminProductApiController</servlet-name>
+        <url-pattern>/api/admin/products</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaymentApiController</servlet-name>
+        <url-pattern>/api/payments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProfileApiController</servlet-name>
+        <url-pattern>/api/profile</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
