@@ -92,6 +92,10 @@
         <servlet-name>ChatController</servlet-name>
         <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.ChatController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductApiController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.api.ProductApiController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>PadelController</servlet-name>
         <url-pattern>/padel</url-pattern>
@@ -189,6 +193,10 @@
     <servlet-mapping>
         <servlet-name>ChatController</servlet-name>
         <url-pattern>/chat</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductApiController</servlet-name>
+        <url-pattern>/api/products</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
