@@ -40,6 +40,26 @@ public class TrackHealthController extends HttpServlet {
             return;
         }
 
+        Exception healthException = (Exception) session.getAttribute("health_exception");
+        if (healthException != null) {
+            request.setAttribute("healthExceptionMessage", healthException.toString());
+            StringBuilder sb = new StringBuilder();
+            for (StackTraceElement ste : healthException.getStackTrace()) {
+                if (ste.getClassName().contains("com.mycompany")) {
+                    sb.append("at ").append(ste.toString()).append("\n");
+                }
+            }
+            if (sb.length() == 0) {
+                int count = 0;
+                for (StackTraceElement ste : healthException.getStackTrace()) {
+                    sb.append("at ").append(ste.toString()).append("\n");
+                    if (++count >= 10) break;
+                }
+            }
+            request.setAttribute("healthExceptionStackTrace", sb.toString());
+            session.removeAttribute("health_exception");
+        }
+
         int userId = (Integer) userIdObj;
         User user = new User();
         user.setUserId(userId);
@@ -52,6 +72,74 @@ public class TrackHealthController extends HttpServlet {
         PerformanceScore currentScore = new PerformanceScore();
 
         try (Connection conn = Koneksi.getConnection()) {
+            // Auto-fix users table columns
+            boolean hasAge = false;
+            try (ResultSet colRs = conn.getMetaData().getColumns(conn.getCatalog(), null, "users", "age")) {
+                if (colRs.next()) hasAge = true;
+            }
+            if (!hasAge) {
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate("ALTER TABLE `users` ADD COLUMN `age` INT DEFAULT 0 AFTER `role`");
+                    stmt.executeUpdate("ALTER TABLE `users` ADD COLUMN `weight` FLOAT DEFAULT 0.0 AFTER `age`");
+                    stmt.executeUpdate("ALTER TABLE `users` ADD COLUMN `height` FLOAT DEFAULT 0.0 AFTER `weight`");
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            // Auto-create missing tables using CREATE TABLE IF NOT EXISTS
+            try (Statement stmt = conn.createStatement()) {
+                // padel_sessions
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `padel_sessions` ("
+                        + "  `session_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                        + "  `user_id` INT NOT NULL,"
+                        + "  `start_time` DATETIME NOT NULL,"
+                        + "  `end_time` DATETIME NOT NULL,"
+                        + "  `duration_minutes` INT NOT NULL,"
+                        + "  `calories_burned` INT NOT NULL,"
+                        + "  `avg_heart_rate` FLOAT NOT NULL,"
+                        + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                        + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+                // health_metrics
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `health_metrics` ("
+                        + "  `metric_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                        + "  `user_id` INT NOT NULL,"
+                        + "  `record_date` DATE NOT NULL,"
+                        + "  `resting_heart_rate` INT NOT NULL,"
+                        + "  `bmi` FLOAT NOT NULL,"
+                        + "  `total_steps` INT NOT NULL,"
+                        + "  `calories_daily` INT NOT NULL,"
+                        + "  UNIQUE KEY `user_record_date` (`user_id`, `record_date`),"
+                        + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                        + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+                // activity_summaries
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `activity_summaries` ("
+                        + "  `summary_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                        + "  `user_id` INT NOT NULL,"
+                        + "  `summary_date` DATE NOT NULL,"
+                        + "  `total_sessions` INT NOT NULL,"
+                        + "  `total_duration` INT NOT NULL,"
+                        + "  `total_calories` INT NOT NULL,"
+                        + "  UNIQUE KEY `user_summary_date` (`user_id`, `summary_date`),"
+                        + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                        + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+                // performance_scores
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS `performance_scores` ("
+                        + "  `score_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                        + "  `user_id` INT NOT NULL,"
+                        + "  `calculated_date` DATE NOT NULL,"
+                        + "  `fitness_score` FLOAT NOT NULL,"
+                        + "  `category` VARCHAR(50) NOT NULL,"
+                        + "  UNIQUE KEY `user_calculated_date` (`user_id`, `calculated_date`),"
+                        + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                        + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
             // 1. Fetch User details (including age, weight, height)
             String userSql = "SELECT username, email, role, age, weight, height FROM users WHERE user_id = ?";
             try (PreparedStatement ps = conn.prepareStatement(userSql)) {
@@ -316,8 +404,9 @@ public class TrackHealthController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/TrackHealth?status=metric_logged");
                 return;
             }
-        } catch (SQLException | ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("health_exception", e);
             response.sendRedirect(request.getContextPath() + "/TrackHealth?status=error");
             return;
         }

@@ -122,9 +122,18 @@
                     </div>
                 </c:when>
                 <c:when test="${param.status eq 'error'}">
-                    <div class="p-4 border-2 border-black rounded-xl bg-rose-100 text-rose-900 font-bold text-xs uppercase tracking-wider neobrutalism-shadow flex justify-between items-center">
-                        <span>⚠ Error: Something went wrong processing your request!</span>
-                        <button onclick="this.parentElement.remove()" class="font-bold">×</button>
+                    <div class="p-4 border-2 border-black rounded-xl bg-rose-100 text-rose-900 font-bold text-xs uppercase tracking-wider neobrutalism-shadow flex flex-col gap-2">
+                        <div class="flex justify-between items-center w-full">
+                            <span>⚠ Error: Something went wrong processing your request!</span>
+                            <button onclick="this.parentElement.remove()" class="font-bold">×</button>
+                        </div>
+                        <c:if test="${not empty healthExceptionMessage}">
+                            <div class="bg-white border-2 border-black p-4 rounded-xl mt-2 text-left font-mono text-[10px] text-red-600 overflow-auto max-h-60 whitespace-pre">
+                                <strong>Exception:</strong> ${healthExceptionMessage}
+                                <strong class="block mt-2">Stack Trace:</strong>
+                                ${healthExceptionStackTrace}
+                            </div>
+                        </c:if>
                     </div>
                 </c:when>
             </c:choose>
