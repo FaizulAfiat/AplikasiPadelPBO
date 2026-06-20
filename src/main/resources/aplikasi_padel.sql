@@ -222,6 +222,9 @@ CREATE TABLE `users` (
   `email` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `role` enum('Admin','Regular','Premium') NOT NULL DEFAULT 'Regular',
+  `age` int(11) NOT NULL DEFAULT 0,
+  `weight` float NOT NULL DEFAULT 0,
+  `height` float NOT NULL DEFAULT 0,
   `created_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -461,6 +464,50 @@ ALTER TABLE `rentals`
 --
 ALTER TABLE `verifications`
   ADD CONSTRAINT `verifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+CREATE TABLE `padel_sessions` (
+  `session_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `start_time` DATETIME NOT NULL,
+  `end_time` DATETIME NOT NULL,
+  `duration_minutes` INT NOT NULL,
+  `calories_burned` INT NOT NULL,
+  `avg_heart_rate` FLOAT NOT NULL,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `health_metrics` (
+  `metric_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `record_date` DATE NOT NULL,
+  `resting_heart_rate` INT NOT NULL,
+  `bmi` FLOAT NOT NULL,
+  `total_steps` INT NOT NULL,
+  `calories_daily` INT NOT NULL,
+  UNIQUE KEY `user_record_date` (`user_id`, `record_date`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `activity_summaries` (
+  `summary_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `summary_date` DATE NOT NULL,
+  `total_sessions` INT NOT NULL,
+  `total_duration` INT NOT NULL,
+  `total_calories` INT NOT NULL,
+  UNIQUE KEY `user_summary_date` (`user_id`, `summary_date`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `performance_scores` (
+  `score_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `calculated_date` DATE NOT NULL,
+  `fitness_score` FLOAT NOT NULL,
+  `category` VARCHAR(50) NOT NULL,
+  UNIQUE KEY `user_calculated_date` (`user_id`, `calculated_date`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

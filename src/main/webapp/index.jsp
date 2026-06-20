@@ -123,8 +123,7 @@
                                 class="w-full h-64 md:h-96 object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
 
                             <div class="absolute bottom-8 right-8 z-20">
-                                <a href="<%= (session.getAttribute(" user") !=null) ? "BookingController"
-                                    : "view/Login.html" %>" class="bg-blue-400 text-black px-8 py-4 font-black uppercase
+                                <a href="${not empty sessionScope.user ? 'BookingController' : 'view/Login.html'}" class="bg-blue-400 text-black px-8 py-4 font-black uppercase
                                     tracking-tighter text-xl
                                     border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                                     hover:translate-x-[2px] hover:translate-y-[2px]
@@ -270,6 +269,17 @@
                                             </svg>
                                         </div>
                                         <span class="font-black uppercase text-sm tracking-tighter">Profile</span>
+                                    </a>
+
+                                    <a href="${pageContext.request.contextPath}/TrackHealth"
+                                        class="group flex flex-col items-center gap-4 text-center">
+                                        <div
+                                            class="w-20 h-20 bg-rose-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-rose-400/50 transition-all duration-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="font-black uppercase text-sm tracking-tighter">Track Health</span>
                                     </a>
 
                                     <a href="${pageContext.request.contextPath}/chat"

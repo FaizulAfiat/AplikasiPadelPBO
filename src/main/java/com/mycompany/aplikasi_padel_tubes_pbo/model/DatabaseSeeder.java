@@ -260,6 +260,126 @@ public class DatabaseSeeder implements ServletContextListener {
                         }
                     }
                 }
+                
+                // === START TRACK HEALTH MIGRATION ===
+                // 1. Cek & Tambah kolom 'age', 'weight', 'height' di tabel 'users'
+                boolean hasAge = false;
+                try (ResultSet colRs = conn.getMetaData().getColumns(null, null, "users", "age")) {
+                    if (colRs.next()) hasAge = true;
+                } catch (Exception e) {}
+                if (!hasAge) {
+                    System.out.println("[Seeder] Tabel 'users' membutuhkan kolom 'age', 'weight', 'height'. Menjalankan ALTER...");
+                    try {
+                        stmt.executeUpdate("ALTER TABLE `users` ADD COLUMN `age` INT DEFAULT 0 AFTER `role`");
+                        stmt.executeUpdate("ALTER TABLE `users` ADD COLUMN `weight` FLOAT DEFAULT 0.0 AFTER `age`");
+                        stmt.executeUpdate("ALTER TABLE `users` ADD COLUMN `height` FLOAT DEFAULT 0.0 AFTER `weight`");
+                        System.out.println("[Seeder] Kolom 'age', 'weight', 'height' berhasil ditambahkan ke tabel 'users'.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal menambahkan kolom kesehatan ke tabel 'users': " + e.getMessage());
+                    }
+                }
+
+                // 2. Buat tabel 'padel_sessions' jika belum ada
+                boolean padelSessionsExist = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "padel_sessions", null)) {
+                    if (rs.next()) padelSessionsExist = true;
+                } catch (Exception e) {}
+                if (!padelSessionsExist) {
+                    System.out.println("[Seeder] Tabel 'padel_sessions' belum ada. Membuat tabel...");
+                    try {
+                        String createPadelSessionsSql = "CREATE TABLE `padel_sessions` ("
+                                + "  `session_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` INT NOT NULL,"
+                                + "  `start_time` DATETIME NOT NULL,"
+                                + "  `end_time` DATETIME NOT NULL,"
+                                + "  `duration_minutes` INT NOT NULL,"
+                                + "  `calories_burned` INT NOT NULL,"
+                                + "  `avg_heart_rate` FLOAT NOT NULL,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createPadelSessionsSql);
+                        System.out.println("[Seeder] Tabel 'padel_sessions' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'padel_sessions': " + e.getMessage());
+                    }
+                }
+
+                // 3. Buat tabel 'health_metrics' jika belum ada
+                boolean healthMetricsExist = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "health_metrics", null)) {
+                    if (rs.next()) healthMetricsExist = true;
+                } catch (Exception e) {}
+                if (!healthMetricsExist) {
+                    System.out.println("[Seeder] Tabel 'health_metrics' belum ada. Membuat tabel...");
+                    try {
+                        String createHealthMetricsSql = "CREATE TABLE `health_metrics` ("
+                                + "  `metric_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` INT NOT NULL,"
+                                + "  `record_date` DATE NOT NULL,"
+                                + "  `resting_heart_rate` INT NOT NULL,"
+                                + "  `bmi` FLOAT NOT NULL,"
+                                + "  `total_steps` INT NOT NULL,"
+                                + "  `calories_daily` INT NOT NULL,"
+                                + "  UNIQUE KEY `user_record_date` (`user_id`, `record_date`),"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createHealthMetricsSql);
+                        System.out.println("[Seeder] Tabel 'health_metrics' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'health_metrics': " + e.getMessage());
+                    }
+                }
+
+                // 4. Buat tabel 'activity_summaries' jika belum ada
+                boolean activitySummariesExist = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "activity_summaries", null)) {
+                    if (rs.next()) activitySummariesExist = true;
+                } catch (Exception e) {}
+                if (!activitySummariesExist) {
+                    System.out.println("[Seeder] Tabel 'activity_summaries' belum ada. Membuat tabel...");
+                    try {
+                        String createActivitySummariesSql = "CREATE TABLE `activity_summaries` ("
+                                + "  `summary_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` INT NOT NULL,"
+                                + "  `summary_date` DATE NOT NULL,"
+                                + "  `total_sessions` INT NOT NULL,"
+                                + "  `total_duration` INT NOT NULL,"
+                                + "  `total_calories` INT NOT NULL,"
+                                + "  UNIQUE KEY `user_summary_date` (`user_id`, `summary_date`),"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createActivitySummariesSql);
+                        System.out.println("[Seeder] Tabel 'activity_summaries' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'activity_summaries': " + e.getMessage());
+                    }
+                }
+
+                // 5. Buat tabel 'performance_scores' jika belum ada
+                boolean performanceScoresExist = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "performance_scores", null)) {
+                    if (rs.next()) performanceScoresExist = true;
+                } catch (Exception e) {}
+                if (!performanceScoresExist) {
+                    System.out.println("[Seeder] Tabel 'performance_scores' belum ada. Membuat tabel...");
+                    try {
+                        String createPerformanceScoresSql = "CREATE TABLE `performance_scores` ("
+                                + "  `score_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` INT NOT NULL,"
+                                + "  `calculated_date` DATE NOT NULL,"
+                                + "  `fitness_score` FLOAT NOT NULL,"
+                                + "  `category` VARCHAR(50) NOT NULL,"
+                                + "  UNIQUE KEY `user_calculated_date` (`user_id`, `calculated_date`),"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createPerformanceScoresSql);
+                        System.out.println("[Seeder] Tabel 'performance_scores' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'performance_scores': " + e.getMessage());
+                    }
+                }
+                // === END TRACK HEALTH MIGRATION ===
+                
                 return;
             }
 

@@ -13,6 +13,10 @@ public class User {
     private String username;
     private String password;
     private String role;
+    private String email;
+    private int age;
+    private float weight;
+    private float height;
 
     public User() {
     }
@@ -31,6 +35,13 @@ public class User {
         this.username = username; 
     }
 
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password; 
     }
@@ -43,5 +54,34 @@ public class User {
     }
     public void setRole(String role) {
         this.role = role; 
+    }
+
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+    public void setWeight(float weight) {
+        this.weight = weight;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public float calculateBMI() {
+        if (height <= 0) {
+            return 0;
+        }
+        float heightInMeters = height / 100.0f;
+        return weight / (heightInMeters * heightInMeters);
     }
 }
