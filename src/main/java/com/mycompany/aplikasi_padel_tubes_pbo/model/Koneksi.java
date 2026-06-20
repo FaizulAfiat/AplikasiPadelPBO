@@ -13,9 +13,9 @@ import java.sql.SQLException;
  * @author Faizul Afiat
  */
 public class Koneksi {
-    private static final String URL  = System.getenv().getOrDefault("DB_URL",  "jdbc:mysql://localhost:3306/aplikasi_padel");
-    private static final String USER = System.getenv().getOrDefault("DB_USER", "root");
-    private static final String PASS = System.getenv().getOrDefault("DB_PASS", "");
+    private static final String URL = "jdbc:mysql://localhost:3306/aplikasi_padel";
+    private static final String USER = "root";
+    private static final String PASS = "";
     
     public static Connection getConnection() throws SQLException {
         try {

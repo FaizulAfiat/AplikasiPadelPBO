@@ -261,47 +261,102 @@
                             </div>
 
                             <!-- Dashboard Stats Intro Card -->
-                            <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm flex flex-col md:flex-row gap-8">
-                                <div class="w-full md:w-1/3 flex flex-col justify-between">
-                                    <div>
-                                        <span class="text-xs font-bold uppercase block mb-3 text-cyan-600 tracking-wider">02 / Dashboard</span>
-                                        <h2 class="text-3xl md:text-4xl font-black leading-tight uppercase tracking-tighter">
-                                            What we do for athletes
-                                        </h2>
-                                    </div>
-                                    <div class="w-3 h-3 bg-cyan-400 rounded-full mt-4"></div>
+                            <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                                <div class="mb-8">
+                                    <span class="text-xs font-bold uppercase block mb-3 text-cyan-600 tracking-wider">02 / Our Services</span>
+                                    <h2 class="text-3xl md:text-4xl font-black leading-tight uppercase tracking-tighter">
+                                        What we do <br>for <span class="text-cyan-500">athletes</span>
+                                    </h2>
+                                    <p class="text-xs text-gray-400 font-medium mt-3 max-w-lg">Platform lengkap untuk komunitas padel — dari booking lapangan hingga tracking performa atletmu.</p>
                                 </div>
 
-                                <div class="flex-1 space-y-6 divide-y divide-gray-100">
-                                    <div class="pb-6">
-                                        <div class="flex gap-4">
-                                            <span class="text-xs font-bold w-8 pt-1 text-gray-400">01</span>
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                                    <!-- Item 1 -->
+                                    <div class="py-6 md:pr-8 first:pt-0 last:pb-0">
+                                        <div class="flex gap-4 items-start">
+                                            <div class="w-10 h-10 bg-black rounded-xl flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                            </div>
                                             <div>
-                                                <h3 class="text-xl font-bold uppercase mb-2 tracking-tight text-gray-900">
-                                                    Field Booking
-                                                </h3>
-                                                <p class="text-xs text-gray-500 max-w-md leading-relaxed">
-                                                    Pesan lapangan Padel favoritmu secara instan dengan sistem konfirmasi otomatis.
-                                                </p>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">01</span>
+                                                <h3 class="text-base font-black uppercase tracking-tight text-gray-900 mt-0.5">Field Booking</h3>
+                                                <p class="text-xs text-gray-500 leading-relaxed mt-1.5">Pesan lapangan Padel favoritmu secara instan dengan sistem konfirmasi otomatis dan pilihan waktu fleksibel.</p>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="pt-6">
-                                        <div class="flex gap-4">
-                                            <span class="text-xs font-bold w-8 pt-1 text-gray-400">02</span>
+                                    <!-- Item 2 -->
+                                    <div class="py-6 md:px-8">
+                                        <div class="flex gap-4 items-start">
+                                            <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                                            </div>
                                             <div>
-                                                <h3 class="text-xl font-bold uppercase mb-2 tracking-tight text-gray-900">
-                                                    Member Stats
-                                                </h3>
-                                                <p class="text-xs text-gray-500 max-w-md leading-relaxed">
-                                                    Pantau statistik permainan dan progres latihanmu setiap minggu melalui dashboard interaktif.
-                                                </p>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">02</span>
+                                                <h3 class="text-base font-black uppercase tracking-tight text-gray-900 mt-0.5">Member Stats</h3>
+                                                <p class="text-xs text-gray-500 leading-relaxed mt-1.5">Pantau statistik permainan dan progres latihanmu setiap minggu melalui dashboard interaktif real-time.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Item 3 -->
+                                    <div class="py-6 md:pl-8">
+                                        <div class="flex gap-4 items-start">
+                                            <div class="w-10 h-10 bg-amber-400 rounded-xl flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">03</span>
+                                                <h3 class="text-base font-black uppercase tracking-tight text-gray-900 mt-0.5">Tournaments <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold ml-1 align-middle">PRO</span></h3>
+                                                <p class="text-xs text-gray-500 leading-relaxed mt-1.5">Ikuti turnamen kompetitif antar member, lihat bracket, dan buktikan kemampuanmu di papan peringkat.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Item 4 -->
+                                    <div class="py-6 md:pr-8 border-t md:border-t border-gray-100">
+                                        <div class="flex gap-4 items-start">
+                                            <div class="w-10 h-10 bg-rose-500 rounded-xl flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">04</span>
+                                                <h3 class="text-base font-black uppercase tracking-tight text-gray-900 mt-0.5">Track Health <span class="text-[9px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold ml-1 align-middle">PRO</span></h3>
+                                                <p class="text-xs text-gray-500 leading-relaxed mt-1.5">Monitor kalori, detak jantung, dan kebugaran tubuhmu setelah setiap sesi padel dengan analisis mendalam.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Item 5 -->
+                                    <div class="py-6 md:px-8 border-t md:border-t border-gray-100">
+                                        <div class="flex gap-4 items-start">
+                                            <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">05</span>
+                                                <h3 class="text-base font-black uppercase tracking-tight text-gray-900 mt-0.5">Shop & Rent</h3>
+                                                <p class="text-xs text-gray-500 leading-relaxed mt-1.5">Beli atau sewa peralatan padel premium — raket, grip, tas, dan aksesoris dari brand terbaik.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Item 6 -->
+                                    <div class="py-6 md:pl-8 border-t md:border-t border-gray-100">
+                                        <div class="flex gap-4 items-start">
+                                            <div class="w-10 h-10 bg-purple-500 rounded-xl flex items-center justify-center shrink-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">06</span>
+                                                <h3 class="text-base font-black uppercase tracking-tight text-gray-900 mt-0.5">Community</h3>
+                                                <p class="text-xs text-gray-500 leading-relaxed mt-1.5">Temukan teman bermain, bangun koneksi sesama penggemar padel, dan jadilah bagian komunitas aktif kami.</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
 
                             <!-- SECTION 1: Live Court Availability -->
                             <div>
