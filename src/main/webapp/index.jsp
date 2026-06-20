@@ -222,7 +222,7 @@
                     <main class="flex flex-col flex-1 bg-gray-50/50">
                         <c:if test="${param.status eq 'success'}">
                             <div id="success-toast"
-                                class="m-6 border border-emerald-200 p-5 rounded-3xl bg-emerald-50 text-emerald-800 font-semibold flex items-center justify-between shadow-sm max-w-6xl w-full mx-auto">
+                                class="m-6 border border-emerald-200 p-5 rounded-3xl bg-emerald-50 text-emerald-800 font-semibold flex items-center justify-between shadow-sm max-w-[1440px] w-full mx-auto">
                                 <div class="flex items-center gap-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2.5" class="shrink-0">
@@ -242,7 +242,7 @@
                             </div>
                         </c:if>
 
-                        <div class="flex-1 p-6 pb-24 max-w-6xl w-full mx-auto space-y-10">
+                        <div class="flex-1 p-6 pb-24 max-w-[1440px] w-full mx-auto space-y-10">
                             <!-- Hero Section Banner -->
                             <div class="w-full bg-white border border-gray-200 rounded-3xl overflow-hidden relative group shadow-sm">
                                 <img src="img/padel.jpg" alt="Padel Banner"
