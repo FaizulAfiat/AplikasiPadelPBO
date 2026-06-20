@@ -8,6 +8,7 @@
 
                 <head>
                     <title>Manage Shop - PadelApp</title>
+                    <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
                     <script src="https://cdn.tailwindcss.com"></script>
                 </head>
 

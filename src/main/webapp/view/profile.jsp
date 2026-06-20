@@ -19,6 +19,7 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Profil & Transaksi - PadelApp</title>
+            <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
 
             <!-- Google Fonts: Inter & Outfit (matching index.jsp / admin_dashboard.jsp) -->
             <link rel="preconnect" href="https://fonts.googleapis.com">
