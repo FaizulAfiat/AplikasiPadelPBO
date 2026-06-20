@@ -123,8 +123,7 @@
                                 class="w-full h-64 md:h-96 object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
 
                             <div class="absolute bottom-8 right-8 z-20">
-                                <a href="<%= (session.getAttribute(" user") !=null) ? "BookingController"
-                                    : "view/Login.html" %>" class="bg-blue-400 text-black px-8 py-4 font-black uppercase
+                                <a href="${not empty sessionScope.user ? 'BookingController' : 'view/Login.html'}" class="bg-blue-400 text-black px-8 py-4 font-black uppercase
                                     tracking-tighter text-xl
                                     border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                                     hover:translate-x-[2px] hover:translate-y-[2px]
