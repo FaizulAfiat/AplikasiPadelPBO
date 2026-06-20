@@ -19,6 +19,12 @@ public class DeleteProduct extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        jakarta.servlet.http.HttpSession session = request.getSession();
+        String role = (String) session.getAttribute("role");
+        if (role == null || !role.equalsIgnoreCase("Admin")) {
+            response.sendRedirect(request.getContextPath() + "/view/Login.html?error=unauthorized");
+            return;
+        }
         String idStr = request.getParameter("id");
         if (idStr != null && !idStr.trim().isEmpty()) {
             try {
