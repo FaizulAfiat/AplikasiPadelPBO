@@ -590,16 +590,33 @@
                                         <span class="font-black uppercase text-sm tracking-tighter">Profile</span>
                                     </a>
 
-                                    <a href="${pageContext.request.contextPath}/TrackHealth"
-                                        class="group flex flex-col items-center gap-4 text-center">
-                                        <div
-                                            class="w-20 h-20 bg-rose-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-rose-400/50 transition-all duration-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                                            </svg>
-                                        </div>
-                                        <span class="font-black uppercase text-sm tracking-tighter">Track Health</span>
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.role eq 'Premium' or sessionScope.role eq 'Admin'}">
+                                            <a href="${pageContext.request.contextPath}/TrackHealth"
+                                                class="group flex flex-col items-center gap-4 text-center">
+                                                <div
+                                                    class="w-20 h-20 bg-rose-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-rose-400/50 transition-all duration-300">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-black uppercase text-sm tracking-tighter text-black">Track Health</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button onclick="openPremiumModal()"
+                                                class="group flex flex-col items-center gap-4 text-center cursor-pointer outline-none bg-transparent border-0">
+                                                <div
+                                                    class="w-20 h-20 bg-rose-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-rose-400/50 transition-all duration-300 relative">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                                    </svg>
+                                                    <span class="absolute -top-2 -right-2 bg-purple-600 text-white text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full border border-black">PRO</span>
+                                                </div>
+                                                <span class="font-black uppercase text-sm tracking-tighter text-zinc-500">Track Health <span class="text-purple-600 text-[10px]">★</span></span>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
 
                                     <a href="${pageContext.request.contextPath}/chat"
                                         class="group flex flex-col items-center gap-4 text-center">
@@ -614,16 +631,34 @@
                                         <span class="font-black uppercase text-sm tracking-tighter">Chat Room</span>
                                     </a>
 
-                                    <a href="${pageContext.request.contextPath}/TournamentNewsController" class="group flex flex-col items-center gap-4 text-center">
-                                        <div
-                                            class="w-20 h-20 bg-amber-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-amber-400/50 transition-all duration-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
-                                                <path d="M18 14h-8M18 18h-8M16 6H10v4h6V6Z"></path>
-                                            </svg>
-                                        </div>
-                                        <span class="font-black uppercase text-sm tracking-tighter">Tournaments</span>
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${sessionScope.role eq 'Premium' or sessionScope.role eq 'Admin'}">
+                                            <a href="${pageContext.request.contextPath}/TournamentNewsController" class="group flex flex-col items-center gap-4 text-center">
+                                                <div
+                                                    class="w-20 h-20 bg-amber-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-amber-400/50 transition-all duration-300">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                                                        <path d="M18 14h-8M18 18h-8M16 6H10v4h6V6Z"></path>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-black uppercase text-sm tracking-tighter text-black">Tournaments</span>
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button onclick="openPremiumModal()"
+                                                class="group flex flex-col items-center gap-4 text-center cursor-pointer outline-none bg-transparent border-0">
+                                                <div
+                                                    class="w-20 h-20 bg-amber-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-amber-400/50 transition-all duration-300 relative">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                        <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+                                                        <path d="M18 14h-8M18 18h-8M16 6H10v4h6V6Z"></path>
+                                                    </svg>
+                                                    <span class="absolute -top-2 -right-2 bg-purple-600 text-white text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full border border-black">PRO</span>
+                                                </div>
+                                                <span class="font-black uppercase text-sm tracking-tighter text-zinc-500">Tournaments <span class="text-purple-600 text-[10px]">★</span></span>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
 
                                     <a href="${pageContext.request.contextPath}/MusicController"
                                         class="group flex flex-col items-center gap-4 text-center">
@@ -640,6 +675,97 @@
                                         <span class="font-black uppercase text-sm tracking-tighter">Music Request</span>
                                     </a>
 
+                                    <c:choose>
+                                        <c:when test="${sessionScope.role eq 'Premium' or sessionScope.role eq 'Admin'}">
+                                            <div class="group flex flex-col items-center gap-4 text-center cursor-default">
+                                                <div
+                                                    class="w-20 h-20 bg-gradient-to-tr from-amber-400 to-yellow-500 text-black border-4 border-black rounded-2xl flex items-center justify-center shadow-lg relative">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                                    </svg>
+                                                    <span class="absolute -top-2 -right-2 bg-black text-white text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full border border-yellow-400">Active</span>
+                                                </div>
+                                                <span class="font-black uppercase text-sm tracking-tighter text-amber-500">Premium Active</span>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button onclick="openPremiumModal()"
+                                                class="group flex flex-col items-center gap-4 text-center cursor-pointer outline-none bg-transparent border-0">
+                                                <div
+                                                    class="w-20 h-20 bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-purple-500/50 transition-all duration-300 relative overflow-hidden">
+                                                    <div class="absolute inset-0 bg-white/20 translate-y-full skew-y-12 group-hover:-translate-y-full transition-transform duration-1000"></div>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                                    </svg>
+                                                </div>
+                                                <span class="font-black uppercase text-sm tracking-tighter text-indigo-600">Go Premium ⭐</span>
+                                            </button>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PREMIUM SUBSCRIBE MODAL -->
+                        <div id="premium-modal" class="fixed inset-0 z-[1000] hidden bg-black/70 backdrop-blur-md flex items-center justify-center p-6 opacity-0 transition-opacity duration-300">
+                            <div class="bg-zinc-950 text-white border-4 border-black rounded-[2.5rem] p-8 md:p-10 max-w-lg w-full relative shadow-2xl overflow-hidden">
+                                <div class="absolute -top-24 -left-24 w-48 h-48 bg-purple-600/30 rounded-full blur-3xl"></div>
+                                <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-cyan-500/30 rounded-full blur-3xl"></div>
+                                
+                                <button onclick="closePremiumModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                </button>
+
+                                <div class="text-center space-y-6 relative z-10">
+                                    <div class="inline-block p-4 bg-gradient-to-tr from-amber-400 to-yellow-500 rounded-3xl border-2 border-white shadow-lg text-black animate-bounce">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                        </svg>
+                                    </div>
+
+                                    <div>
+                                        <h3 class="text-3xl font-black uppercase italic tracking-tighter bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-200 bg-clip-text text-transparent">Unlock Premium</h3>
+                                        <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mt-1">Upgrade your PadelApp experience to the next level</p>
+                                    </div>
+
+                                    <div class="space-y-3.5 text-left border-y border-zinc-900 py-6 my-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-emerald-400 text-lg font-bold">✓</span>
+                                            <p class="text-xs font-semibold text-zinc-300">Daftar turnamen eksklusif klub & liga bergengsi</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-emerald-400 text-lg font-bold">✓</span>
+                                            <p class="text-xs font-semibold text-zinc-300">Request antrean musik DJ tak terbatas (Regular maks 3)</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-emerald-400 text-lg font-bold">✓</span>
+                                            <p class="text-xs font-semibold text-zinc-300">Prioritas pemesanan jadwal lapangan utama</p>
+                                        </div>
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-emerald-400 text-lg font-bold">✓</span>
+                                            <p class="text-xs font-semibold text-zinc-300">Badge premium emas khusus di profil Anda</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-2xl flex justify-between items-center text-left">
+                                            <div>
+                                                <p class="text-[9px] font-black text-zinc-400 uppercase tracking-widest">Harga Berlangganan</p>
+                                                <p class="text-xl font-black text-white mt-0.5">Rp 99.000 <span class="text-xs font-semibold text-zinc-500">/ bulan</span></p>
+                                            </div>
+                                            <span class="text-[9px] font-black bg-purple-500/10 text-purple-400 border border-purple-500/30 px-3 py-1 rounded-full uppercase">Best Value</span>
+                                        </div>
+
+                                        <form action="${pageContext.request.contextPath}/UpgradePremiumController" method="POST">
+                                            <button type="submit" class="w-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-black py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg hover:shadow-yellow-500/20 active:scale-[0.98] transition-all cursor-pointer">
+                                                Berlangganan Sekarang ⚡
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -650,6 +776,26 @@
                     const trigger = document.getElementById('launchpad-trigger');
                     const launchpad = document.getElementById('launchpad');
                     const closeBtn = document.getElementById('launchpad-close');
+                    const premiumModal = document.getElementById('premium-modal');
+
+                    function openPremiumModal() {
+                        closeLaunchpad();
+                        if (premiumModal) {
+                            premiumModal.classList.remove('hidden');
+                            setTimeout(() => {
+                                premiumModal.classList.remove('opacity-0');
+                            }, 10);
+                        }
+                    }
+
+                    function closePremiumModal() {
+                        if (premiumModal) {
+                            premiumModal.classList.add('opacity-0');
+                            setTimeout(() => {
+                                premiumModal.classList.add('hidden');
+                            }, 300);
+                        }
+                    }
 
                     function openLaunchpad() {
                         launchpad.classList.remove('hidden');
@@ -681,10 +827,19 @@
                         });
                     }
 
+                    if (premiumModal) {
+                        premiumModal.addEventListener('click', (e) => {
+                            if (e.target === premiumModal)
+                                closePremiumModal();
+                        });
+                    }
+
                     // Close jika tekan tombol ESC
                     document.addEventListener('keydown', (e) => {
-                        if (e.key === "Escape")
+                        if (e.key === "Escape") {
                             closeLaunchpad();
+                            closePremiumModal();
+                        }
                     });
 
                     // Autocomplete Search Suggestions
