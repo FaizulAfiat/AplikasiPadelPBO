@@ -19,19 +19,24 @@ public class DatabaseSeeder implements ServletContextListener {
         System.out.println("=== SYSTEM: MEMULAI DATABASE SEEDER ===");
         
         // 1. Pastikan Database 'aplikasi_padel' sudah terbuat di MySQL lokal
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String rawUrl = "jdbc:mysql://localhost:3306/";
-            String user = "root";
-            String pass = "";
-            
-            try (Connection rawConn = DriverManager.getConnection(rawUrl, user, pass);
-                 Statement rawStmt = rawConn.createStatement()) {
-                rawStmt.executeUpdate("CREATE DATABASE IF NOT EXISTS aplikasi_padel");
-                System.out.println("[Seeder] Database 'aplikasi_padel' berhasil dipastikan ada.");
+        // Di production (Aiven), database sudah ada, jadi blok ini hanya relevan untuk local dev
+        String dbUrl  = System.getenv().getOrDefault("DB_URL",  "jdbc:mysql://localhost:3306/aplikasi_padel");
+        String dbUser = System.getenv().getOrDefault("DB_USER", "root");
+        String dbPass = System.getenv().getOrDefault("DB_PASS", "");
+        boolean isProduction = System.getenv("DB_URL") != null;
+
+        if (!isProduction) {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                String rawUrl = "jdbc:mysql://localhost:3306/";
+                try (Connection rawConn = DriverManager.getConnection(rawUrl, dbUser, dbPass);
+                     Statement rawStmt = rawConn.createStatement()) {
+                    rawStmt.executeUpdate("CREATE DATABASE IF NOT EXISTS aplikasi_padel");
+                    System.out.println("[Seeder] Database 'aplikasi_padel' berhasil dipastikan ada.");
+                }
+            } catch (Exception e) {
+                System.err.println("[Seeder] Gagal memastikan database 'aplikasi_padel' ada: " + e.getMessage());
             }
-        } catch (Exception e) {
-            System.err.println("[Seeder] Gagal memastikan database 'aplikasi_padel' ada: " + e.getMessage());
         }
 
         // 2. Cek apakah tabel 'users' sudah ada (jika sudah ada, lewati import)
