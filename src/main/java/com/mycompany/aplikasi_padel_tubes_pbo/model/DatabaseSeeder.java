@@ -260,7 +260,36 @@ public class DatabaseSeeder implements ServletContextListener {
                         }
                     }
                 }
-                
+                // Cek apakah tabel 'feedbacks' perlu dibuat
+                boolean feedbacksExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "feedbacks", null)) {
+                    if (rs.next()) {
+                        feedbacksExists = true;
+                    }
+                } catch (Exception e) {
+                    // Abaikan
+                }
+
+                if (!feedbacksExists) {
+                    System.out.println("[Seeder] Tabel 'feedbacks' belum ada. Membuat tabel...");
+                    try {
+                        String createFeedbacksSql = "CREATE TABLE `feedbacks` ("
+                                + "  `feedback_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `facility_type` varchar(100) NOT NULL,"
+                                + "  `rating` int(11) NOT NULL,"
+                                + "  `comments` text DEFAULT NULL,"
+                                + "  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+                        stmt.executeUpdate(createFeedbacksSql);
+                        System.out.println("[Seeder] Tabel 'feedbacks' berhasil dibuat.");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'feedbacks': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
                 // === START TRACK HEALTH MIGRATION ===
                 // 1. Cek & Tambah kolom 'age', 'weight', 'height' di tabel 'users'
                 boolean hasAge = false;
@@ -379,7 +408,7 @@ public class DatabaseSeeder implements ServletContextListener {
                     }
                 }
                 // === END TRACK HEALTH MIGRATION ===
-                
+
                 return;
             }
 

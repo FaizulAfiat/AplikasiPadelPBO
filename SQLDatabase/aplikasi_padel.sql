@@ -231,7 +231,10 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `role`, `created_at`) VALUES
 (1, 'user', 'user@gmail.com', 'user', 'Regular', '2026-05-04 10:26:59'),
-(2, 'admin', 'admin@gmail.com', 'admin', 'Admin', '2026-05-11 14:10:40')
+(2, 'admin', 'admin@gmail.com', 'admin', 'Admin', '2026-05-11 14:10:40'),
+(4, 'joan', 'joan@yahoo.com', '1234', 'Regular', '2026-05-07 14:52:29'),
+(5, 'Halo halo', 'halo@gmail.com', 'halo', 'Regular', '2026-05-11 12:23:37'),
+(6, 'a', 'alfinnurhakim17@gmail.com', 'aaaaa', 'Regular', '2026-05-11 12:33:54');
 -- --------------------------------------------------------
 
 --
@@ -520,6 +523,23 @@ CREATE TABLE `pesan` (
   KEY `pengirim_id` (`pengirim_id`),
   CONSTRAINT `pesan_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `pesan_ibfk_2` FOREIGN KEY (`pengirim_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedbacks`
+--
+
+CREATE TABLE `feedbacks` (
+  `feedback_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `facility_type` varchar(100) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `comments` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `feedbacks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 COMMIT;

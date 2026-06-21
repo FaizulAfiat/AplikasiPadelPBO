@@ -5,6 +5,7 @@
 package com.mycompany.aplikasi_padel_tubes_pbo.controller.admin;
 
 import com.mycompany.aplikasi_padel_tubes_pbo.model.Koneksi;
+import com.mycompany.aplikasi_padel_tubes_pbo.model.Feedback;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -91,10 +92,13 @@ public class AdminController extends HttpServlet {
                 bookingList.add(map);
             }
 
+            List<Feedback> feedbackList = Feedback.getAllFeedbacks();
+
             request.setAttribute("revenue", totalRevenue);
             request.setAttribute("productCount", totalProducts);
             request.setAttribute("bookingCount", totalBookings);
             request.setAttribute("bookingList", bookingList);
+            request.setAttribute("feedbackList", feedbackList);
 
             request.getRequestDispatcher("view/admin/admin_dashboard.jsp").forward(request, response);
 

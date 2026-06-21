@@ -323,6 +323,62 @@
                         </table>
                     </div>
                 </div>
+
+
+                <!-- User Feedbacks Card -->
+                <div id="feedback-logs" class="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm mt-12 overflow-hidden">
+                    <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+                        <h3 class="font-black uppercase italic text-3xl tracking-tighter flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            User Feedbacks
+                        </h3>
+                        <span class="text-xs bg-gray-50 text-gray-600 font-bold px-3 py-1.5 border border-gray-200 rounded-lg">
+                            ${fn:length(feedbackList)} records
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <c:choose>
+                            <c:when test="${empty feedbackList}">
+                                <div class="col-span-full py-12 text-center text-gray-400 font-medium italic bg-gray-50/50 rounded-2xl border border-gray-100">
+                                    No feedback received yet
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach var="f" items="${feedbackList}">
+                                    <div class="bg-white border border-gray-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative">
+                                        <div class="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h4 class="font-bold text-gray-900 uppercase tracking-tight">${f.facilityType}</h4>
+                                                <p class="text-xs text-gray-400 font-semibold uppercase">@${f.username}</p>
+                                            </div>
+                                            <div class="flex items-center gap-1 text-orange-400 bg-orange-50 px-2 py-1 rounded-lg border border-orange-100">
+                                                <span class="font-black text-sm">${f.rating}</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mb-4 italic">
+                                            <c:choose>
+                                                <c:when test="${empty f.comments}">
+                                                    <span class="text-gray-300">No comment provided.</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    "${f.comments}"
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                        <div class="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-right">
+                                            <fmt:formatDate value="${f.createdAt}" pattern="dd MMM yyyy HH:mm"/>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+
             </main>
         </div>
     </body>

@@ -723,11 +723,24 @@
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M9 18V5l12-2v13"></path>
-                                                <circle cx="6" cy="18" r="3"></circle>
+                                                        <circle cx="6" cy="18" r="3"></circle>
                                                 <circle cx="18" cy="16" r="3"></circle>
                                             </svg>
                                         </div>
                                         <span class="font-black uppercase text-sm tracking-tighter">Music Request</span>
+                                    </a>
+
+                                    <a href="${pageContext.request.contextPath}/FeedbackController"
+                                        class="group flex flex-col items-center gap-4 text-center">
+                                        <div
+                                            class="w-20 h-20 bg-orange-400 border-4 border-black rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="font-black uppercase text-sm tracking-tighter">Feedback</span>
                                     </a>
 
                                     <c:choose>
@@ -824,10 +837,20 @@
                                 </div>
                             </div>
                         </div>
+
+
+
                 </body>
 
                 </html>
                 <script>
+                    // Auto-Redirect Feedback Logic
+                    <% if (session.getAttribute("show_feedback_popup") != null && (boolean)session.getAttribute("show_feedback_popup")) { %>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            window.location.href = '${pageContext.request.contextPath}/FeedbackController';
+                        });
+                    <% } %>
+
                     const trigger = document.getElementById('launchpad-trigger');
                     const launchpad = document.getElementById('launchpad');
                     const closeBtn = document.getElementById('launchpad-close');
