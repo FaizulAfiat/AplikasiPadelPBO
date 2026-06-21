@@ -246,6 +246,80 @@
         <servlet-name>ProfileApiController</servlet-name>
         <url-pattern>/api/profile</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>CommunityController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.CommunityController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateCommunityController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.CreateCommunityController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ClubDetailController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.ClubDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>JoinController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.JoinController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LeaveController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.LeaveController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MySquadController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.MySquadController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ApproveRequestController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.ApproveRequestController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RejectRequestController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.community.RejectRequestController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AchievementController</servlet-name>
+        <servlet-class>com.mycompany.aplikasi_padel_tubes_pbo.controller.achievement.AchievementController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CommunityController</servlet-name>
+        <url-pattern>/CommunityController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateCommunityController</servlet-name>
+        <url-pattern>/CreateCommunityController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ClubDetailController</servlet-name>
+        <url-pattern>/ClubDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>JoinController</servlet-name>
+        <url-pattern>/JoinController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LeaveController</servlet-name>
+        <url-pattern>/LeaveController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MySquadController</servlet-name>
+        <url-pattern>/MySquadController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ApproveRequestController</servlet-name>
+        <url-pattern>/ApproveRequestController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RejectRequestController</servlet-name>
+        <url-pattern>/RejectRequestController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AchievementController</servlet-name>
+        <url-pattern>/AchievementController</url-pattern>
+    </servlet-mapping>
+
     <session-config>
         <session-timeout>
             30
