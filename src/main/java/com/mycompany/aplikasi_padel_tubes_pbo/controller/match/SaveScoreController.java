@@ -142,6 +142,10 @@ public class SaveScoreController extends HttpServlet {
             // Eksekusi massal
             psPlayer.executeBatch();
             conn.commit();
+            
+            // Set session flag untuk pop-up feedback otomatis
+            jakarta.servlet.http.HttpSession session = request.getSession();
+            session.setAttribute("show_feedback_popup", true);
 
             response.sendRedirect("MatchRecapController?match_id=" + generatedMatchId);
 

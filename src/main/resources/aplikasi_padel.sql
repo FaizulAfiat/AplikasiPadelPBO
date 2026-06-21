@@ -141,14 +141,6 @@ CREATE TABLE `products` (
 INSERT INTO `products` (`product_id`, `name`, `category`, `type`, `price`, `stock`, `image`, `description`, `rating`) VALUES
 (1, 'HEAD Padel Pro Overgrip', 'Grip', 'Sale', 4500000, 10, 'HEAD Padel Pro Overgrip.png', 'Overgrip premium dengan daya cengkeram maksimal dan penyerapan keringat yang luar biasa.', 4.8),
 (2, 'HEAD Padel Racket Gravity Pro 2024 (365G) 224004 – Raket Padel', 'Racket', 'Sale', 4200000, 5, 'HEAD Padel Racket Gravity Pro 2024.png', 'Raket padel tingkat profesional dengan kontrol presisi tinggi dan sweetspot yang luas.', 4.9),
-(3, 'HEAD Extreme Junior Padel Racket 356G – Raket Padel Anak', 'Racket', 'Sale', 4800000, 3, 'HEAD Extreme Junior Padel Racket.png', 'Raket padel ringan khusus anak-anak untuk kenyamanan dan kemudahan belajar.', 4.7),
-(4, 'Prosport Tas Padel', 'Bag', 'Sale', 4100000, 7, 'Tas Padel.webp', 'Tas padel fungsional dengan kompartemen raket termal dan kantong aksesoris luas.', 4.6),
-(5, 'HEAD Padel Racket Speed One X\n', 'Racket', 'Sale', 3800000, 8, 'HEAD Padel Racket Speed One X.webp', 'Raket padel berkecepatan tinggi dengan transfer energi maksimal untuk pukulan bertenaga.', 4.8),
-(13, 'Test', 'Racquet', 'Sale', 100000, 12, 'code.png', 'Produk percobaan untuk testing sistem toko.', 4.0),
-(14, 'test2', 'Racquet', 'Rent', 190090999, 2, 'logo kebanggaan.png', 'Produk sewa percobaan untuk testing sistem rental.', 4.2);
-
--- --------------------------------------------------------
-
 --
 -- Table structure for table `profiles`
 --
@@ -230,12 +222,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password`, `role`, `created_at`) VALUES
-(1, 'faizul', 'faizulafiat1411@gmail.com', 'halo', 'Regular', '2026-05-04 10:26:59'),
-(2, 'faizulafiat', 'admin', 'admin', 'Admin', '2026-05-11 14:10:40'),
+(1, 'user', 'user@gmail.com', 'user', 'Regular', '2026-05-04 10:26:59'),
+(2, 'admin', 'admin@gmail.com', 'admin', 'Admin', '2026-05-11 14:10:40'),
 (4, 'joan', 'joan@yahoo.com', '1234', 'Regular', '2026-05-07 14:52:29'),
 (5, 'Halo halo', 'halo@gmail.com', 'halo', 'Regular', '2026-05-11 12:23:37'),
 (6, 'a', 'alfinnurhakim17@gmail.com', 'aaaaa', 'Regular', '2026-05-11 12:33:54');
-
 -- --------------------------------------------------------
 
 --
@@ -461,6 +452,88 @@ ALTER TABLE `rentals`
 --
 ALTER TABLE `verifications`
   ADD CONSTRAINT `verifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `friendships`
+--
+
+CREATE TABLE `friendships` (
+  `friendship_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `friend_id` int(11) NOT NULL,
+  `status` enum('PENDING','ACCEPTED','REJECTED') NOT NULL DEFAULT 'PENDING',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  KEY `user_id` (`user_id`),
+  KEY `friend_id` (`friend_id`),
+  CONSTRAINT `friendships_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `friendships_ibfk_2` FOREIGN KEY (`friend_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chats`
+--
+
+CREATE TABLE `chats` (
+  `id_chat` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `is_group` tinyint(1) NOT NULL DEFAULT 0,
+  `nama_grup` varchar(100) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_participants`
+--
+
+CREATE TABLE `chat_participants` (
+  `id_chat` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id_chat`, `user_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `chat_participants_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `chat_participants_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pesan`
+--
+
+CREATE TABLE `pesan` (
+  `id_pesan` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `id_chat` int(11) NOT NULL,
+  `pengirim_id` int(11) NOT NULL,
+  `isi_pesan` text NOT NULL,
+  `waktu_kirim` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` enum('terkirim','dibaca') NOT NULL DEFAULT 'terkirim',
+  KEY `id_chat` (`id_chat`),
+  KEY `pengirim_id` (`pengirim_id`),
+  CONSTRAINT `pesan_ibfk_1` FOREIGN KEY (`id_chat`) REFERENCES `chats` (`id_chat`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `pesan_ibfk_2` FOREIGN KEY (`pengirim_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedbacks`
+--
+
+CREATE TABLE `feedbacks` (
+  `feedback_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `facility_type` varchar(100) NOT NULL,
+  `rating` int(11) NOT NULL,
+  `comments` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `feedbacks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
