@@ -9,6 +9,7 @@
 <html>
     <head>
         <title>Live Score Counter - PadelApp</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
     <body class="bg-gray-100 min-h-screen flex flex-col">

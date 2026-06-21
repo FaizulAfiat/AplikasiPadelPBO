@@ -34,6 +34,11 @@ public class SaveScoreController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        jakarta.servlet.http.HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/view/Login.html");
+            return;
+        }
         String bookingIdParam = request.getParameter("booking_id");
         Integer bookingId = null;
         if (bookingIdParam != null && !bookingIdParam.trim().isEmpty() && !bookingIdParam.trim().equalsIgnoreCase("null")) {

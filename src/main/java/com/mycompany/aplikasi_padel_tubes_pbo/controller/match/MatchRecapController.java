@@ -18,6 +18,11 @@ public class MatchRecapController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        jakarta.servlet.http.HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/view/Login.html");
+            return;
+        }
         String matchIdParam = request.getParameter("match_id");
         if (matchIdParam == null || matchIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/MatchSetupController");

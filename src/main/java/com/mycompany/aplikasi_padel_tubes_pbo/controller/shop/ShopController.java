@@ -63,6 +63,11 @@ public class ShopController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
+        jakarta.servlet.http.HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/view/Login.html");
+            return;
+        }
         List<Product> productList = new ArrayList<>();
         
         try (Connection conn = Koneksi.getConnection();
@@ -86,7 +91,6 @@ public class ShopController extends HttpServlet {
             request.setAttribute("productList", productList);
 
             // Fetch user's active bookings
-            jakarta.servlet.http.HttpSession session = request.getSession();
             Object userIdObj = session.getAttribute("user_id");
             List<java.util.Map<String, Object>> userBookings = new ArrayList<>();
             if (userIdObj != null) {

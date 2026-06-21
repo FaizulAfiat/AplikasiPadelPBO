@@ -31,6 +31,11 @@ public class MatchSetupController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        jakarta.servlet.http.HttpSession session = request.getSession();
+        if (session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/view/Login.html");
+            return;
+        }
         ArrayList<Map<String, Object>> players = new ArrayList<>();
         
         try (Connection conn = Koneksi.getConnection()) {

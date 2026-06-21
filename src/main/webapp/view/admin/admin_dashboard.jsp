@@ -13,6 +13,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Admin Dashboard - PadelApp</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
         <script src="https://cdn.tailwindcss.com"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,63 +24,55 @@
             }
         </style>
     </head>
-    <body class="bg-[#f0f0f0] text-black min-h-screen">
+    <body class="bg-gray-50 text-black min-h-screen">
         <div class="flex min-h-screen">
             <!-- Sidebar Navigation -->
-            <aside class="w-72 bg-black text-white p-8 flex flex-col fixed h-full border-r-4 border-black shadow-[8px_0px_0px_0px_rgba(0,0,0,1)] z-50">
-                <div class="mb-12 border-b-4 border-zinc-800 pb-6">
+            <aside class="w-72 bg-zinc-950 text-white p-8 flex flex-col fixed h-full border-r border-zinc-900 shadow-sm z-50">
+                <div class="mb-12 border-b border-zinc-900 pb-6">
                     <h2 class="text-3xl font-black italic tracking-tighter text-cyan-400">PADELAPP</h2>
                     <div class="flex items-center gap-2 mt-1">
-                        <span class="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping"></span>
-                        <p class="text-[10px] font-black text-zinc-400 tracking-[0.2em] uppercase">SYSTEM ADMIN</p>
+                        <span class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span>
+                        <p class="text-[10px] font-black text-zinc-500 tracking-[0.2em] uppercase">SYSTEM ADMIN</p>
                     </div>
                 </div>
 
                 <nav class="space-y-4 flex-1">
                     <a href="${pageContext.request.contextPath}/AdminController" 
-                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest bg-cyan-400 text-black border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                       class="flex items-center gap-3 px-4 py-3 font-semibold text-xs uppercase tracking-widest bg-cyan-500 text-white rounded-xl shadow-md shadow-cyan-500/20 transition-all hover:bg-cyan-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>
                         </svg>
                         Dashboard
                     </a>
                     
                     <a href="${pageContext.request.contextPath}/ManageProducts" 
-                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                       class="flex items-center gap-3 px-4 py-3 font-semibold text-xs uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-xl hover:translate-x-1.5 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/>
                         </svg>
                         Manage Shop
                     </a>
                     
                     <a href="${pageContext.request.contextPath}/AdminRentalController" 
-                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                       class="flex items-center gap-3 px-4 py-3 font-semibold text-xs uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-xl hover:translate-x-1.5 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
                         </svg>
                         Track Rentals
                     </a>
-                    
-                    <a href="${pageContext.request.contextPath}/AdminController#rental-logs" 
-                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        Schedules
-                    </a>
 
                     <a href="${pageContext.request.contextPath}/Profile" 
-                       class="flex items-center gap-3 px-4 py-3 font-black text-xs uppercase tracking-widest text-zinc-400 hover:text-white border-2 border-transparent hover:border-black hover:bg-zinc-900 rounded-xl hover:translate-x-2 transition-all duration-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                       class="flex items-center gap-3 px-4 py-3 font-semibold text-xs uppercase tracking-widest text-zinc-400 hover:text-white hover:bg-zinc-900 rounded-xl hover:translate-x-1.5 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
                         Admin Profile
                     </a>
                 </nav>
 
-                <div class="pt-6 border-t-4 border-zinc-800 mt-auto">
+                <div class="pt-6 border-t border-zinc-900 mt-auto">
                     <a href="${pageContext.request.contextPath}/Logout" 
-                       class="block w-full bg-rose-500/10 text-rose-500 border-2 border-rose-500 p-4 rounded-2xl text-center font-black text-xs uppercase hover:bg-rose-500 hover:text-white hover:shadow-[4px_4px_0px_0px_rgba(244,63,94,0.3)] transition-all">
+                       class="block w-full bg-rose-500/10 text-rose-400 border border-rose-500/20 p-4 rounded-2xl text-center font-bold text-xs uppercase hover:bg-rose-500 hover:text-white transition-all shadow-sm">
                         Exit Session
                     </a>
                 </div>
@@ -90,29 +83,35 @@
                 <!-- Header -->
                 <header class="mb-12 flex justify-between items-end">
                     <div>
-                        <h1 class="text-6xl font-black uppercase italic tracking-tighter leading-none">Overview</h1>
+                        <h1 class="text-5xl font-black uppercase italic tracking-tighter leading-none text-zinc-900">Overview</h1>
                         <p class="text-zinc-500 font-bold uppercase text-xs mt-3 tracking-widest flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-black rounded-full"></span>
+                            <span class="w-1.5 h-1.5 bg-cyan-500 rounded-full"></span>
                             Real-time business analytics
                         </p>
                     </div>
-                    <div class="bg-white border-4 border-black p-4 rounded-2xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-right">
-                        <p class="font-bold text-[10px] text-zinc-400 uppercase tracking-widest">Logged in admin</p>
-                        <p class="text-black font-black text-lg uppercase flex items-center justify-end gap-2">
-                            ${user}
-                            <span class="w-3 h-3 bg-cyan-400 rounded-full border-2 border-black"></span>
-                        </p>
+                    <div class="bg-white border border-gray-200 px-6 py-3.5 rounded-2xl shadow-sm text-right flex items-center gap-4">
+                        <div>
+                            <p class="font-bold text-[9px] text-gray-400 uppercase tracking-widest text-right">Logged in admin</p>
+                            <p class="text-gray-900 font-extrabold text-sm uppercase text-right">
+                                ${user}
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 bg-cyan-50 rounded-xl border border-cyan-100 flex items-center justify-center text-cyan-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                        </div>
                     </div>
                 </header>
 
                 <!-- Statistics Metrics Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Earnings Card -->
-                    <div class="bg-black text-white p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 relative overflow-hidden group">
+                    <div class="bg-zinc-900 text-white p-8 rounded-3xl border border-zinc-800 shadow-md hover:-translate-y-1 hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
                         <div class="flex items-center justify-between mb-4">
                             <span class="text-[10px] font-black uppercase tracking-wider text-cyan-400">Total Earnings</span>
                             <div class="w-8 h-8 rounded-full bg-cyan-400/10 flex items-center justify-center text-cyan-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                 </svg>
                             </div>
@@ -125,42 +124,42 @@
                     </div>
 
                     <!-- Bookings Card -->
-                    <div class="bg-lime-300 text-black p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 relative overflow-hidden group">
+                    <div class="bg-white border border-gray-200 text-gray-900 p-8 rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-black opacity-60">Total Rentals</span>
-                            <div class="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-black">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-gray-500">Total Rentals</span>
+                            <div class="w-8 h-8 rounded-full bg-lime-500/10 flex items-center justify-center text-lime-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
                                 </svg>
                             </div>
                         </div>
-                        <h2 class="text-3xl font-black italic tracking-tight text-black mt-2">
+                        <h2 class="text-3xl font-black italic tracking-tight text-gray-900 mt-2">
                             ${bookingCount} Bookings
                         </h2>
                     </div>
 
                     <!-- Products Card -->
-                    <div class="bg-amber-400 text-black p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 relative overflow-hidden group">
+                    <div class="bg-white border border-gray-200 text-gray-900 p-8 rounded-3xl shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
                         <div class="flex items-center justify-between mb-4">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-black opacity-60">Inventory Size</span>
-                            <div class="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-black">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-gray-500">Inventory Size</span>
+                            <div class="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
                                 </svg>
                             </div>
                         </div>
-                        <h2 class="text-3xl font-black italic tracking-tight text-black mt-2">
+                        <h2 class="text-3xl font-black italic tracking-tight text-gray-900 mt-2">
                             ${productCount} Items
                         </h2>
                     </div>
 
                     <!-- Quick Action Card -->
                     <div onclick="window.location.href='${pageContext.request.contextPath}/ManageProducts'" 
-                         class="bg-fuchsia-400 text-black p-8 rounded-[2.5rem] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1.5 hover:-translate-y-1.5 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 flex flex-col justify-between cursor-pointer group">
+                         class="bg-cyan-500 hover:bg-cyan-600 text-white p-8 rounded-3xl shadow-md hover:shadow-lg shadow-cyan-500/20 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between cursor-pointer group">
                         <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-black opacity-60">Quick Actions</span>
-                            <div class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                            <span class="text-[10px] font-black uppercase tracking-wider text-white/80">Quick Actions</span>
+                            <div class="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                     <path d="M5 12h14M12 5v14"/>
                                 </svg>
                             </div>
@@ -172,7 +171,7 @@
                 </div>
 
                 <!-- Court Rental Logs Card -->
-                <div id="rental-logs" class="bg-white border border-gray-200 rounded-[2.5rem] p-8 shadow-sm mt-12 overflow-hidden">
+                <div id="rental-logs" class="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm mt-12 overflow-hidden">
                     <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
                         <h3 class="font-black uppercase italic text-3xl tracking-tighter flex items-center gap-3">
                             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">

@@ -24,6 +24,7 @@
                                         <head>
                                             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                                             <title>Shop & Rent - PadelApp</title>
+                                            <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/favicon.png">
                                             <script src="https://cdn.tailwindcss.com"></script>
                                         </head>
 
@@ -77,7 +78,7 @@
                                                 </header>
 
                                                 <%-- MAIN AREA CONTAINER --%>
-                                                    <div class="flex-1 p-6 pb-24 max-w-6xl w-full mx-auto">
+                                                    <div class="flex-1 p-6 pb-24 max-w-[1440px] w-full mx-auto">
                                                         <div class="mb-10">
                                                             <h1
                                                                 class="text-5xl font-black uppercase tracking-tighter italic">
