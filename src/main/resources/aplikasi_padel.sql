@@ -583,6 +583,102 @@ CREATE TABLE `performance_scores` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `club`
+--
+
+CREATE TABLE `club` (
+  `club_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `status` enum('active','deactive') NOT NULL DEFAULT 'active',
+  `type` enum('PUBLIC','PRIVATE') NOT NULL DEFAULT 'PUBLIC',
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` int(11) NOT NULL,
+  FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `club_member`
+--
+
+CREATE TABLE `club_member` (
+  `club_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`club_id`, `user_id`),
+  FOREIGN KEY (`club_id`) REFERENCES `club` (`club_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `club_request`
+--
+
+CREATE TABLE `club_request` (
+  `club_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `status` enum('PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'PENDING',
+  PRIMARY KEY (`club_id`, `user_id`),
+  FOREIGN KEY (`club_id`) REFERENCES `club` (`club_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `achievements`
+--
+
+CREATE TABLE `achievements` (
+  `achievement_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `icon` varchar(50) NOT NULL,
+  `badge_color` varchar(20) NOT NULL,
+  `milestone_type` varchar(50) NOT NULL,
+  `milestone_value` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `achievements`
+--
+
+INSERT INTO `achievements` (`achievement_id`, `name`, `description`, `icon`, `badge_color`, `milestone_type`, `milestone_value`) VALUES 
+(1, 'First Booking', 'Make your first booking', '🎾', 'blue', 'booking', 1), 
+(2, 'Court Regular', 'Make 5 bookings', '🔥', 'green', 'booking', 5), 
+(3, 'Booking Master', 'Make 20 bookings', '👑', 'gold', 'booking', 20), 
+(4, 'Community Starter', 'Create 1 community', '🤝', 'purple', 'community_created', 1), 
+(5, 'Social Player', 'Join 3 communities', '💬', 'pink', 'community', 3), 
+(6, 'Popular Member', 'Join 5 communities', '🌟', 'orange', 'community', 5), 
+(9, 'Premium Player', 'Become a premium member', '💎', 'cyan', 'premium', 1), 
+(10, 'Booking Legend', 'Make 50 bookings', '🏆', 'indigo', 'booking', 50), 
+(11, 'Padel God', 'Make 100 bookings', '⚡', 'red', 'booking', 100), 
+(12, 'Community Builder', 'Create 3 communities', '🏗️', 'teal', 'community_created', 3), 
+(13, 'Community Mogul', 'Create 5 communities', '🏢', 'yellow', 'community_created', 5), 
+(14, 'Squad Leader', 'Join 10 communities', '🦅', 'emerald', 'community', 10);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_achievements`
+--
+
+CREATE TABLE `user_achievements` (
+  `user_achievement_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `user_id` int(11) NOT NULL,
+  `achievement_id` int(11) NOT NULL,
+  `unlocked_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  UNIQUE KEY `user_achievement_unique` (`user_id`,`achievement_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`achievement_id`) REFERENCES `achievements` (`achievement_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -290,6 +290,129 @@ public class DatabaseSeeder implements ServletContextListener {
                     }
                 }
 
+                // === START COMMUNITY MIGRATION ===
+                boolean clubExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "club", null)) {
+                    if (rs.next()) clubExists = true;
+                } catch (Exception e) {}
+
+                if (!clubExists) {
+                    System.out.println("[Seeder] Tabel 'club' belum ada. Membuat tabel...");
+                    try {
+                        stmt.executeUpdate("CREATE TABLE `club` ("
+                                + "  `club_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `name` varchar(255) NOT NULL,"
+                                + "  `description` text NOT NULL,"
+                                + "  `status` enum('active','deactive') NOT NULL DEFAULT 'active',"
+                                + "  `type` enum('PUBLIC','PRIVATE') NOT NULL DEFAULT 'PUBLIC',"
+                                + "  `created_at` datetime NOT NULL DEFAULT current_timestamp(),"
+                                + "  `created_by` int(11) NOT NULL,"
+                                + "  FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'club': " + e.getMessage());
+                    }
+                }
+
+                boolean clubMemberExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "club_member", null)) {
+                    if (rs.next()) clubMemberExists = true;
+                } catch (Exception e) {}
+
+                if (!clubMemberExists) {
+                    try {
+                        stmt.executeUpdate("CREATE TABLE `club_member` ("
+                                + "  `club_id` int(11) NOT NULL,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  PRIMARY KEY (`club_id`, `user_id`),"
+                                + "  FOREIGN KEY (`club_id`) REFERENCES `club` (`club_id`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'club_member': " + e.getMessage());
+                    }
+                }
+
+                boolean clubReqExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "club_request", null)) {
+                    if (rs.next()) clubReqExists = true;
+                } catch (Exception e) {}
+
+                if (!clubReqExists) {
+                    try {
+                        stmt.executeUpdate("CREATE TABLE `club_request` ("
+                                + "  `club_id` int(11) NOT NULL,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `status` enum('PENDING','APPROVED','REJECTED') NOT NULL DEFAULT 'PENDING',"
+                                + "  PRIMARY KEY (`club_id`, `user_id`),"
+                                + "  FOREIGN KEY (`club_id`) REFERENCES `club` (`club_id`) ON DELETE CASCADE ON UPDATE CASCADE,"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'club_request': " + e.getMessage());
+                    }
+                }
+                // === END COMMUNITY MIGRATION ===
+
+                // === START ACHIEVEMENT MIGRATION ===
+                boolean achievementsExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "achievements", null)) {
+                    if (rs.next()) achievementsExists = true;
+                } catch (Exception e) {}
+
+                if (!achievementsExists) {
+                    System.out.println("[Seeder] Tabel 'achievements' belum ada. Membuat tabel...");
+                    try {
+                        stmt.executeUpdate("CREATE TABLE `achievements` ("
+                                + "  `achievement_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `name` varchar(100) NOT NULL,"
+                                + "  `description` text NOT NULL,"
+                                + "  `icon` varchar(50) NOT NULL,"
+                                + "  `badge_color` varchar(20) NOT NULL,"
+                                + "  `milestone_type` varchar(50) NOT NULL,"
+                                + "  `milestone_value` int(11) NOT NULL"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                        
+                        stmt.executeUpdate("INSERT INTO `achievements` (`achievement_id`, `name`, `description`, `icon`, `badge_color`, `milestone_type`, `milestone_value`) VALUES "
+                                + "(1, 'First Booking', 'Make your first booking', '🎾', 'blue', 'booking', 1), "
+                                + "(2, 'Court Regular', 'Make 5 bookings', '🔥', 'green', 'booking', 5), "
+                                + "(3, 'Booking Master', 'Make 20 bookings', '👑', 'gold', 'booking', 20), "
+                                + "(4, 'Community Starter', 'Create 1 community', '🤝', 'purple', 'community_created', 1), "
+                                + "(5, 'Social Player', 'Join 3 communities', '💬', 'pink', 'community', 3), "
+                                + "(6, 'Popular Member', 'Join 5 communities', '🌟', 'orange', 'community', 5), "
+                                + "(9, 'Premium Player', 'Become a premium member', '💎', 'cyan', 'premium', 1), "
+                                + "(10, 'Booking Legend', 'Make 50 bookings', '🏆', 'indigo', 'booking', 50), "
+                                + "(11, 'Padel God', 'Make 100 bookings', '⚡', 'red', 'booking', 100), "
+                                + "(12, 'Community Builder', 'Create 3 communities', '🏗️', 'teal', 'community_created', 3), "
+                                + "(13, 'Community Mogul', 'Create 5 communities', '🏢', 'yellow', 'community_created', 5), "
+                                + "(14, 'Squad Leader', 'Join 10 communities', '🦅', 'emerald', 'community', 10)");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'achievements': " + e.getMessage());
+                    }
+                }
+
+                boolean userAchExists = false;
+                try (ResultSet rs = conn.getMetaData().getTables(null, null, "user_achievements", null)) {
+                    if (rs.next()) userAchExists = true;
+                } catch (Exception e) {}
+
+                if (!userAchExists) {
+                    try {
+                        stmt.executeUpdate("CREATE TABLE `user_achievements` ("
+                                + "  `user_achievement_id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+                                + "  `user_id` int(11) NOT NULL,"
+                                + "  `achievement_id` int(11) NOT NULL,"
+                                + "  `unlocked_at` timestamp NOT NULL DEFAULT current_timestamp(),"
+                                + "  UNIQUE KEY `user_achievement_unique` (`user_id`,`achievement_id`),"
+                                + "  FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,"
+                                + "  FOREIGN KEY (`achievement_id`) REFERENCES `achievements` (`achievement_id`) ON DELETE CASCADE"
+                                + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                    } catch (Exception e) {
+                        System.err.println("[Seeder] Gagal membuat tabel 'user_achievements': " + e.getMessage());
+                    }
+                }
+                // === END ACHIEVEMENT MIGRATION ===
+
                 // === START TRACK HEALTH MIGRATION ===
                 // 1. Cek & Tambah kolom 'age', 'weight', 'height' di tabel 'users'
                 boolean hasAge = false;
