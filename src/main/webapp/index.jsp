@@ -844,12 +844,7 @@
 
                 </html>
                 <script>
-                    // Auto-Redirect Feedback Logic
-                    <% if (session.getAttribute("show_feedback_popup") != null && (boolean)session.getAttribute("show_feedback_popup")) { %>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            window.location.href = '${pageContext.request.contextPath}/FeedbackController';
-                        });
-                    <% } %>
+
 
                     const trigger = document.getElementById('launchpad-trigger');
                     const launchpad = document.getElementById('launchpad');
